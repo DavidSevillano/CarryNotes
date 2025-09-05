@@ -1,8 +1,7 @@
 package com.burixer85.mynotesapp.domain.model
 
-data class Note(
+data class QuickNote(
     val id: Int,
     val title: String,
-    val category: Category,
     val content: String
 )

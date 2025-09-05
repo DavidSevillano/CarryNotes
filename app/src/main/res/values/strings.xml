@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MyNotesApp</string>
+    <string name="app_name">CarryNotes</string>
+    <string name="Main_Screen_Text_Tittle">NOTAS</string>
+    <string name="Main_Screen_Button_Achievements">Logros</string>
+    <string name="Main_Screen_Text_Categories">Categorias</string>
+    <string name="Main_Screen_Text_Quick_Notes">Notas Rapidas</string>
 </resources>

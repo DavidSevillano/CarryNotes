@@ -3,10 +3,8 @@ package com.burixer85.mynotesapp.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "notes")
-data class NoteModel(
+@Entity(tableName = "category")
+data class CategoryModel(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
-    val category: CategoryModel,
-    val content: String
 )
