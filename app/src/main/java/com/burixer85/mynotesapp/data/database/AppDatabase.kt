@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 import com.burixer85.mynotesapp.data.converter.CategoryModelConverter
 import com.burixer85.mynotesapp.data.converter.QuickNoteModelConverter
 import com.burixer85.mynotesapp.data.dao.NoteDao
-import com.burixer85.mynotesapp.data.model.NoteModel
+import com.burixer85.mynotesapp.data.entity.NoteModel
 
 @Database(entities = [NoteModel::class], version = 2)
 @TypeConverters(CategoryModelConverter::class, QuickNoteModelConverter::class)

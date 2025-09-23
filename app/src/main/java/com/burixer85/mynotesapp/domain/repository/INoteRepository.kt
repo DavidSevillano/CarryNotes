@@ -1,9 +1,10 @@
 package com.burixer85.mynotesapp.domain.repository
 
-import com.burixer85.mynotesapp.data.model.NoteModel
+import com.burixer85.mynotesapp.data.entity.NoteModel
+import com.burixer85.mynotesapp.domain.model.Note
 
 interface INoteRepository {
-    suspend fun getNotes(): List<NoteModel>
-    suspend fun addNote(note: NoteModel)
-    suspend fun removeNote(note: NoteModel)
+    suspend fun getNotes(): List<Note>
+    suspend fun addNote(note: Note)
+    suspend fun removeNote(note: Note)
 }

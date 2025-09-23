@@ -1,6 +1,7 @@
 package com.burixer85.mynotesapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,16 +26,20 @@ fun CarryQuickNotes(title: String) {
     Box(
         Modifier
             .height(80.dp)
-            .width(100.dp)
+            .width(120.dp)
             .border(
                 BorderStroke(2.dp, Color.White),
+                shape = RoundedCornerShape(14.dp)
+            )
+            .background(
+                color = Color(0xFF424242),
                 shape = RoundedCornerShape(14.dp)
             )
     ) {
         Text(
             text = title,
             color = Color.White,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelSmall,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(8.dp).align(Alignment.Center)

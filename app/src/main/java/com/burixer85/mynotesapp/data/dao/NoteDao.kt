@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import com.burixer85.mynotesapp.data.model.NoteModel
+import com.burixer85.mynotesapp.data.entity.NoteModel
 
 @Dao
 interface NoteDao {

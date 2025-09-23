@@ -1,6 +1,7 @@
 package com.burixer85.mynotesapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,32 +28,35 @@ import androidx.compose.ui.Alignment
 fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
     Box(
         Modifier
-            .height(160.dp)
+            .height(190.dp)
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
             .border(
                 BorderStroke(2.dp, Color.White),
-                shape = RoundedCornerShape(46.dp)
+                shape = RoundedCornerShape(36.dp)
+            ).background(
+                color = Color(0xFF303030),
+                shape = RoundedCornerShape(36.dp)
             )
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.TopCenter)
+                .align(Alignment.Center)
         ) {
             Text(
                 text = "${quickNotes.size} notas rápidas",
                 color = Color.White,
-                style = MaterialTheme.typography.titleSmall,
+                style = MaterialTheme.typography.labelLarge,
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
-                    .padding(top = 8.dp, bottom = 16.dp)
+                    .padding(bottom = 16.dp)
             )
             Row(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(quickNotes.take(3)) { quickNote ->
+                    items(quickNotes.take(2)) { quickNote ->
                         CarryQuickNotes(title = quickNote.title)
                     }
                 }

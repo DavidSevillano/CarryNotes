@@ -1,7 +1,7 @@
 package com.burixer85.mynotesapp.data.converter
 
 import androidx.room.TypeConverter
-import com.burixer85.mynotesapp.data.model.QuickNoteModel
+import com.burixer85.mynotesapp.data.entity.QuickNoteModel
 import com.google.gson.Gson
 
 class QuickNoteModelConverter {

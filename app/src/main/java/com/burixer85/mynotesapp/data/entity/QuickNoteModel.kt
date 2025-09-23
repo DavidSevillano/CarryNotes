@@ -1,4 +1,4 @@
-package com.burixer85.mynotesapp.data.model
+package com.burixer85.mynotesapp.data.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

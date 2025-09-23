@@ -1,4 +1,4 @@
-import com.burixer85.mynotesapp.data.model.NoteModel
+import com.burixer85.mynotesapp.data.entity.NoteModel
 import com.burixer85.mynotesapp.domain.model.Note
 import com.burixer85.mynotesapp.domain.repository.INoteRepository
 import com.burixer85.mynotesapp.domain.usecase.NotesUseCase
