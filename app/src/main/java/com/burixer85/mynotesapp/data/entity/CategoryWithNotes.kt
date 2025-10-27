@@ -4,10 +4,10 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class CategoryWithNotes(
-    @Embedded val category: CategoryEntitiy,
+    @Embedded val category: CategoryEntity,
     @Relation(
         parentColumn = "id",
         entityColumn = "categoryId"
     )
-    val notes: List<NoteModel>
+    val notes: List<NoteEntity>
 )

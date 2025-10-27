@@ -1,4 +1,4 @@
-import com.burixer85.mynotesapp.data.entity.NoteModel
+import com.burixer85.mynotesapp.data.entity.NoteEntity
 import com.burixer85.mynotesapp.domain.model.Note
 import com.burixer85.mynotesapp.domain.repository.INoteRepository
 import com.burixer85.mynotesapp.domain.usecase.NotesUseCase
@@ -9,11 +9,11 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class FakeNoteRepository : INoteRepository {
-    private val notes = mutableListOf<NoteModel>()
+    private val notes = mutableListOf<NoteEntity>()
 
-    override suspend fun getNotes(): List<NoteModel> = notes
-    override suspend fun addNote(note: NoteModel) { notes.add(note) }
-    override suspend fun removeNote(note: NoteModel) { notes.remove(note) }
+    override suspend fun getNotes(): List<NoteEntity> = notes
+    override suspend fun addNote(note: NoteEntity) { notes.add(note) }
+    override suspend fun removeNote(note: NoteEntity) { notes.remove(note) }
 }
 
 class NotesUseCaseTest {

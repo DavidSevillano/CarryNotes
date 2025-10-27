@@ -3,8 +3,8 @@ package com.burixer85.mynotesapp.data.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "notes")
-data class QuickNoteModel(
+@Entity(tableName = "quick_notes")
+data class QuickNoteEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val content: String
