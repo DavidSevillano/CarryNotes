@@ -3,6 +3,7 @@ package com.burixer85.mynotesapp.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.burixer85.mynotesapp.data.application.RoomApplication
+import com.burixer85.mynotesapp.data.entity.toPresentation
 import com.burixer85.mynotesapp.presentation.model.Category
 import com.burixer85.mynotesapp.presentation.model.Note
 import com.burixer85.mynotesapp.presentation.model.QuickNote
@@ -17,55 +18,58 @@ class MainScreenViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(MainScreenUI())
     val uiState: StateFlow<MainScreenUI> = _uiState
 
-    // Prueba, no estará para la aplicación final ya que es muy ineficiente
+    // Prueba, no estará para la aplicación final
+
     init {
-        val quickNotes =listOf(
-            QuickNote("Código puzzle", "Contenido de la nota rapida 1"),
-            QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
-            QuickNote("Nombre amigo", "Contenido de la nota rapida 3")
-        )
-        val notes = listOf(
-            Note(1, "1", "Contenido de la nota 1"),
-            Note(2, "2", "Contenido de la nota 2"),
-            Note(3, "3", "Contenido de la nota 3")
-        )
-        val notes2 = listOf(
-            Note(1, "1", "Contenido de otra nota 1"),
-            Note(2, "2", "Contenido de otra nota 2"),
-            Note(3, "3", "Contenido de otra nota 3")
-        )
-        val categories = listOf(
-            Category(1, "Cumpleaños", notes),
-            Category(2, "Recetas", notes2)
-        )
-
         viewModelScope.launch(Dispatchers.IO) {
-            val quickNoteEntities = quickNotes.map { quickNote ->
-                quickNote.toEntity()
-            }
-            quickNoteEntities.forEach { quickNoteEntity ->
-                RoomApplication.db.quickNoteDao().insertQuickNote(quickNoteEntity)
-            }
 
-            val categoryEntities = categories.map { category ->
-                category.toEntity()
-            }
+            val existingQuickNotes = RoomApplication.db.quickNoteDao().getAllQuickNotes()
+            if (existingQuickNotes.isEmpty()) {
+                val quickNotes = listOf(
+                    QuickNote("Código puzzle", "Contenido de la nota rapida 1"),
+                    QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
+                    QuickNote("Nombre amigo", "Contenido de la nota rapida 3")
+                )
+                val notes = listOf(Note(1, "Primera nota", "Contenido de la primera nota"),
+                    Note(2, "Segunda nota", "Contenido de la segunda nota"),
+                    Note(3, "Tercera nota", "Contenido de la tercera nota"))
+                val notes2 = listOf(Note(4, "Cuarta nota", "Contenido de la cuarta nota"),
+                    Note(5, "Quinta nota", "Contenido de la quinta nota"),
+                    Note(6, "Sexta nota", "Contenido de la sexta nota"))
+                val categories = listOf(Category(1, "Cumpleaños", notes), Category(2, "Recetas", notes2))
 
-            categoryEntities.forEach { categoryEntity ->
-                RoomApplication.db.categoryDao().insertCategory(categoryEntity)
-            }
+                val quickNoteEntities = quickNotes.map { it.toEntity() }
+                quickNoteEntities.forEach { RoomApplication.db.quickNoteDao().insertQuickNote(it) }
 
-            categories.forEach { category ->
-                category.notes.forEach { note ->
-                    val noteEntity = note.toEntity(categoryId = category.id)
-                    RoomApplication.db.noteDao().insertNote(noteEntity) // ESTO ES SOLO DE PRUEBA
+                val categoryEntities = categories.map { it.toEntity() }
+                categoryEntities.forEach { RoomApplication.db.categoryDao().insertCategory(it) }
+
+                categories.forEach { category ->
+                    category.notes.forEach { note ->
+                        val noteEntity = note.toEntity(categoryId = category.id)
+                        RoomApplication.db.noteDao().insertNote(noteEntity)
+                    }
                 }
             }
+            val quickNotesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()
+            val categoriesFromDb = RoomApplication.db.categoryDao().getAllCategories()
+            val notesFromDb = RoomApplication.db.noteDao().getAllNotes()
 
+            val quickNotesForUi = quickNotesFromDb.map { it.toPresentation() }
+            val categoriesForUi = categoriesFromDb.map { categoryEntity ->
+                val notesForThisCategory = notesFromDb
+                    .filter { noteEntity -> noteEntity.categoryId == categoryEntity.id }
+                    .map { it.toPresentation() }
+                categoryEntity.toPresentation().copy(notes = notesForThisCategory)
+            }
+
+            _uiState.value = MainScreenUI(
+                quickNotes = quickNotesForUi,
+                categories = categoriesForUi
+            )
         }
     }
 }
-
 data class MainScreenUI (
     val quickNotes: List<QuickNote> = emptyList(),
     val notes: List<Note> = emptyList(),

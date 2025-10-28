@@ -28,39 +28,6 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
     val uiState by mainScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    val notesCumple: List<Note> = listOf(
-        Note(1, "1", "Contenido de la nota 1 (cumple 1)"),
-        Note(2, "2", "Contenido de la nota 2 (cumple 2)"),
-        Note(3, "3", "Contenido de la nota 3 (cumple 3)")
-    )
-
-    val notesRecetas: List<Note> = listOf(
-        Note(1, "1", "Contenido de la nota 1 (receta 1)"),
-        Note(2, "2", "Contenido de la nota 2 (receta 2)"),
-    )
-
-    val categoryCumple = Category(1, "Cumpleaños", notesCumple)
-    val categoryRecetas = Category(2, "Recetas", notesRecetas)
-
-    val categories: List<Category> = listOf(
-        categoryCumple,
-        categoryRecetas,
-        categoryCumple,
-        categoryRecetas,
-        categoryCumple,
-        categoryRecetas,
-        categoryCumple,
-        categoryRecetas
-    )
-
-    val quickNotes: List<QuickNote> = listOf(
-        QuickNote("Código puzzle", "Contenido de la nota rapida 1"),
-        QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
-        QuickNote("Nombre amigo", "Contenido de la nota rapida 3")
-
-    )
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets(0, 0, 0, 0), //Permite que no se transforme al minimizarla
@@ -86,7 +53,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
                 color = Color.White,
                 style = MaterialTheme.typography.titleSmall
             )
-            if (quickNotes.isNotEmpty()) {
+            if (uiState.quickNotes.isNotEmpty()) {
                 CarryAllQuickNotes(uiState.quickNotes)
             }
             Text(
@@ -95,7 +62,7 @@ fun MainScreen(mainScreenViewModel: MainScreenViewModel = viewModel()) {
                 color = Color.White,
                 style = MaterialTheme.typography.titleSmall
             )
-            if (categories.isNotEmpty()) {
+            if (uiState.categories.isNotEmpty()) {
                 CarryAllCategories(uiState.categories)
             }
         }

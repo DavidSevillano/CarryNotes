@@ -3,6 +3,7 @@ package com.burixer85.mynotesapp.data.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.burixer85.mynotesapp.data.entity.QuickNoteEntity
 
@@ -11,7 +12,7 @@ interface QuickNoteDao {
     @Query("SELECT * FROM quick_notes")
     suspend fun getAllQuickNotes(): List<QuickNoteEntity>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertQuickNote(quickNote: QuickNoteEntity)
 
     @Delete
