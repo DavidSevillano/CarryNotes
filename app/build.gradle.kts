@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlinx.serialization)
     kotlin("kapt")
 }
 
@@ -56,6 +57,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.material.icons.extended)
     implementation(libs.datastore.preferences)
+    implementation(libs.kotlinx.serialization.json)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

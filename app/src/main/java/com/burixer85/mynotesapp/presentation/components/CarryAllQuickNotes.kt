@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -26,37 +27,26 @@ import androidx.compose.ui.Alignment
 
 @Composable
 fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
-    Box(
-        Modifier
-            .height(190.dp)
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .border(
-                BorderStroke(2.dp, Color.White),
-                shape = RoundedCornerShape(36.dp)
-            ).background(
-                color = Color(0xFF303030),
-                shape = RoundedCornerShape(36.dp)
-            )
+    Column(modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
+        Text(
+            text = "${quickNotes.size} notas rápidas",
+            color = Color.White,
+            style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
+                .padding(bottom = 32.dp)
+        )
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                text = "${quickNotes.size} notas rápidas",
-                color = Color.White,
-                style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 16.dp)
-            )
-            Row(
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            ) {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    items(quickNotes.take(2)) { quickNote ->
+            val chunkedNotes = quickNotes.chunked(2)
+
+            items(chunkedNotes) { pairOfNotes ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    pairOfNotes.forEach { quickNote ->
                         CarryQuickNotes(title = quickNote.title)
                     }
                 }

@@ -9,42 +9,42 @@ import androidx.compose.ui.unit.sp
 import com.burixer85.mynotesapp.R
 
 
-val LatoFontFamily = FontFamily(Font(R.font.lato_regular))
+val interFontFamily = FontFamily(Font(R.font.inter_regular))
 
 // Set of Material typography styles to start with
 val Typography = Typography(
     headlineSmall = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 50.sp,
     ),
     titleLarge = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 36.sp,
     ),
     titleMedium = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 30.sp,
     ),
     titleSmall = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp,
     ),
     labelLarge = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp,
     ),
     labelMedium = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
     ),
     labelSmall = TextStyle(
-        fontFamily = LatoFontFamily,
+        fontFamily = interFontFamily,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
     )

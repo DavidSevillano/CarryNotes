@@ -26,7 +26,7 @@ fun CarryQuickNotes(title: String) {
     Box(
         Modifier
             .height(80.dp)
-            .width(120.dp)
+            .width(160.dp)
             .border(
                 BorderStroke(2.dp, Color.White),
                 shape = RoundedCornerShape(14.dp)
