@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,10 +25,12 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
 fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
-    Column(modifier = Modifier.fillMaxWidth(),
+    Column(
+        modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -38,19 +41,54 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
                 .padding(bottom = 32.dp)
         )
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val chunkedNotes = quickNotes.chunked(2)
-
-            items(chunkedNotes) { pairOfNotes ->
+            items(quickNotes.chunked(2)) { pair ->
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    pairOfNotes.forEach { quickNote ->
-                        CarryQuickNotes(title = quickNote.title)
+                    pair.forEach { category ->
+                        Box(
+                            Modifier
+                                .height(120.dp)
+                                .weight(1f)
+                                .border(
+                                    BorderStroke(2.dp, Color.White),
+                                    shape = RoundedCornerShape(14.dp)
+                                ).background(
+                                    color = Color(0xFF303030),
+                                    shape = RoundedCornerShape(14.dp)
+                                )
+                        ) {
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(8.dp)
+                            ) {
+                                Text(
+                                    text = category.title,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                            }
+                        }
+                    }
+                    if (pair.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }
         }
     }
 }
+
+
+

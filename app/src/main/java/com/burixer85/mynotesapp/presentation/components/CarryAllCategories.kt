@@ -18,54 +18,66 @@ import com.burixer85.mynotesapp.presentation.model.Category
 
 @Composable
 fun CarryAllCategories(categories: List<Category>) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(categories.chunked(2)) { pair ->
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                pair.forEach { category ->
-                    Box(
-                        Modifier
-                            .height(120.dp)
-                            .weight(1f)
-                            .border(
-                                BorderStroke(2.dp, Color.White),
-                                shape = RoundedCornerShape(14.dp)
-                            ).background(
-                                color = Color(0xFF303030),
-                                shape = RoundedCornerShape(14.dp)
-                            )
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(8.dp)
+        Text(
+            text = "${categories.size} categorías",
+            color = Color.White,
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .padding(bottom = 32.dp)
+        )
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            items(categories.chunked(2)) { pair ->
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    pair.forEach { category ->
+                        Box(
+                            Modifier
+                                .height(120.dp)
+                                .weight(1f)
+                                .border(
+                                    BorderStroke(2.dp, Color.White),
+                                    shape = RoundedCornerShape(14.dp)
+                                ).background(
+                                    color = Color(0xFF303030),
+                                    shape = RoundedCornerShape(14.dp)
+                                )
                         ) {
-                            Text(
-                                text = category.title,
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelLarge,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = "${category.notes.size} notas",
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelMedium,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
-                            )
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(8.dp)
+                            ) {
+                                Text(
+                                    text = category.title,
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.labelLarge,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "${category.notes.size} notas",
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.labelMedium,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                            }
                         }
                     }
-                }
-                if (pair.size == 1) {
-                    Spacer(modifier = Modifier.weight(1f))
+                    if (pair.size == 1) {
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }
