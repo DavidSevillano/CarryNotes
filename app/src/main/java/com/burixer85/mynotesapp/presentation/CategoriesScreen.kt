@@ -37,7 +37,12 @@ fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesSc
 
     Scaffold(
         modifier = modifier,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0), //Permite que no se transforme al minimizarla
+        contentWindowInsets = WindowInsets(
+            0,
+            0,
+            0,
+            0
+        ), //Permite que no se transforme al minimizarla
         containerColor = Color(0xFF212121)
     ) { padding ->
         Column(Modifier.padding(padding)) {
@@ -73,9 +78,46 @@ fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesSc
             Spacer(
                 modifier = Modifier.padding(12.dp),
             )
-            if (uiState.categories.isNotEmpty()) {
+            if (uiState.categories.isEmpty()) {
                 CarryAllCategories(uiState.categories)
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Sin categorías",
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(bottom = 32.dp)
+                    )
+
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(240.dp)
+                            .padding(12.dp)
+                            .border(
+                                BorderStroke(2.dp, Color.White),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                            .background(
+                                color = Color(0xFF303030),
+                                shape = RoundedCornerShape(14.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Text(
+                            text = "Añadir Categoría",
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
+                    }
+
+                }
             }
         }
-        }
     }
+}
