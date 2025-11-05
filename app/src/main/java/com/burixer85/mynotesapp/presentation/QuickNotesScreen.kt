@@ -3,20 +3,14 @@ package com.burixer85.mynotesapp.presentation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -26,14 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
-import com.burixer85.mynotesapp.presentation.components.CarryAllCategories
 import com.burixer85.mynotesapp.presentation.components.CarryAllQuickNotes
-import kotlin.collections.chunked
+import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 
 @Composable
 fun QuickNotesScreen(
@@ -49,8 +41,20 @@ fun QuickNotesScreen(
             0,
             0,
             0
-        ), //Permite que no se transforme al minimizarla
-        containerColor = Color(0xFF212121)
+        ),
+        containerColor = Color(0xFF212121),
+        floatingActionButton = {
+            CarryFloatingActionButton(onOptionSelected = { option ->
+                when (option) {
+                    "quicknote" -> {
+                        //TODO: Implementar lógica para añadir una quicknote
+                    }
+                    "category" -> {
+                        //TODO: Implementar lógica para añadir una category
+                    }
+                }
+            })
+        }
     ) { padding ->
         Column(Modifier.padding(padding)) {
             Text(
@@ -86,7 +90,7 @@ fun QuickNotesScreen(
             Spacer(
                 modifier = Modifier.padding(12.dp),
             )
-            if (uiState.quickNotes.isEmpty()) {
+            if (uiState.quickNotes.isNotEmpty()) {
                 CarryAllQuickNotes(uiState.quickNotes)
             } else {
                 Column(
@@ -94,7 +98,7 @@ fun QuickNotesScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Sin notas rápidas",
+                        text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
                         color = Color.White,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
@@ -118,7 +122,7 @@ fun QuickNotesScreen(
                     ) {
 
                         Text(
-                            text = "Añadir nota rápida",
+                            text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_Category),
                             color = Color.White,
                             style = MaterialTheme.typography.labelLarge,
                         )

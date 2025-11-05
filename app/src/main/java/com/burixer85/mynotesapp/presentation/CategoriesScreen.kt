@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,13 +20,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryAllCategories
-import com.burixer85.mynotesapp.presentation.components.CarryAllQuickNotes
+import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 
 @Composable
 fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesScreenViewModel = viewModel ()) {
@@ -43,7 +40,19 @@ fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesSc
             0,
             0
         ), //Permite que no se transforme al minimizarla
-        containerColor = Color(0xFF212121)
+        containerColor = Color(0xFF212121),
+        floatingActionButton = {
+            CarryFloatingActionButton(onOptionSelected = { option ->
+                when (option) {
+                    "quicknote" -> {
+                        //TODO: Implementar lógica para añadir una quicknote
+                    }
+                    "category" -> {
+                        //TODO: Implementar lógica para añadir una category
+                    }
+                }
+            })
+        }
     ) { padding ->
         Column(Modifier.padding(padding)) {
             Text(
@@ -86,7 +95,7 @@ fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesSc
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Sin categorías",
+                        text = stringResource(R.string.Categories_Screen_Main_Text_No_Categories),
                         color = Color.White,
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier
@@ -110,7 +119,7 @@ fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesSc
                     ) {
 
                         Text(
-                            text = "Añadir Categoría",
+                            text = stringResource(R.string.Categories_Screen_Text_Box_Add_Category),
                             color = Color.White,
                             style = MaterialTheme.typography.labelLarge,
                         )
