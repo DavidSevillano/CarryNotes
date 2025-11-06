@@ -27,7 +27,10 @@ class QuickNotesScreenViewModel() : ViewModel() {
                 val quickNotes = listOf(
                     QuickNote("Código puzzle", "Contenido de la nota rapida 1"),
                     QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
-                    QuickNote("Nombre amigo", "Contenido de la nota rapida 3")
+                    QuickNote("Nombre amigo", "Contenido de la nota rapida 3"),
+                    QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
+                    QuickNote("Nombre amigo", "Contenido de la nota rapida 3"),
+
                 )
 
                 val quickNoteEntities = quickNotes.map { it.toEntity() }

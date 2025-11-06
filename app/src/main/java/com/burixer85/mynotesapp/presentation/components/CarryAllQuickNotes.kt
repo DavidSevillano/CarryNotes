@@ -3,6 +3,7 @@ package com.burixer85.mynotesapp.presentation.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
-fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
+fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -51,7 +52,7 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    pair.forEach { category ->
+                    pair.forEach { quickNote ->
                         Box(
                             Modifier
                                 .height(120.dp)
@@ -62,6 +63,10 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
                                 ).background(
                                     color = Color(0xFF303030),
                                     shape = RoundedCornerShape(14.dp)
+                                ).clickable(
+                                    onClick = {
+                                        onQuickNoteClick(quickNote)
+                                    }
                                 )
                         ) {
                             Column(
@@ -70,7 +75,7 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>) {
                                     .padding(8.dp)
                             ) {
                                 Text(
-                                    text = category.title,
+                                    text = quickNote.title,
                                     color = Color.White,
                                     style = MaterialTheme.typography.labelLarge,
                                     maxLines = 1,
