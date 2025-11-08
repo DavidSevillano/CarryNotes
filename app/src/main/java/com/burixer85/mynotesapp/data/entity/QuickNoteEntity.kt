@@ -13,6 +13,7 @@ data class QuickNoteEntity(
 
 fun QuickNoteEntity.toPresentation(): QuickNote {
     return QuickNote(
+        id = this.id,
         title = this.title,
         content = this.content
     )

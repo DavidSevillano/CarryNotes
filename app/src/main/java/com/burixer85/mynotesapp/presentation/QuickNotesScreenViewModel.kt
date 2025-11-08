@@ -1,5 +1,6 @@
 package com.burixer85.mynotesapp.presentation
 
+import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.burixer85.mynotesapp.data.application.RoomApplication
@@ -10,40 +11,57 @@ import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class QuickNotesScreenViewModel() : ViewModel() {
 
-    private val _uiState = MutableStateFlow(QuickNotesUI())
+    private val _uiState = MutableStateFlow(QuickNotesUI(isLoading = true))
     val uiState: StateFlow<QuickNotesUI> = _uiState
 
-    // Prueba, no estará para la aplicación final
-
     init {
+        loadInitialQuickNotes()
+    }
+
+    private fun loadInitialQuickNotes() {
         viewModelScope.launch(Dispatchers.IO) {
+            _uiState.update { it.copy(isLoading = true) }
 
-            val existingQuickNotes = RoomApplication.db.quickNoteDao().getAllQuickNotes()
-            if (existingQuickNotes.isEmpty()) {
-                val quickNotes = listOf(
-                    QuickNote("Código puzzle", "Contenido de la nota rapida 1"),
-                    QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
-                    QuickNote("Nombre amigo", "Contenido de la nota rapida 3"),
-                    QuickNote("Segundos restantes", "Contenido de la nota rapida 2"),
-                    QuickNote("Nombre amigo", "Contenido de la nota rapida 3"),
+            val notesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()
 
-                )
+            val notesForUi = notesFromDb.map { it.toPresentation() }
 
-                val quickNoteEntities = quickNotes.map { it.toEntity() }
-                quickNoteEntities.forEach { RoomApplication.db.quickNoteDao().insertQuickNote(it) }
-
+            _uiState.update {
+                it.copy(quickNotes = notesForUi, isLoading = false)
             }
-            val quickNotesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()
+        }
+    }
 
-            val quickNotesForUi = quickNotesFromDb.map { it.toPresentation() }
+    fun addQuickNote(note: QuickNote) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteEntity = note.toEntity()
+            RoomApplication.db.quickNoteDao().insertQuickNote(noteEntity)
 
-            _uiState.value = QuickNotesUI(
-                quickNotes = quickNotesForUi,
-            )
+            val updatedNotesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()
+
+            val quickNotesForUi = updatedNotesFromDb.map { it.toPresentation() }
+
+            _uiState.update { currentState ->
+                currentState.copy(quickNotes = quickNotesForUi)
+            }
+        }
+    }
+
+    fun deleteQuickNote(note: QuickNote){
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteEntity = note.toEntity()
+
+            RoomApplication.db.quickNoteDao().deleteQuickNote(noteEntity)
+
+            _uiState.update { currentState ->
+                val updatedList = currentState.quickNotes.filter { it.id != note.id }
+                currentState.copy(quickNotes = updatedList)
+            }
         }
     }
 }

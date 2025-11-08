@@ -10,12 +10,23 @@
     <!--QuickNotes Screen -->
     <string name="QuickNotes_Screen_Main_Text_No_Quicknotes">Sin Notas Rápidas</string>
     <string name="QuickNotes_Screen_Main_Text_Number_Of_Quicknotes">%1$d Notas Rápidas</string>
-    <string name="QuickNotes_Screen_Text_Box_Add_Category">Añadir Categoría</string>
+    <string name="QuickNotes_Screen_Text_Box_Add_QuickNote">Añadir Nota Rápida</string>
 
     <!--Categories Screen -->
     <string name="Categories_Screen_Main_Text_No_Categories">Sin Categorías</string>
     <string name="Categories_Screen_Main_Text_Number_Of_Categories">%1$d Categorías</string>
     <string name="Categories_Screen_Text_Box_Add_Category">Añadir Categoría</string>
+
+    <!--QuickNote Dialog -->
+
+
+    <!--CreateQuickNote Dialog -->
+    <string name="CreateQuickNote_Dialog_Main_Text">Crear Nota Rápida</string>
+    <string name="CreateQuickNote_Dialog_Text_Label_Title">Título</string>
+    <string name="CreateQuickNote_Dialog_Text_Label_Content">Contenido</string>
+    <string name="CreateQuickNote_Dialog_TextButton_Cancel">Cancelar</string>
+    <string name="CreateQuickNote_Dialog_Button_Save">Guardar</string>
+    <string name="QuickNote_Dialog_TextButton_Close">Cerrar</string>
 
 
 </resources>
