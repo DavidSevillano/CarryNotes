@@ -9,6 +9,6 @@ enum class Destination(val route: String,
                        val label:String,
                        val icon: ImageVector,
                        val contentDescription: String) {
-    QUICKNOTE("nav_quicknote","QuickNotes", Icons.Default.Home, "main view"),
+    QUICKNOTE("nav_quicknote","QuickNotes", Icons.Default.Home, "quicknotes view"),
     CATEGORIES("nav_categories","Categories", Icons.Default.Search, "categories view")
 }

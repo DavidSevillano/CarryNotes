@@ -11,6 +11,8 @@
     <string name="QuickNotes_Screen_Main_Text_No_Quicknotes">Sin Notas Rápidas</string>
     <string name="QuickNotes_Screen_Main_Text_Number_Of_Quicknotes">%1$d Notas Rápidas</string>
     <string name="QuickNotes_Screen_Text_Box_Add_QuickNote">Añadir Nota Rápida</string>
+    <string name="QuickNotes_Screen_Text_Text_SnackBar">Nota rápida eliminada</string>
+
 
     <!--Categories Screen -->
     <string name="Categories_Screen_Main_Text_No_Categories">Sin Categorías</string>
@@ -18,7 +20,11 @@
     <string name="Categories_Screen_Text_Box_Add_Category">Añadir Categoría</string>
 
     <!--QuickNote Dialog -->
-
+    <string name="QuickNote_Dialog_AlertDialog_Text_Title">Confirmar Borrado</string>
+    <string name="QuickNote_Dialog_TextButton_Close">Cerrar</string>
+    <string name="QuickNote_Dialog_AlertDialog_Text_Content">¿Estás seguro de que quieres borrar esta nota?</string>
+    <string name="QuickNote_Dialog_AlertDialog_Button_Delete">Borrar</string>
+    <string name="QuickNote_Dialog_AlertDialog_Button_Cancel">Cancelar</string>
 
     <!--CreateQuickNote Dialog -->
     <string name="CreateQuickNote_Dialog_Main_Text">Crear Nota Rápida</string>
@@ -26,7 +32,6 @@
     <string name="CreateQuickNote_Dialog_Text_Label_Content">Contenido</string>
     <string name="CreateQuickNote_Dialog_TextButton_Cancel">Cancelar</string>
     <string name="CreateQuickNote_Dialog_Button_Save">Guardar</string>
-    <string name="QuickNote_Dialog_TextButton_Close">Cerrar</string>
 
 
 </resources>

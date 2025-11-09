@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.burixer85.mynotesapp.R
@@ -50,35 +51,70 @@ fun CarryQuickNoteDialog(
     var isMainDialogVisible by remember { mutableStateOf(true) }
 
     if (isMainDialogVisible) {
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = Color(0xFF303030),
-            border = BorderStroke(1.dp, Color.White)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-
+        Dialog(onDismissRequest = onDismiss) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = Color(0xFF303030),
+                border = BorderStroke(1.dp, Color.White)
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = note.title,
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.White
-                    )
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = note.title,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(end = 40.dp),
+                                style = MaterialTheme.typography.titleSmall,
+                                color = Color.White,
+
+                                )
+                        }
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        Text(
+                            text = note.content,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.height(32.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.End
+                        ) {
+                            TextButton(onClick = onDismiss) {
+                                Text(
+                                    text = stringResource(R.string.QuickNote_Dialog_TextButton_Close),
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = MaterialTheme.colorScheme.primary,
+                                )
+                            }
+                        }
+                    }
+
                     Box(
                         modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(top = 16.dp, end = 16.dp)
                             .size(36.dp)
                             .clip(CircleShape)
                             .background(Color.Red)
-                            .clickable { showDeleteConfirmationDialog = true
-                                       isMainDialogVisible = false},
+                            .clickable {
+                                showDeleteConfirmationDialog = true
+                                isMainDialogVisible = false
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -88,44 +124,20 @@ fun CarryQuickNoteDialog(
                         )
                     }
                 }
-
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Text(
-                    text = note.content,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.White
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-
-                    TextButton(
-                        onClick = onDismiss
-                    ) {
-                        Text(
-                            text = stringResource(R.string.QuickNote_Dialog_TextButton_Close),
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.primary,
-                        )
-                    }
-
-                }
             }
         }
-    }
     }
     if (showDeleteConfirmationDialog) {
         AlertDialog(
             onDismissRequest = {},
-            title = { Text("Confirmar Borrado",style = MaterialTheme.typography.titleMedium,
-                color = Color.White) },
-            text = { Text("¿Estás seguro de que quieres borrar esta nota?") },
+            title = {
+                Text(
+                    stringResource(R.string.QuickNote_Dialog_AlertDialog_Text_Title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.White
+                )
+            },
+            text = { Text(stringResource(R.string.QuickNote_Dialog_AlertDialog_Text_Content)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -137,17 +149,19 @@ fun CarryQuickNoteDialog(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
-                    Text("Borrar")
+                    Text(stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Delete))
                 }
             },
             dismissButton = {
                 TextButton(
-                    onClick = { showDeleteConfirmationDialog = false
-                        isMainDialogVisible = true}
+                    onClick = {
+                        showDeleteConfirmationDialog = false
+                        isMainDialogVisible = true
+                    }
                 ) {
-                    Text("Cancelar")
+                    Text(stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Cancel))
                 }
-            },containerColor = Color(0xFF212121),
+            }, containerColor = Color(0xFF212121),
             titleContentColor = Color.White,
             textContentColor = Color.LightGray
         )

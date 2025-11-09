@@ -50,47 +50,20 @@ fun CarryCreateQuickNoteDialog(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                OutlinedTextField(
+                CarryTextField(
                     value = title,
                     onValueChange = { title = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Title))
-                    },
+                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Title),
                     singleLine = true,
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFF424242),
-                        unfocusedContainerColor = Color(0xFF424242),
-                        focusedIndicatorColor = Color.White,
-                        unfocusedIndicatorColor = Color.Gray,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedLabelColor = Color.Gray,
-                    )
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                OutlinedTextField(
+                CarryTextField(
                     value = content,
                     onValueChange = { content = it },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(120.dp),
-                    label = {
-                        Text(stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Content))
-                    },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFF424242),
-                        unfocusedContainerColor = Color(0xFF424242),
-                        focusedIndicatorColor = Color.White,
-                        unfocusedIndicatorColor = Color.Gray,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedLabelColor = Color.Gray,
-                    )
+                    height = 120.dp,
+                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Content),
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -101,8 +74,11 @@ fun CarryCreateQuickNoteDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text(stringResource(R.string.CreateQuickNote_Dialog_TextButton_Cancel),
-                            color = MaterialTheme.colorScheme.primary)
+                        Text(
+                            stringResource(R.string.CreateQuickNote_Dialog_TextButton_Cancel),
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -114,7 +90,10 @@ fun CarryCreateQuickNoteDialog(
                         },
                         enabled = isFormValid
                     ) {
-                        Text(stringResource(R.string.CreateQuickNote_Dialog_Button_Save))
+                        Text(
+                            text = stringResource(R.string.CreateQuickNote_Dialog_Button_Save),
+                            style = MaterialTheme.typography.labelLarge
+                        )
                     }
                 }
             }

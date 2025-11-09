@@ -3,6 +3,7 @@ package com.burixer85.mynotesapp.presentation
 import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 
@@ -11,6 +12,7 @@ import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -60,12 +62,21 @@ class QuickNotesScreenViewModel() : ViewModel() {
 
             _uiState.update { currentState ->
                 val updatedList = currentState.quickNotes.filter { it.id != note.id }
-                currentState.copy(quickNotes = updatedList)
+                currentState.copy(quickNotes = updatedList, isQuickNoteDeleted = true)
             }
+
         }
     }
+
+    fun quickNoteDeleted() {
+        _uiState.update { currentState ->
+            currentState.copy(isQuickNoteDeleted = false)
+        }
+    }
+
 }
 data class QuickNotesUI (
     val quickNotes: List<QuickNote> = emptyList(),
     val isLoading: Boolean = false,
+    val isQuickNoteDeleted: Boolean = false
 )
