@@ -52,6 +52,7 @@ fun QuickNotesScreen(
 ) {
     val uiState by quickNotesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
+
     var showCreateNoteDialog by remember { mutableStateOf(false) }
     var selectedNote by remember { mutableStateOf<QuickNote?>(null) }
 
@@ -89,6 +90,7 @@ fun QuickNotesScreen(
             CarryFloatingActionButton(onOptionSelected = { option ->
                 when (option) {
                     "quicknote" -> {
+                        selectedNote = null
                         showCreateNoteDialog = true
                     }
 
@@ -100,126 +102,145 @@ fun QuickNotesScreen(
         }
     ) { padding ->
 
-        if (!uiState.isLoading) {
-            Column(
-                Modifier
-                    .fillMaxSize()
-            ) {
-                Text(
-                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                    text = stringResource(R.string.Main_Screen_Text_Tittle),
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Box(
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+        ) {
+            if (!uiState.isLoading) {
+                Column(
                     Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
-
-                        .height(60.dp)
-                        .border(
-                            BorderStroke(2.dp, Color.White),
-                            shape = RoundedCornerShape(32.dp)
-                        )
-                        .background(
-                            color = Color(0xFF303030),
-                            shape = RoundedCornerShape(14.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+                        .fillMaxSize()
                 ) {
-
                     Text(
-                        text = stringResource(R.string.Main_Screen_Button_Achievements),
+                        modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                        text = stringResource(R.string.Main_Screen_Text_Tittle),
                         color = Color.White,
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.headlineSmall
                     )
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp)
 
-                }
-                Spacer(
-                    modifier = Modifier.padding(12.dp),
-                )
-                if (uiState.quickNotes.isNotEmpty()) {
-                    CarryAllQuickNotes(
-                        quickNotes = uiState.quickNotes,
-                        onQuickNoteClick = { quicknote ->
-                            selectedNote = quicknote
-                            showNoteDialog = true
-                        }
-                    )
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .padding(bottom = 32.dp)
-                        )
-
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(240.dp)
-                                .padding(12.dp)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .clickable(
-                                    onClick = { showCreateNoteDialog = true }
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            Text(
-                                text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelLarge,
+                            .height(60.dp)
+                            .border(
+                                BorderStroke(2.dp, Color.White),
+                                shape = RoundedCornerShape(32.dp)
                             )
-                        }
+                            .background(
+                                color = Color(0xFF303030),
+                                shape = RoundedCornerShape(14.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        Text(
+                            text = stringResource(R.string.Main_Screen_Button_Achievements),
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelLarge
+                        )
 
                     }
+                    Spacer(
+                        modifier = Modifier.padding(12.dp),
+                    )
+                    if (uiState.quickNotes.isNotEmpty()) {
+                        CarryAllQuickNotes(
+                            quickNotes = uiState.quickNotes,
+                            onQuickNoteClick = { quicknote ->
+                                selectedNote = quicknote
+                                showNoteDialog = true
+                            }
+                        )
+                    } else {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
+                                color = Color.White,
+                                style = MaterialTheme.typography.titleLarge,
+                                modifier = Modifier
+                                    .padding(bottom = 32.dp)
+                            )
+
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .height(240.dp)
+                                    .padding(12.dp)
+                                    .border(
+                                        BorderStroke(2.dp, Color.White),
+                                        shape = RoundedCornerShape(14.dp)
+                                    )
+                                    .background(
+                                        color = Color(0xFF303030),
+                                        shape = RoundedCornerShape(14.dp)
+                                    )
+                                    .clickable(
+                                        onClick = { showCreateNoteDialog = true }
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+
+                                Text(
+                                    text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
+                                    color = Color.White,
+                                    style = MaterialTheme.typography.labelLarge,
+                                )
+                            }
+
+                        }
+                    }
+                }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
-        } else {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
         }
-    }
 
 
-    if (showNoteDialog && selectedNote != null) {
-        CarryQuickNoteDialog(
-            note = selectedNote!!,
-            onDismiss = {
-                showNoteDialog = false
-                selectedNote = null
-            },
-            onDeleteConfirm = {
-                quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
-            }
-        )
-    }
-    if (showCreateNoteDialog) {
-        CarryCreateQuickNoteDialog(
-            onDismiss = { showCreateNoteDialog = false },
-            onConfirm = { newNote ->
-                quickNotesScreenViewModel.addQuickNote(newNote)
-                showCreateNoteDialog = false
-            }
-        )
+        if (showNoteDialog && selectedNote != null) {
+            CarryQuickNoteDialog(
+                note = selectedNote!!,
+                onDismiss = {
+                    showNoteDialog = false
+                    selectedNote = null
+                },
+                onEdit = {
+                    showNoteDialog = false
+                    showCreateNoteDialog = true
+                },
+                onDeleteConfirm = {
+                    quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
+                }
+            )
+        }
+        if (showCreateNoteDialog) {
+            CarryCreateQuickNoteDialog(
+                noteToEdit = selectedNote,
+                onDismiss = {
+                    showCreateNoteDialog = false
+                    selectedNote = null
+                },
+                onConfirm = { note ->
+                    if (selectedNote != null) {
+                        quickNotesScreenViewModel.updateQuickNote(note)
+                    } else {
+                        quickNotesScreenViewModel.addQuickNote(note)
+                    }
+                    showCreateNoteDialog = false
+                    selectedNote = null
+                }
+            )
+        }
     }
 }

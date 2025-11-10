@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,6 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -44,6 +48,7 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 fun CarryQuickNoteDialog(
     note: QuickNote,
     onDismiss: () -> Unit,
+    onEdit: () -> Unit,
     onDeleteConfirm: () -> Unit
 ) {
     var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
@@ -92,15 +97,53 @@ fun CarryQuickNoteDialog(
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.End
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            TextButton(onClick = onDismiss) {
-                                Text(
-                                    text = stringResource(R.string.QuickNote_Dialog_TextButton_Close),
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = MaterialTheme.colorScheme.primary,
+                            Row(
+                                modifier = Modifier.clickable { onEdit() },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Edit,
+                                    contentDescription = "ugu",
+                                    tint = Color(0xFF64B5F6)
                                 )
+                                TextButton(
+                                    onClick = onEdit, colors = ButtonDefaults.textButtonColors(
+                                        contentColor = Color(0xFF64B5F6)
+                                    ),
+                                    contentPadding = PaddingValues(6.dp)
+
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.QuickNote_Dialog_TextButton_Edit),
+                                        style = MaterialTheme.typography.labelMedium,
+                                    )
+                                }
+
                             }
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    contentDescription = "gas",
+                                    tint = Color(0xFFFF7043)
+                                )
+                                TextButton(
+                                    onClick = onDismiss, colors = ButtonDefaults.textButtonColors(
+                                        contentColor = Color(0xFFFF7043)
+                                    ),
+                                    contentPadding = PaddingValues(6.dp)
+
+                                ) {
+                                    Text(
+                                        text = stringResource(R.string.QuickNote_Dialog_TextButton_Close),
+                                        style = MaterialTheme.typography.labelMedium,
+                                    )
+                                }
+                            }
+
                         }
                     }
 

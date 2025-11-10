@@ -1,8 +1,13 @@
 package com.burixer85.mynotesapp.presentation.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
@@ -19,13 +24,26 @@ import com.burixer85.mynotesapp.R
 
 @Composable
 fun CarryCreateQuickNoteDialog(
+    noteToEdit: QuickNote? = null,
     onDismiss: () -> Unit,
     onConfirm: (QuickNote) -> Unit
 ) {
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
-    val isFormValid by remember { derivedStateOf { title.isNotBlank() && content.isNotBlank() } }
+    var title by remember(noteToEdit) { mutableStateOf(noteToEdit?.title ?: "") }
+    var content by remember(noteToEdit) { mutableStateOf(noteToEdit?.content ?: "") }
 
+    val isFormValid by remember(title, content, noteToEdit) {
+        derivedStateOf {
+            val titleIsNotBlank = title.isNotBlank()
+            val contentIsNotBlank = content.isNotBlank()
+
+            if (noteToEdit == null) {
+                titleIsNotBlank && contentIsNotBlank
+            } else {
+                val hasChanges = title != noteToEdit.title || content != noteToEdit.content
+                titleIsNotBlank && contentIsNotBlank && hasChanges
+            }
+        }
+    }
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
@@ -70,30 +88,80 @@ fun CarryCreateQuickNoteDialog(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    TextButton(onClick = onDismiss) {
-                        Text(
-                            stringResource(R.string.CreateQuickNote_Dialog_TextButton_Cancel),
-                            color = MaterialTheme.colorScheme.primary,
-                            style = MaterialTheme.typography.labelLarge
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = Color(0xFFFF7043)
                         )
+
+                        TextButton(
+                            onClick = onDismiss, colors = ButtonDefaults.textButtonColors(
+                                contentColor = Color(0xFFFF7043)
+                            ),
+                            contentPadding = PaddingValues(6.dp)
+
+                        ) {
+                            Text(
+                                stringResource(R.string.CreateQuickNote_Dialog_TextButton_Cancel),
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
+                    }
+                    val isEditing = noteToEdit != null
+                    val buttonText = if (isEditing) {
+                        stringResource(R.string.CreateQuickNote_Dialog_Button_Update)
+                    } else {
+                        stringResource(R.string.CreateQuickNote_Dialog_Button_Save)
                     }
 
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Button(
-                        onClick = {
-                            val newNote = QuickNote(title = title, content = content)
-                            onConfirm(newNote)
-                        },
-                        enabled = isFormValid
+                    val buttonColor = if (isEditing) {
+                        Color(0xFF2196F3)
+                    } else {
+                        Color(0xFF64B5F6)
+                    }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            text = stringResource(R.string.CreateQuickNote_Dialog_Button_Save),
-                            style = MaterialTheme.typography.labelLarge
+                        val iconColor = if (isFormValid) {
+                            Color(0xFF64B5F6)
+                        } else {
+                            Color.Gray
+                        }
+                        Icon(
+                            imageVector = Icons.Default.Save,
+                            contentDescription = buttonText,
+                            tint = iconColor
                         )
+
+                        TextButton(
+                            onClick = {
+                                val finalNote = noteToEdit?.copy(
+                                    title = title,
+                                    content = content
+                                ) ?: QuickNote(
+                                    title = title,
+                                    content = content
+                                )
+                                onConfirm(finalNote)
+                            },
+                            enabled = isFormValid,
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = buttonColor,
+                                disabledContentColor = Color.Gray
+                            ),
+                            contentPadding = PaddingValues(6.dp)
+
+                        ) {
+                            Text(
+                                text = buttonText,
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
                     }
                 }
             }

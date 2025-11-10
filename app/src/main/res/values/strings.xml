@@ -22,6 +22,7 @@
     <!--QuickNote Dialog -->
     <string name="QuickNote_Dialog_AlertDialog_Text_Title">Confirmar Borrado</string>
     <string name="QuickNote_Dialog_TextButton_Close">Cerrar</string>
+    <string name="QuickNote_Dialog_TextButton_Edit">Editar</string>
     <string name="QuickNote_Dialog_AlertDialog_Text_Content">¿Estás seguro de que quieres borrar esta nota?</string>
     <string name="QuickNote_Dialog_AlertDialog_Button_Delete">Borrar</string>
     <string name="QuickNote_Dialog_AlertDialog_Button_Cancel">Cancelar</string>
@@ -32,6 +33,7 @@
     <string name="CreateQuickNote_Dialog_Text_Label_Content">Contenido</string>
     <string name="CreateQuickNote_Dialog_TextButton_Cancel">Cancelar</string>
     <string name="CreateQuickNote_Dialog_Button_Save">Guardar</string>
+    <string name="CreateQuickNote_Dialog_Button_Update">Actualizar</string>
 
 
 </resources>
