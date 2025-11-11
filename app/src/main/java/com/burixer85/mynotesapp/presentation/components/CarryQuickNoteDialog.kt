@@ -105,7 +105,7 @@ fun CarryQuickNoteDialog(
                             ) {
                                 Icon(
                                     Icons.Default.Edit,
-                                    contentDescription = "ugu",
+                                    contentDescription = "Editar",
                                     tint = Color(0xFF64B5F6)
                                 )
                                 TextButton(
@@ -127,7 +127,7 @@ fun CarryQuickNoteDialog(
                             ) {
                                 Icon(
                                     Icons.Default.Close,
-                                    contentDescription = "gas",
+                                    contentDescription = "Cerrar",
                                     tint = Color(0xFFFF7043)
                                 )
                                 TextButton(
@@ -180,31 +180,48 @@ fun CarryQuickNoteDialog(
                     color = Color.White
                 )
             },
-            text = { Text(stringResource(R.string.QuickNote_Dialog_AlertDialog_Text_Content)) },
+            text = {
+                Text(
+                    stringResource(R.string.QuickNote_Dialog_AlertDialog_Text_Content),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color.LightGray
+                )
+            },
+
             confirmButton = {
-                Button(
-                    onClick = {
-                        showDeleteConfirmationDialog = false
-                        onDeleteConfirm()
-                        onDismiss()
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Delete))
+                    TextButton(
+                        onClick = {
+                            showDeleteConfirmationDialog = false
+                            isMainDialogVisible = true
+                        }
+                    ) {
+                        Text(
+                            stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Cancel),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+
+                    TextButton(
+                        onClick = {
+                            showDeleteConfirmationDialog = false
+                            onDeleteConfirm()
+                            onDismiss()
+                        }
+                    ) {
+                        Text(
+                            stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Delete),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
                 }
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDeleteConfirmationDialog = false
-                        isMainDialogVisible = true
-                    }
-                ) {
-                    Text(stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Cancel))
-                }
-            }, containerColor = Color(0xFF212121),
+            containerColor = Color(0xFF2C2C2C),
             titleContentColor = Color.White,
             textContentColor = Color.LightGray
         )
