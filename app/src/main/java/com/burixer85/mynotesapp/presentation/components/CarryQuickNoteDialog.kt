@@ -70,30 +70,39 @@ fun CarryQuickNoteDialog(
                             .fillMaxWidth()
                             .padding(24.dp)
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                        if (note.title.isNotEmpty()) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = note.title,
+                                    modifier = Modifier
+                                        .padding(end = 40.dp),
+                                    style = MaterialTheme.typography.titleSmall,
+                                    color = Color.White,
+
+                                    )
+                            }
+
+                            Spacer(modifier = Modifier.height(32.dp))
+
                             Text(
-                                text = note.title,
+                                text = note.content,
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White
+                            )
+
+                        }else{
+                            Text(
+                                text = note.content,
                                 modifier = Modifier
-                                    .weight(1f)
                                     .padding(end = 40.dp),
-                                style = MaterialTheme.typography.titleSmall,
-                                color = Color.White,
-
-                                )
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = Color.White)
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                        Spacer(modifier = Modifier.height(32.dp))
-
-                        Text(
-                            text = note.content,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.White
-                        )
-
-                        Spacer(modifier = Modifier.height(32.dp))
 
                         Row(
                             modifier = Modifier.fillMaxWidth(),

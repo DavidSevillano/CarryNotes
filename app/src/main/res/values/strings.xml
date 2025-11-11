@@ -34,6 +34,7 @@
     <string name="CreateQuickNote_Dialog_TextButton_Cancel">Cancelar</string>
     <string name="CreateQuickNote_Dialog_Button_Save">Guardar</string>
     <string name="CreateQuickNote_Dialog_Button_Update">Actualizar</string>
+    <string name="CreateQuickNote_Dialog_Text_Label_Add_Title">Añadir título</string>
 
 
 </resources>

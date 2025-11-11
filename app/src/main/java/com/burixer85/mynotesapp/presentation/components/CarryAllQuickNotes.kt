@@ -26,6 +26,7 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
@@ -60,10 +61,12 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                 .border(
                                     BorderStroke(2.dp, Color.White),
                                     shape = RoundedCornerShape(14.dp)
-                                ).background(
+                                )
+                                .background(
                                     color = Color(0xFF303030),
                                     shape = RoundedCornerShape(14.dp)
-                                ).clickable(
+                                )
+                                .clickable(
                                     onClick = {
                                         onQuickNoteClick(quickNote)
                                     }
@@ -74,13 +77,26 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                     .align(Alignment.Center)
                                     .padding(8.dp)
                             ) {
-                                Text(
-                                    text = quickNote.title,
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
+                                if (quickNote.title.isNotEmpty()) {
+                                    Text(
+                                        text = quickNote.title,
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            textDecoration = TextDecoration.Underline
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                else{
+                                    Text(
+                                        text = quickNote.content,
+                                        color = Color.White,
+                                        style = MaterialTheme.typography.labelLarge,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
                                 Spacer(modifier = Modifier.height(8.dp))
 
                             }

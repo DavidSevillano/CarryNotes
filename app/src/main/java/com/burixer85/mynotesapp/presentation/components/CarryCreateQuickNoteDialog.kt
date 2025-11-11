@@ -1,5 +1,9 @@
 package com.burixer85.mynotesapp.presentation.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,27 +32,30 @@ fun CarryCreateQuickNoteDialog(
     onDismiss: () -> Unit,
     onConfirm: (QuickNote) -> Unit
 ) {
+
+    var isTitleEnabled by remember { mutableStateOf(noteToEdit?.title?.isNotBlank() ?: false) }
     var title by remember(noteToEdit) { mutableStateOf(noteToEdit?.title ?: "") }
     var content by remember(noteToEdit) { mutableStateOf(noteToEdit?.content ?: "") }
 
-    val isFormValid by remember(title, content, noteToEdit) {
+    val isFormValid by remember(title, content, noteToEdit, isTitleEnabled) {
         derivedStateOf {
-            val titleIsNotBlank = title.isNotBlank()
             val contentIsNotBlank = content.isNotBlank()
 
-            if (noteToEdit == null) {
-                titleIsNotBlank && contentIsNotBlank
+            val titleIsValid = if (isTitleEnabled) title.isNotBlank() else true
+
+            val hasChanges = if (noteToEdit != null) {
+                (if (isTitleEnabled) title else "") != noteToEdit.title || content != noteToEdit.content
             } else {
-                val hasChanges = title != noteToEdit.title || content != noteToEdit.content
-                titleIsNotBlank && contentIsNotBlank && hasChanges
+                true
             }
+
+            contentIsNotBlank && titleIsValid && hasChanges
         }
     }
+
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnClickOutside = false
-        )
+        properties = DialogProperties(dismissOnClickOutside = false)
     ) {
         Surface(
             shape = RoundedCornerShape(16.dp),
@@ -68,12 +75,48 @@ fun CarryCreateQuickNoteDialog(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                CarryTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Title),
-                    singleLine = true,
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Add_Title),
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Switch(
+                        checked = isTitleEnabled,
+                        onCheckedChange = { isEnabled ->
+                            isTitleEnabled = isEnabled
+                            if (!isEnabled) {
+                                title = ""
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.primary,
+                            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = isTitleEnabled,
+                    enter = slideInVertically(initialOffsetY = { -it }),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 200))
+                ) {
+                    Column {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        CarryTextField(
+                            value = title,
+                            onValueChange = { title = it },
+                            label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Title),
+                            singleLine = true,
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -112,6 +155,7 @@ fun CarryCreateQuickNoteDialog(
                             )
                         }
                     }
+
                     val isEditing = noteToEdit != null
                     val buttonText = if (isEditing) {
                         stringResource(R.string.CreateQuickNote_Dialog_Button_Update)
@@ -127,11 +171,7 @@ fun CarryCreateQuickNoteDialog(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        val iconColor = if (isFormValid) {
-                            Color(0xFF64B5F6)
-                        } else {
-                            Color.Gray
-                        }
+                        val iconColor = if (isFormValid) buttonColor else Color.Gray
                         Icon(
                             imageVector = Icons.Default.Save,
                             contentDescription = buttonText,
@@ -140,11 +180,12 @@ fun CarryCreateQuickNoteDialog(
 
                         TextButton(
                             onClick = {
+                                val finalTitle = if (isTitleEnabled) title else ""
                                 val finalNote = noteToEdit?.copy(
-                                    title = title,
+                                    title = finalTitle,
                                     content = content
                                 ) ?: QuickNote(
-                                    title = title,
+                                    title = finalTitle,
                                     content = content
                                 )
                                 onConfirm(finalNote)
