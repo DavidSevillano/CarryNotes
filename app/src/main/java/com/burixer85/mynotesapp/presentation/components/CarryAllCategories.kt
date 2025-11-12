@@ -3,6 +3,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -33,50 +34,47 @@ fun CarryAllCategories(categories: List<Category>) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            items(categories.chunked(2)) { pair ->
+            items(categories) { category ->
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    pair.forEach { category ->
-                        Box(
-                            Modifier
-                                .height(120.dp)
-                                .weight(1f)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                ).background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
+                    Box(
+                        Modifier
+                            .height(80.dp)
+                            .weight(1f)
+                            .border(
+                                BorderStroke(2.dp, Color.White),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                            .background(
+                                color = Color(0xFF303030),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.Center)
+                                .padding(horizontal = 16.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Column(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .padding(8.dp)
-                            ) {
-                                Text(
-                                    text = category.title,
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.labelLarge,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = "${category.notes.size} notas",
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.labelMedium,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                )
-                            }
+                            Text(
+                                text = category.title,
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelLarge,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.weight(1f, fill = false)
+                            )
+                            Text(
+                                text = "${category.notes.size} notas",
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelMedium,
+                            )
                         }
-                    }
-                    if (pair.size == 1) {
-                        Spacer(modifier = Modifier.weight(1f))
                     }
                 }
             }

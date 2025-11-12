@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
+import com.burixer85.mynotesapp.presentation.model.Category
+import com.burixer85.mynotesapp.presentation.model.Note
 
 import com.burixer85.mynotesapp.presentation.model.QuickNote
 import com.burixer85.mynotesapp.presentation.model.toEntity
@@ -24,7 +26,6 @@ class QuickNotesScreenViewModel() : ViewModel() {
     init {
         loadInitialQuickNotes()
     }
-
     private fun loadInitialQuickNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
@@ -90,6 +91,8 @@ class QuickNotesScreenViewModel() : ViewModel() {
     }
 
 }
+
+
 data class QuickNotesUI (
     val quickNotes: List<QuickNote> = emptyList(),
     val isLoading: Boolean = false,

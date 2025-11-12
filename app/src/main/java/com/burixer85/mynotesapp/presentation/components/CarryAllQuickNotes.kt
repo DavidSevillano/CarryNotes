@@ -90,8 +90,7 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                 }
                                 else{
                                     Text(
-                                        text = quickNote.content,
-                                        color = Color.White,
+                                        text = quickNote.content.replace("\n", " "),                                        color = Color.White,
                                         style = MaterialTheme.typography.labelLarge,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis

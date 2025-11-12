@@ -87,7 +87,7 @@ fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesSc
             Spacer(
                 modifier = Modifier.padding(12.dp),
             )
-            if (uiState.categories.isEmpty()) {
+            if (uiState.categories.isNotEmpty()) {
                 CarryAllCategories(uiState.categories)
             } else {
                 Column(

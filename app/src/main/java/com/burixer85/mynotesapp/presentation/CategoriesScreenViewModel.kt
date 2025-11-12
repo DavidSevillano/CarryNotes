@@ -11,6 +11,7 @@ import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class CategoriesScreenViewModel() : ViewModel(){
@@ -20,44 +21,65 @@ class CategoriesScreenViewModel() : ViewModel(){
     // Prueba, no estará para la aplicación final
 
     init {
+        loadCategories()
+    }
+
+    private fun loadCategories() {
         viewModelScope.launch(Dispatchers.IO) {
 
-            val existingCategores = RoomApplication.db.categoryDao().getAllCategories()
-            if (existingCategores.isEmpty()) {
-                val notes = listOf(Note(1, "Primera nota", "Contenido de la primera nota"),
-                    Note(2, "Segunda nota", "Contenido de la segunda nota"),
-                    Note(3, "Tercera nota", "Contenido de la tercera nota"))
-                val notes2 = listOf(Note(4, "Cuarta nota", "Contenido de la cuarta nota"),
-                    Note(5, "Quinta nota", "Contenido de la quinta nota"),
-                    Note(6, "Sexta nota", "Contenido de la sexta nota"))
-                val categories = listOf(Category(1, "Cumpleaños", notes), Category(2, "Recetas", notes2))
+            _uiState.update { it.copy(isLoading = true) }
 
-                val categoryEntities = categories.map { it.toEntity() }
-                categoryEntities.forEach { RoomApplication.db.categoryDao().insertCategory(it) }
 
-                categories.forEach { category ->
-                    category.notes.forEach { note ->
-                        val noteEntity = note.toEntity(categoryId = category.id)
-                        RoomApplication.db.noteDao().insertNote(noteEntity)
-                    }
+            val categoriesFromDb = RoomApplication.db.categoryDao().getAllCategories()
+                .map { category ->
+                    category.toPresentation()
+                }
+
+            if (categoriesFromDb.isEmpty()) {
+                addMockDataAndReload()
+            } else {
+                _uiState.update {
+                    it.copy(
+                        categories = categoriesFromDb,
+                        isLoading = false
+                    )
                 }
             }
-            val categoriesFromDb = RoomApplication.db.categoryDao().getAllCategories()
-            val notesFromDb = RoomApplication.db.noteDao().getAllNotes()
+        }
+    }
 
-            val categoriesForUi = categoriesFromDb.map { categoryEntity ->
-                val notesForThisCategory = notesFromDb
-                    .filter { noteEntity -> noteEntity.categoryId == categoryEntity.id }
-                    .map { it.toPresentation() }
-                categoryEntity.toPresentation().copy(notes = notesForThisCategory)
+    private fun addMockDataAndReload() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val notes = listOf(
+                Note(title = "1", content = "Contenido de la nota 1"),
+                Note(title = "2", content = "Contenido de la nota 2"),
+                Note(title = "3", content = "Contenido de la nota 3")
+            )
+            val notes2 = listOf(
+                Note(title = "1", content = "Contenido de otra nota 1"),
+                Note(title = "2", content = "Contenido de otra nota 2"),
+                Note(title = "3", content = "Contenido de otra nota 3")
+            )
+            val categories = listOf(
+                Category(id = 1, title = "Cumpleaños", notes = notes),
+                Category(id = 2, title = "Recetas", notes = notes2)
+            )
+
+            categories.forEach { category ->
+                RoomApplication.db.categoryDao().insertCategory(category.toEntity())
             }
 
-            _uiState.value = CategoriesScreenUI(
-                categories = categoriesForUi
-            )
+            categories.forEach { category ->
+                category.notes.forEach { note ->
+                    val noteEntity = note.toEntity(categoryId = category.id)
+                    RoomApplication.db.noteDao().insertNote(noteEntity)
+                }
+            }
+            loadCategories()
         }
     }
 }
+
 data class CategoriesScreenUI (
     val notes: List<Note> = emptyList(),
     val categories: List<Category> = emptyList(),
