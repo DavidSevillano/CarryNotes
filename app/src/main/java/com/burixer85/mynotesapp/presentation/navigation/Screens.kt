@@ -7,3 +7,6 @@ object QuickNotesRoute
 
 @Serializable
 object CategoriesRoute
+
+@Serializable
+data class NotesRoute(val categoryId: Int, val categoryName: String)

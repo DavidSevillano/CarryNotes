@@ -47,17 +47,17 @@ import com.burixer85.mynotesapp.R
 
 @Composable
 fun CarryFloatingActionButton(
+    modifier: Modifier = Modifier,
     onOptionSelected: (String) -> Unit
 ) {
     var showMenu by remember { mutableStateOf(false) }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .wrapContentSize(Alignment.TopStart)
 
     ) {
         FloatingActionButton(
-            modifier = Modifier.padding(16.dp),
             onClick = {
                 showMenu = true
             }

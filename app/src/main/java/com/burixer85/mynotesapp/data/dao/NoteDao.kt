@@ -9,8 +9,9 @@ import com.burixer85.mynotesapp.data.entity.NoteEntity
 
 @Dao
 interface NoteDao {
-    @Query("SELECT * FROM notes")
-    suspend fun getAllNotes(): List<NoteEntity>
+
+    @Query("SELECT * FROM notes WHERE categoryId = :categoryId")
+    suspend fun getNotesByCategoryId(categoryId: Int): List<NoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNote(note: NoteEntity)

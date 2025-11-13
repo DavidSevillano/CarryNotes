@@ -39,37 +39,42 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
+import com.burixer85.mynotesapp.presentation.components.CarryAllNotes
 import com.burixer85.mynotesapp.presentation.components.CarryAllQuickNotes
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryQuickNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
+import com.burixer85.mynotesapp.presentation.model.Note
 import com.burixer85.mynotesapp.presentation.model.QuickNote
 import kotlinx.coroutines.launch
 
 @Composable
-fun QuickNotesScreen(
+fun NotesScreen(
     scaffoldPadding: PaddingValues,
-    quickNotesScreenViewModel: QuickNotesScreenViewModel = viewModel()
+    categoryName: String,
+    notesScreenViewModel: NotesScreenViewModel = viewModel(),
+    onNavigateUp: () -> Unit
 ) {
-    val uiState by quickNotesScreenViewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
 
     var showCreateNoteDialog by remember { mutableStateOf(false) }
-    var selectedNote by remember { mutableStateOf<QuickNote?>(null) }
+    var selectedNote by remember { mutableStateOf<Note?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
 
-    LaunchedEffect(uiState.isQuickNoteDeleted) {
-        if (uiState.isQuickNoteDeleted) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(R.string.QuickNotes_Screen_Text_Text_SnackBar),
-                duration = SnackbarDuration.Short
-            )
-            quickNotesScreenViewModel.quickNoteDeleted()
-        }
-    }
+//    LaunchedEffect(uiState.isQuickNoteDeleted) {
+//        if (uiState.isQuickNoteDeleted) {
+//            snackbarHostState.showSnackbar(
+//                message = context.getString(R.string.Notes_Screen_Text_Text_SnackBar),
+//                duration = SnackbarDuration.Short
+//            )
+//            NotesScreenViewModel.NoteDeleted()
+//        }
+//    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier.fillMaxSize(),
@@ -132,11 +137,12 @@ fun QuickNotesScreen(
                         Spacer(
                             modifier = Modifier.padding(12.dp),
                         )
-                        if (uiState.quickNotes.isNotEmpty()) {
-                            CarryAllQuickNotes(
-                                quickNotes = uiState.quickNotes,
-                                onQuickNoteClick = { quicknote ->
-                                    selectedNote = quicknote
+                        if (uiState.notes.isNotEmpty()) {
+                            CarryAllNotes(
+                                notes = uiState.notes,
+                                categoryName = categoryName,
+                                onNoteClick = { note ->
+                                    selectedNote = note
                                     showNoteDialog = true
                                 }
                             )
@@ -146,7 +152,8 @@ fun QuickNotesScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
+                                    //text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
+                                    text = "Sin notas",
                                     color = Color.White,
                                     style = MaterialTheme.typography.titleLarge,
                                     modifier = Modifier
@@ -173,7 +180,8 @@ fun QuickNotesScreen(
                                 ) {
 
                                     Text(
-                                        text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
+                                        //text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
+                                        text = "Toca para añadir una nota",
                                         color = Color.White,
                                         style = MaterialTheme.typography.labelLarge,
                                     )
@@ -182,52 +190,18 @@ fun QuickNotesScreen(
                             }
                         }
                     }
-                } else {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+//            } else {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .padding(padding),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    CircularProgressIndicator()
+//                }
+//            }
                 }
-            }
 
-
-            if (showNoteDialog && selectedNote != null) {
-                CarryQuickNoteDialog(
-                    note = selectedNote!!,
-                    onDismiss = {
-                        showNoteDialog = false
-                        selectedNote = null
-                    },
-                    onEdit = {
-                        showNoteDialog = false
-                        showCreateNoteDialog = true
-                    },
-                    onDeleteConfirm = {
-                        quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
-                    }
-                )
-            }
-            if (showCreateNoteDialog) {
-                CarryCreateQuickNoteDialog(
-                    noteToEdit = selectedNote,
-                    onDismiss = {
-                        showCreateNoteDialog = false
-                        selectedNote = null
-                    },
-                    onConfirm = { note ->
-                        if (selectedNote != null) {
-                            quickNotesScreenViewModel.updateQuickNote(note)
-                        } else {
-                            quickNotesScreenViewModel.addQuickNote(note)
-                        }
-                        showCreateNoteDialog = false
-                        selectedNote = null
-                    }
-                )
             }
         }
         CarryFloatingActionButton(
@@ -248,6 +222,4 @@ fun QuickNotesScreen(
                 }
             })
     }
-
-
 }

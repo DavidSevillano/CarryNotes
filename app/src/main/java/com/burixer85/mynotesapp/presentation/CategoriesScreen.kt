@@ -5,8 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,105 +30,121 @@ import com.burixer85.mynotesapp.presentation.components.CarryAllCategories
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 
 @Composable
-fun CategoriesScreen(modifier: Modifier, categoriesScreenViewModel: CategoriesScreenViewModel = viewModel ()) {
+fun CategoriesScreen(
+    scaffoldPadding: PaddingValues,
+    categoriesScreenViewModel: CategoriesScreenViewModel = viewModel(),
+    onCategoryClick: (categoryId: Int, categoryName: String) -> Unit
+) {
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        modifier = modifier,
-        contentWindowInsets = WindowInsets(
-            0,
-            0,
-            0,
-            0
-        ), //Permite que no se transforme al minimizarla
-        containerColor = Color(0xFF212121),
-        floatingActionButton = {
-            CarryFloatingActionButton(onOptionSelected = { option ->
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            contentWindowInsets = WindowInsets(
+                0,
+                0,
+                0,
+                0
+            ), //Permite que no se transforme al minimizarla
+            containerColor = Color(0xFF212121),
+        ) { padding ->
+            Column(Modifier.padding(scaffoldPadding)) {
+                Text(
+                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                    text = stringResource(R.string.Main_Screen_Text_Tittle),
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+
+                        .height(60.dp)
+                        .border(
+                            BorderStroke(2.dp, Color.White),
+                            shape = RoundedCornerShape(32.dp)
+                        )
+                        .background(
+                            color = Color(0xFF303030),
+                            shape = RoundedCornerShape(14.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Text(
+                        text = stringResource(R.string.Main_Screen_Button_Achievements),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+
+                }
+                Spacer(
+                    modifier = Modifier.padding(12.dp),
+                )
+                if (uiState.categories.isNotEmpty()) {
+                    CarryAllCategories(
+                        categories = uiState.categories,
+                        onCategoryClick = { category ->
+                            onCategoryClick(category.id, category.name)
+                        })
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = stringResource(R.string.Categories_Screen_Main_Text_No_Categories),
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(bottom = 32.dp)
+                        )
+
+                        Box(
+                            Modifier
+                                .fillMaxWidth()
+                                .height(240.dp)
+                                .padding(12.dp)
+                                .border(
+                                    BorderStroke(2.dp, Color.White),
+                                    shape = RoundedCornerShape(14.dp)
+                                )
+                                .background(
+                                    color = Color(0xFF303030),
+                                    shape = RoundedCornerShape(14.dp)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            Text(
+                                text = stringResource(R.string.Categories_Screen_Text_Box_Add_Category),
+                                color = Color.White,
+                                style = MaterialTheme.typography.labelLarge,
+                            )
+                        }
+
+                    }
+                }
+            }
+        }
+        CarryFloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(scaffoldPadding)
+                .padding(16.dp),
+            onOptionSelected = { option ->
                 when (option) {
                     "quicknote" -> {
                         //TODO: Implementar lógica para añadir una quicknote
                     }
+
                     "category" -> {
                         //TODO: Implementar lógica para añadir una category
                     }
                 }
-            })
-        }
-    ) { padding ->
-        Column(Modifier.padding(padding)) {
-            Text(
-                modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                text = stringResource(R.string.Main_Screen_Text_Tittle),
-                color = Color.White,
-                style = MaterialTheme.typography.headlineSmall
-            )
-            Box(
-                Modifier.fillMaxWidth()
-                    .padding(24.dp)
-
-                    .height(60.dp)
-                    .border(
-                        BorderStroke(2.dp, Color.White),
-                        shape = RoundedCornerShape(32.dp)
-                    )
-                    .background(
-                        color = Color(0xFF303030),
-                        shape = RoundedCornerShape(14.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Text(
-                    text = stringResource(R.string.Main_Screen_Button_Achievements),
-                    color = Color.White,
-                    style = MaterialTheme.typography.labelLarge
-                )
-
             }
-            Spacer(
-                modifier = Modifier.padding(12.dp),
-            )
-            if (uiState.categories.isNotEmpty()) {
-                CarryAllCategories(uiState.categories)
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = stringResource(R.string.Categories_Screen_Main_Text_No_Categories),
-                        color = Color.White,
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier
-                            .padding(bottom = 32.dp)
-                    )
-
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(240.dp)
-                            .padding(12.dp)
-                            .border(
-                                BorderStroke(2.dp, Color.White),
-                                shape = RoundedCornerShape(14.dp)
-                            )
-                            .background(
-                                color = Color(0xFF303030),
-                                shape = RoundedCornerShape(14.dp)
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-
-                        Text(
-                            text = stringResource(R.string.Categories_Screen_Text_Box_Add_Category),
-                            color = Color.White,
-                            style = MaterialTheme.typography.labelLarge,
-                        )
-                    }
-
-                }
-            }
-        }
+        )
     }
 }

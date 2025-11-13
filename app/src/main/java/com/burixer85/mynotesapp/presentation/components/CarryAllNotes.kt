@@ -22,7 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.burixer85.mynotesapp.presentation.model.QuickNote
+import com.burixer85.mynotesapp.presentation.model.Note
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
@@ -30,13 +30,13 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
-fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote) -> Unit) {
+fun CarryAllNotes(notes: List<Note>, categoryName: String, onNoteClick: (Note) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "${quickNotes.size} notas rápidas",
+            text = categoryName,
             color = Color.White,
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier
@@ -48,12 +48,12 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            items(quickNotes.chunked(2)) { pair ->
+            items(notes.chunked(2)) { pair ->
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    pair.forEach { quickNote ->
+                    pair.forEach { note ->
                         Box(
                             Modifier
                                 .height(120.dp)
@@ -68,7 +68,7 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                 )
                                 .clickable(
                                     onClick = {
-                                        onQuickNoteClick(quickNote)
+                                        onNoteClick(note)
                                     }
                                 )
                         ) {
@@ -77,9 +77,9 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                     .align(Alignment.Center)
                                     .padding(8.dp)
                             ) {
-                                if (quickNote.title.isNotEmpty()) {
+                                if (note.title.isNotEmpty()) {
                                     Text(
-                                        text = quickNote.title,
+                                        text = note.title,
                                         color = Color.White,
                                         style = MaterialTheme.typography.labelLarge,
                                         maxLines = 1,
@@ -87,7 +87,7 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                     )
                                 } else {
                                     Text(
-                                        text = quickNote.content.replace("\n", " "),
+                                        text = note.content.replace("\n", " "),
                                         color = Color.White,
                                         style = MaterialTheme.typography.labelLarge.copy(
                                             textDecoration = TextDecoration.Underline

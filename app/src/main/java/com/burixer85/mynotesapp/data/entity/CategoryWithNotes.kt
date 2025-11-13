@@ -17,7 +17,7 @@ data class CategoryWithNotes(
 fun CategoryWithNotes.toPresentation(): Category {
     return Category(
         id = this.category.id,
-        title = this.category.title,
+        name = this.category.name,
         notes = this.notes.map { noteEntity ->
             noteEntity.toPresentation()
         }

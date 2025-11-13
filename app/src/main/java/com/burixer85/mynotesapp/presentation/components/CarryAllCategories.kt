@@ -1,7 +1,9 @@
 package com.burixer85.mynotesapp.presentation.components
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.burixer85.mynotesapp.presentation.model.Category
 
 @Composable
-fun CarryAllCategories(categories: List<Category>) {
+fun CarryAllCategories(categories: List<Category>, onCategoryClick: (Category) -> Unit) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -49,9 +51,10 @@ fun CarryAllCategories(categories: List<Category>) {
                                 shape = RoundedCornerShape(14.dp)
                             )
                             .background(
-                                color = Color(0xFF303030),
+                                color = Color(0xFaF303030),
                                 shape = RoundedCornerShape(14.dp)
                             )
+                            .clickable { onCategoryClick(category) }
                     ) {
                         Row(
                             modifier = Modifier
@@ -62,7 +65,7 @@ fun CarryAllCategories(categories: List<Category>) {
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = category.title,
+                                text = category.name,
                                 color = Color.White,
                                 style = MaterialTheme.typography.labelLarge,
                                 maxLines = 1,

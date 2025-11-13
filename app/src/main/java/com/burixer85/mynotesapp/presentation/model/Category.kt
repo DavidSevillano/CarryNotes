@@ -4,13 +4,13 @@ import com.burixer85.mynotesapp.data.entity.CategoryEntity
 
 data class Category(
     val id: Int = 0,
-    val title: String,
+    val name: String,
     val notes: List<Note>
 )
 
 fun Category.toEntity() = CategoryEntity(
     id = id,
-    title = title
+    name = name
 )
 
 

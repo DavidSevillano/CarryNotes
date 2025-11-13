@@ -9,13 +9,13 @@ import com.burixer85.mynotesapp.presentation.model.Category
 data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Int = 0,
-    @ColumnInfo(name = "title") val title: String,
+    @ColumnInfo(name = "name") val name: String,
 )
 
 fun CategoryEntity.toPresentation(): Category {
     return Category(
         id = this.id,
-        title = this.title,
+        name = this.name,
         notes = emptyList()
     )
 }

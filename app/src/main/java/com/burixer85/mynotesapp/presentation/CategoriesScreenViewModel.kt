@@ -18,7 +18,6 @@ class CategoriesScreenViewModel() : ViewModel(){
     private val _uiState = MutableStateFlow(CategoriesScreenUI())
     val uiState: StateFlow<CategoriesScreenUI> = _uiState
 
-    // Prueba, no estará para la aplicación final
 
     init {
         loadCategories()
@@ -48,6 +47,8 @@ class CategoriesScreenViewModel() : ViewModel(){
         }
     }
 
+    // Prueba, no estará para la aplicación final
+
     private fun addMockDataAndReload() {
         viewModelScope.launch(Dispatchers.IO) {
             val notes = listOf(
@@ -61,8 +62,8 @@ class CategoriesScreenViewModel() : ViewModel(){
                 Note(title = "3", content = "Contenido de otra nota 3")
             )
             val categories = listOf(
-                Category(id = 1, title = "Cumpleaños", notes = notes),
-                Category(id = 2, title = "Recetas", notes = notes2)
+                Category(id = 1, name = "Cumpleaños", notes = notes),
+                Category(id = 2, name = "Recetas", notes = notes2)
             )
 
             categories.forEach { category ->
