@@ -4,9 +4,9 @@ import com.burixer85.mynotesapp.data.entity.NoteEntity
 
 data class Note(
     val id: Int = 0,
-    val title: String,
-    val content: String
-)
+    override val title: String,
+    override val content: String
+) : DisplayableNote
 
 fun Note.toEntity(categoryId: Int) = NoteEntity(
     id = id,

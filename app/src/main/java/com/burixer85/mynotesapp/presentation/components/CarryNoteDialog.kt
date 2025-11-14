@@ -18,10 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -38,15 +36,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.burixer85.mynotesapp.R
+import com.burixer85.mynotesapp.presentation.model.DisplayableNote
 import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
-fun CarryQuickNoteDialog(
-    note: QuickNote,
+fun CarryNoteDialog(
+    note: DisplayableNote,
     onDismiss: () -> Unit,
     onEdit: () -> Unit,
     onDeleteConfirm: () -> Unit

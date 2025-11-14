@@ -48,6 +48,25 @@ fun CategoriesScreen(
                 0
             ), //Permite que no se transforme al minimizarla
             containerColor = Color(0xFF212121),
+            floatingActionButton = {
+                CarryFloatingActionButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(scaffoldPadding)
+                        .padding(16.dp),
+                    onOptionSelected = { option ->
+                        when (option) {
+                            "quicknote" -> {
+                                //TODO: Implementar lógica para añadir una quicknote
+                            }
+
+                            "category" -> {
+                                //TODO: Implementar lógica para añadir una category
+                            }
+                        }
+                    }
+                )
+            }
         ) { padding ->
             Column(Modifier.padding(scaffoldPadding)) {
                 Text(
@@ -129,22 +148,5 @@ fun CategoriesScreen(
                 }
             }
         }
-        CarryFloatingActionButton(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(scaffoldPadding)
-                .padding(16.dp),
-            onOptionSelected = { option ->
-                when (option) {
-                    "quicknote" -> {
-                        //TODO: Implementar lógica para añadir una quicknote
-                    }
-
-                    "category" -> {
-                        //TODO: Implementar lógica para añadir una category
-                    }
-                }
-            }
-        )
     }
 }
