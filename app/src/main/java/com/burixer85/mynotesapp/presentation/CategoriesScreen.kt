@@ -31,44 +31,15 @@ import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButto
 
 @Composable
 fun CategoriesScreen(
-    scaffoldPadding: PaddingValues,
     categoriesScreenViewModel: CategoriesScreenViewModel = viewModel(),
     onCategoryClick: (categoryId: Int, categoryName: String) -> Unit
 ) {
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets(
-                0,
-                0,
-                0,
-                0
-            ), //Permite que no se transforme al minimizarla
-            containerColor = Color(0xFF212121),
-            floatingActionButton = {
-                CarryFloatingActionButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(scaffoldPadding)
-                        .padding(16.dp),
-                    onOptionSelected = { option ->
-                        when (option) {
-                            "quicknote" -> {
-                                //TODO: Implementar lógica para añadir una quicknote
-                            }
+    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF212121))) {
 
-                            "category" -> {
-                                //TODO: Implementar lógica para añadir una category
-                            }
-                        }
-                    }
-                )
-            }
-        ) { padding ->
-            Column(Modifier.padding(scaffoldPadding)) {
+            Column(Modifier.fillMaxSize()) {
                 Text(
                     modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
                     text = stringResource(R.string.Main_Screen_Text_Tittle),
@@ -149,4 +120,4 @@ fun CategoriesScreen(
             }
         }
     }
-}
+

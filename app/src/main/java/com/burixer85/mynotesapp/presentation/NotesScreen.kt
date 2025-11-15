@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -41,15 +42,13 @@ import com.burixer85.mynotesapp.presentation.model.Note
 
 @Composable
 fun NotesScreen(
-    scaffoldPadding: PaddingValues,
     categoryName: String,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
-    onNavigateUp: () -> Unit
+    showCreateDialog: Boolean,
+    onDialogDismiss: () -> Unit
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
-
-    var showCreateNoteDialog by remember { mutableStateOf(false) }
     var selectedNote by remember { mutableStateOf<Note?>(null) }
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -67,164 +66,107 @@ fun NotesScreen(
 //    }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
-            containerColor = Color(0xFF212121),
-            snackbarHost = {
-                SnackbarHost(hostState = snackbarHostState) { message ->
-                    Snackbar(
-                        modifier = Modifier.padding(12.dp),
-                        containerColor = Color(0xFF333333),
-                        shape = RoundedCornerShape(14.dp),
-                        contentColor = Color.White
-                    ) {
-                        Text(message.visuals.message)
-                    }
+        if (!uiState.isLoading) {
+            Column(
+                Modifier
+                    .fillMaxSize()
+            ) {
+                Text(
+                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                    text = stringResource(R.string.Main_Screen_Text_Tittle),
+                    color = Color.White,
+                    style = MaterialTheme.typography.headlineSmall
+                )
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+
+                        .height(60.dp)
+                        .border(
+                            BorderStroke(2.dp, Color.White),
+                            shape = RoundedCornerShape(32.dp)
+                        )
+                        .background(
+                            color = Color(0xFF303030),
+                            shape = RoundedCornerShape(14.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Text(
+                        text = stringResource(R.string.Main_Screen_Button_Achievements),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge
+                    )
+
                 }
-            },
-            floatingActionButton = {
-                CarryFloatingActionButton(
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(scaffoldPadding)
-                        .padding(16.dp),
-                    onOptionSelected = { option ->
-                        when (option) {
-                            "quicknote" -> {
-                                selectedNote = null
-                                showCreateNoteDialog = true
-                            }
-
-                            "category" -> {
-                                //TODO: Implementar lógica para añadir una category
-                            }
+                Spacer(
+                    modifier = Modifier.padding(12.dp),
+                )
+                if (uiState.notes.isNotEmpty()) {
+                    CarryAllNotes(
+                        notes = uiState.notes,
+                        categoryName = categoryName,
+                        onNoteClick = { note ->
+                            selectedNote = note
+                            showNoteDialog = true
                         }
-                    })
-            }
-        ) { padding ->
-
-
-                if (!uiState.isLoading) {
+                    )
+                } else {
                     Column(
-                        Modifier
-                            .fillMaxSize()
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                            text = stringResource(R.string.Main_Screen_Text_Tittle),
+                            //text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
+                            text = "Sin notas",
                             color = Color.White,
-                            style = MaterialTheme.typography.headlineSmall
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier
+                                .padding(bottom = 32.dp)
                         )
+
                         Box(
                             Modifier
                                 .fillMaxWidth()
-                                .padding(24.dp)
-
-                                .height(60.dp)
+                                .height(240.dp)
+                                .padding(12.dp)
                                 .border(
                                     BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(32.dp)
+                                    shape = RoundedCornerShape(14.dp)
                                 )
                                 .background(
                                     color = Color(0xFF303030),
                                     shape = RoundedCornerShape(14.dp)
+                                )
+                                .clickable(
+                                    onClick = { onDialogDismiss }
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
 
                             Text(
-                                text = stringResource(R.string.Main_Screen_Button_Achievements),
+                                //text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
+                                text = "Toca para añadir una nota",
                                 color = Color.White,
-                                style = MaterialTheme.typography.labelLarge
+                                style = MaterialTheme.typography.labelLarge,
                             )
-
                         }
-                        Spacer(
-                            modifier = Modifier.padding(12.dp),
-                        )
-                        if (uiState.notes.isNotEmpty()) {
-                            CarryAllNotes(
-                                notes = uiState.notes,
-                                categoryName = categoryName,
-                                onNoteClick = { note ->
-                                    selectedNote = note
-                                    showNoteDialog = true
-                                }
-                            )
-                        } else {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    //text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
-                                    text = "Sin notas",
-                                    color = Color.White,
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier
-                                        .padding(bottom = 32.dp)
-                                )
 
-                                Box(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .height(240.dp)
-                                        .padding(12.dp)
-                                        .border(
-                                            BorderStroke(2.dp, Color.White),
-                                            shape = RoundedCornerShape(14.dp)
-                                        )
-                                        .background(
-                                            color = Color(0xFF303030),
-                                            shape = RoundedCornerShape(14.dp)
-                                        )
-                                        .clickable(
-                                            onClick = { showCreateNoteDialog = true }
-                                        ),
-                                    contentAlignment = Alignment.Center
-                                ) {
-
-                                    Text(
-                                        //text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
-                                        text = "Toca para añadir una nota",
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge,
-                                    )
-                                }
-
-                            }
-                        }
                     }
-//            } else {
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(padding),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    CircularProgressIndicator()
-//                }
-//            }
                 }
-
             }
-            if (showNoteDialog && selectedNote != null) {
-                CarryNoteDialog(
-                    note = selectedNote!!,
-                    onDismiss = {
-                        showNoteDialog = false
-                        selectedNote = null
-                    },
-                    onEdit = {
-                        showNoteDialog = false
-                        showCreateNoteDialog = true
-                    },
-                    onDeleteConfirm = {
-                        //notesScreenViewModel.deleteNote(selectedNote!!)
-                    }
-                )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
     }
+
+}
 

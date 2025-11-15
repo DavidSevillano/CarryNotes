@@ -10,6 +10,7 @@ activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 kotlinxSerialization = "1.7.1"
 foundationLayout = "1.9.4"
+navigationCompose = "2.9.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -35,12 +36,12 @@ room-compiler = { group = "androidx.room", name = "room-compiler", version = "2.
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.7.0" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version = "2.7.0" }
 lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version = "2.7.0" }
-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.9.5" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version = "1.7.3" }
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version = "1.6.7" }
 datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version = "1.1.0" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout", version.ref = "foundationLayout" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
