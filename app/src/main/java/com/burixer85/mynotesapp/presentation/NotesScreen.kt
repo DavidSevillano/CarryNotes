@@ -42,6 +42,7 @@ import com.burixer85.mynotesapp.presentation.model.Note
 
 @Composable
 fun NotesScreen(
+    modifier: Modifier = Modifier,
     categoryName: String,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
     showCreateDialog: Boolean,
@@ -65,7 +66,7 @@ fun NotesScreen(
 //        }
 //    }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = modifier.fillMaxSize().background(Color((0xFF212121)))) {
         if (!uiState.isLoading) {
             Column(
                 Modifier
@@ -165,6 +166,22 @@ fun NotesScreen(
             ) {
                 CircularProgressIndicator()
             }
+        }
+        if (showNoteDialog && selectedNote != null) {
+            CarryNoteDialog(
+                note = selectedNote!!,
+                onDismiss = {
+                    showNoteDialog = false
+                    selectedNote = null
+                },
+                onEdit = {
+               //     showNoteDialog = false
+               //     showEditNoteDialog = true
+                },
+                onDeleteConfirm = {
+               //     quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
+                }
+            )
         }
     }
 

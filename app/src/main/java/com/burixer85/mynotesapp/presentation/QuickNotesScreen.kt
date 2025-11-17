@@ -45,7 +45,9 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
 fun QuickNotesScreen(
-    quickNotesScreenViewModel: QuickNotesScreenViewModel
+    modifier: Modifier = Modifier,
+    quickNotesScreenViewModel: QuickNotesScreenViewModel,
+    onAddQuickNoteClick: () -> Unit
 ) {
     val uiState by quickNotesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
@@ -67,7 +69,7 @@ fun QuickNotesScreen(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF212121))) {
+    Box(modifier = modifier.fillMaxSize().background(Color(0xFF212121))) {
         if (!uiState.isLoading) {
             Column(
                 Modifier
@@ -139,7 +141,8 @@ fun QuickNotesScreen(
                                 .background(
                                     color = Color(0xFF303030),
                                     shape = RoundedCornerShape(14.dp)
-                                ),
+                                )
+                                .clickable { onAddQuickNoteClick() },
                             contentAlignment = Alignment.Center
                         ) {
 

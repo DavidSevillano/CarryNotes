@@ -31,13 +31,14 @@ import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButto
 
 @Composable
 fun CategoriesScreen(
+    modifier: Modifier = Modifier,
     categoriesScreenViewModel: CategoriesScreenViewModel = viewModel(),
     onCategoryClick: (categoryId: Int, categoryName: String) -> Unit
 ) {
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFF212121))) {
+    Box(modifier = modifier.fillMaxSize().background(Color(0xFF212121))) {
 
             Column(Modifier.fillMaxSize()) {
                 Text(

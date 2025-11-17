@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -37,15 +38,13 @@ fun NavigationWrapper() {
 
             if (route is CategoriesRoute && currentDestination?.route?.startsWith(NotesRoute::class.qualifiedName!!) == true) {
                 navController.popBackStack()
-            } else {
-                if (currentDestination?.route != route.toString()) {
-                    navController.navigate(route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
+            }
+            else {
+                navController.navigate(route) {
+                    popUpTo(navController.graph.findStartDestination().id) {
                     }
+                    launchSingleTop = true
+                    restoreState = true
                 }
             }
         },
@@ -66,11 +65,16 @@ fun NavigationWrapper() {
             modifier = Modifier.padding(scaffoldPadding)
         ) {
             composable<QuickNotesRoute> {
-                QuickNotesScreen(quickNotesScreenViewModel = quickNotesViewModel)
+                QuickNotesScreen(
+                    modifier = Modifier.zIndex(1f),
+                    quickNotesScreenViewModel = quickNotesViewModel,
+                    onAddQuickNoteClick = { showCreateQuickNoteDialog = true }
+                )
             }
 
             composable<CategoriesRoute> {
                 CategoriesScreen(
+                    modifier = Modifier.zIndex(1f),
                     onCategoryClick = { categoryId, categoryName ->
                         navController.navigate(NotesRoute(categoryId, categoryName))
                     }
@@ -80,6 +84,7 @@ fun NavigationWrapper() {
             composable<NotesRoute> { noteData ->
                 val categoryName: NotesRoute = noteData.toRoute()
                 NotesScreen(
+                    modifier = Modifier.zIndex(1f),
                     categoryName = categoryName.categoryName,
                     showCreateDialog = showCreateQuickNoteDialog,
                     onDialogDismiss = {
