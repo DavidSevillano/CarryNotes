@@ -81,7 +81,9 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                     Text(
                                         text = quickNote.title,
                                         color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge,
+                                        style = MaterialTheme.typography.labelLarge.copy(
+                                            textDecoration = TextDecoration.Underline
+                                        ),
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
@@ -89,9 +91,7 @@ fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote
                                     Text(
                                         text = quickNote.content.replace("\n", " "),
                                         color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge.copy(
-                                            textDecoration = TextDecoration.Underline
-                                        ),
+                                        style = MaterialTheme.typography.labelLarge,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis
                                     )
