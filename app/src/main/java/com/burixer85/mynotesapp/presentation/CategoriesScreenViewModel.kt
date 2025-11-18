@@ -1,5 +1,6 @@
 package com.burixer85.mynotesapp.presentation
 
+import android.R.attr.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.burixer85.mynotesapp.data.application.RoomApplication
@@ -23,7 +24,7 @@ class CategoriesScreenViewModel() : ViewModel(){
         loadCategories()
     }
 
-    private fun loadCategories() {
+    fun loadCategories() {
         viewModelScope.launch(Dispatchers.IO) {
 
             _uiState.update { it.copy(isLoading = true) }
@@ -47,9 +48,24 @@ class CategoriesScreenViewModel() : ViewModel(){
         }
     }
 
+    fun addCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val categoryEntity = category.toEntity()
+            RoomApplication.db.categoryDao().insertCategory(categoryEntity)
+
+            val updatedCategoriesFromDb = RoomApplication.db.categoryDao().getAllCategories()
+
+            val categoriesForUi = updatedCategoriesFromDb.map { it.toPresentation() }
+
+            _uiState.update {
+                it.copy(categories = categoriesForUi)
+            }
+        }
+    }
+
     // Prueba, no estará para la aplicación final
 
-    private fun addMockDataAndReload() {
+    fun addMockDataAndReload() {
         viewModelScope.launch(Dispatchers.IO) {
             val notes = listOf(
                 Note(title = "1", content = "Contenido de la nota 1"),

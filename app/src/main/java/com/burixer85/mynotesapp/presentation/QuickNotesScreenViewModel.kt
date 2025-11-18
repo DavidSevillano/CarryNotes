@@ -1,20 +1,15 @@
 package com.burixer85.mynotesapp.presentation
 
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
-import com.burixer85.mynotesapp.presentation.model.Category
-import com.burixer85.mynotesapp.presentation.model.Note
 
 import com.burixer85.mynotesapp.presentation.model.QuickNote
 import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -40,9 +35,9 @@ class QuickNotesScreenViewModel() : ViewModel() {
         }
     }
 
-    fun addQuickNote(note: QuickNote) {
+    fun addQuickNote(quickNote: QuickNote) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity()
+            val noteEntity = quickNote.toEntity()
             RoomApplication.db.quickNoteDao().insertQuickNote(noteEntity)
 
             val updatedNotesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()

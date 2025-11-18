@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.burixer85.mynotesapp.presentation.CategoriesScreen
+import com.burixer85.mynotesapp.presentation.CategoriesScreenViewModel
 import com.burixer85.mynotesapp.presentation.MainScreen
 import com.burixer85.mynotesapp.presentation.NotesScreen
 import com.burixer85.mynotesapp.presentation.QuickNotesScreen
@@ -25,21 +26,25 @@ import com.burixer85.mynotesapp.presentation.navigation.CategoriesRoute
 fun NavigationWrapper() {
     val navController = rememberNavController()
     var showCreateQuickNoteDialog by remember { mutableStateOf(false) }
-
+    var showCreateCategoryDialog by remember { mutableStateOf(false) }
     val quickNotesViewModel: QuickNotesScreenViewModel = viewModel()
+    val categoriesViewModel: CategoriesScreenViewModel = viewModel()
+
 
     MainScreen(
         navController = navController,
         showCreateQuickNoteDialog = showCreateQuickNoteDialog,
         onDismissQuickNoteDialog = { showCreateQuickNoteDialog = false },
         quickNotesViewModel = quickNotesViewModel,
+        showCreateCategoryDialog = showCreateCategoryDialog,
+        onDismissCategoryDialog = { showCreateCategoryDialog = false },
+        categoriesViewModel = categoriesViewModel,
         onItemClick = { route ->
             val currentDestination = navController.currentDestination
 
             if (route is CategoriesRoute && currentDestination?.route?.startsWith(NotesRoute::class.qualifiedName!!) == true) {
                 navController.popBackStack()
-            }
-            else {
+            } else {
                 navController.navigate(route) {
                     popUpTo(navController.graph.findStartDestination().id) {
                     }
@@ -53,11 +58,12 @@ fun NavigationWrapper() {
                 "quicknote" -> {
                     showCreateQuickNoteDialog = true
                 }
+
                 "category" -> {
-                    // TODO: Crear Categorias
+                    showCreateCategoryDialog = true
                 }
             }
-        }
+        },
     ) { scaffoldPadding ->
         NavHost(
             navController = navController,

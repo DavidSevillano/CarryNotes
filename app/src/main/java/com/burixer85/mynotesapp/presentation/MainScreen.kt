@@ -10,6 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNavigationBar
@@ -18,8 +19,11 @@ import com.burixer85.mynotesapp.presentation.components.CarryNavigationBar
 fun MainScreen(
     navController: NavHostController,
     showCreateQuickNoteDialog: Boolean,
+    showCreateCategoryDialog: Boolean,
     onDismissQuickNoteDialog: () -> Unit,
+    onDismissCategoryDialog: () -> Unit,
     quickNotesViewModel: QuickNotesScreenViewModel,
+    categoriesViewModel: CategoriesScreenViewModel,
     onItemClick: (route: Any) -> Unit,
     onFabOptionSelected: (String) -> Unit,
     content: @Composable (padding: PaddingValues) -> Unit
@@ -48,6 +52,16 @@ fun MainScreen(
             onConfirm = { note ->
                 quickNotesViewModel.addQuickNote(note)
                 onDismissQuickNoteDialog()
+            }
+        )
+    }
+    if (showCreateCategoryDialog) {
+        CarryCreateCategoryDialog(
+            categoryToEdit = null,
+            onDismiss = onDismissCategoryDialog,
+            onConfirm = { category ->
+                categoriesViewModel.addCategory(category)
+                onDismissCategoryDialog()
             }
         )
     }
