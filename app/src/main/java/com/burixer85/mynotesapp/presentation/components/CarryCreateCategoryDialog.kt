@@ -58,7 +58,7 @@ fun CarryCreateCategoryDialog(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "Crear Categoria",
+                    text = stringResource(R.string.CreateCategory_Dialog_Main_Text),
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
@@ -68,8 +68,8 @@ fun CarryCreateCategoryDialog(
                 CarryTextField(
                     value = categoryName,
                     onValueChange = { categoryName = it },
-                    height = 120.dp,
-                    label = "Nombre",
+                    height = 80.dp,
+                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label),
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -95,7 +95,7 @@ fun CarryCreateCategoryDialog(
 
                         ) {
                             Text(
-                                stringResource(R.string.CreateQuickNote_Dialog_TextButton_Cancel),
+                                stringResource(R.string.CreateCategory_Dialog_TextButton_Cancel),
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }
@@ -103,9 +103,9 @@ fun CarryCreateCategoryDialog(
 
                     val isEditing = categoryToEdit != null
                     val buttonText = if (isEditing) {
-                        stringResource(R.string.CreateQuickNote_Dialog_Button_Update)
+                        stringResource(R.string.CreateCategory_Dialog_Button_Update)
                     } else {
-                        stringResource(R.string.CreateQuickNote_Dialog_Button_Save)
+                        stringResource(R.string.CreateCategory_Dialog_Button_Save)
                     }
 
                     val buttonColor = if (isEditing) {
