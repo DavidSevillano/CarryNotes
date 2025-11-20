@@ -58,6 +58,9 @@ fun QuickNotesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    LaunchedEffect(Unit) {
+        quickNotesScreenViewModel.loadQuickNotes()
+    }
 
     LaunchedEffect(uiState.isQuickNoteDeleted) {
         if (uiState.isQuickNoteDeleted) {

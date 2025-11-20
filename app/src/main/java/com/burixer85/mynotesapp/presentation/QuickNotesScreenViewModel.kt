@@ -19,9 +19,9 @@ class QuickNotesScreenViewModel() : ViewModel() {
     val uiState: StateFlow<QuickNotesUI> = _uiState
 
     init {
-        loadInitialQuickNotes()
+        loadQuickNotes()
     }
-    private fun loadInitialQuickNotes() {
+    fun loadQuickNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
 
