@@ -38,7 +38,7 @@
 
     <!--CreateCategory Dialog -->
     <string name="CreateCategory_Dialog_Main_Text">Crear Categoría</string>
-    <string name="CreateQuickNote_Dialog_Text_Label">Nombre</string>
+    <string name="CreateCategory_Dialog_Text_Label">Nombre</string>
     <string name="CreateCategory_Dialog_TextButton_Cancel">Cancelar</string>
     <string name="CreateCategory_Dialog_Button_Save">Guardar</string>
     <string name="CreateCategory_Dialog_Button_Update">Actualizar</string>

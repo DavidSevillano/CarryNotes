@@ -36,6 +36,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryAllNotes
+import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNoteDialog
 import com.burixer85.mynotesapp.presentation.model.Note
@@ -43,14 +44,13 @@ import com.burixer85.mynotesapp.presentation.model.Note
 @Composable
 fun NotesScreen(
     modifier: Modifier = Modifier,
-    categoryName: String,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
-    showCreateDialog: Boolean,
-    onDialogDismiss: () -> Unit
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
     var selectedNote by remember { mutableStateOf<Note?>(null) }
+
+    var showEditCategoryDialog by remember { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -66,8 +66,15 @@ fun NotesScreen(
 //        }
 //    }
 
-    Box(modifier = modifier.fillMaxSize().background(Color((0xFF212121)))) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFF212121))
+    ) {
+
         if (!uiState.isLoading) {
+            val currentCategory = uiState.category!!
+
             Column(
                 Modifier
                     .fillMaxSize()
@@ -105,13 +112,16 @@ fun NotesScreen(
                 Spacer(
                     modifier = Modifier.padding(12.dp),
                 )
-                if (uiState.notes.isNotEmpty()) {
+                if (currentCategory.notes.isNotEmpty()) {
                     CarryAllNotes(
-                        notes = uiState.notes,
-                        categoryName = categoryName,
+                        notes = currentCategory.notes,
+                        categoryName = currentCategory.name,
                         onNoteClick = { note ->
                             selectedNote = note
                             showNoteDialog = true
+                        },
+                        onEditCategoryClick = {
+                            showEditCategoryDialog = true
                         }
                     )
                 } else {
@@ -142,7 +152,7 @@ fun NotesScreen(
                                     shape = RoundedCornerShape(14.dp)
                                 )
                                 .clickable(
-                                    onClick = { onDialogDismiss }
+                                    onClick = { }
                                 ),
                             contentAlignment = Alignment.Center
                         ) {
@@ -159,6 +169,7 @@ fun NotesScreen(
                 }
             }
         } else {
+
             Box(
                 modifier = Modifier
                     .fillMaxSize(),
@@ -166,24 +177,23 @@ fun NotesScreen(
             ) {
                 CircularProgressIndicator()
             }
+
         }
-        if (showNoteDialog && selectedNote != null) {
-            CarryNoteDialog(
-                note = selectedNote!!,
-                onDismiss = {
-                    showNoteDialog = false
-                    selectedNote = null
-                },
-                onEdit = {
-               //     showNoteDialog = false
-               //     showEditNoteDialog = true
-                },
-                onDeleteConfirm = {
-               //     quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
+    }
+
+//    if (showNoteDialog && selectedNote != null) {
+//        CarryNoteDialog()
+//    }
+    if (showEditCategoryDialog) {
+        uiState.category?.let { categoryToEdit ->
+            CarryCreateCategoryDialog(
+                categoryToEdit = categoryToEdit,
+                onDismiss = { showEditCategoryDialog = false },
+                onConfirm = { updatedCategory ->
+                    notesScreenViewModel.updateCategory(updatedCategory)
+                    showEditCategoryDialog = false
                 }
             )
         }
     }
-
 }
-

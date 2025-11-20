@@ -18,6 +18,7 @@ import com.burixer85.mynotesapp.presentation.CategoriesScreen
 import com.burixer85.mynotesapp.presentation.CategoriesScreenViewModel
 import com.burixer85.mynotesapp.presentation.MainScreen
 import com.burixer85.mynotesapp.presentation.NotesScreen
+import com.burixer85.mynotesapp.presentation.NotesScreenViewModel
 import com.burixer85.mynotesapp.presentation.QuickNotesScreen
 import com.burixer85.mynotesapp.presentation.QuickNotesScreenViewModel
 import com.burixer85.mynotesapp.presentation.navigation.CategoriesRoute
@@ -92,15 +93,10 @@ fun NavigationWrapper() {
             }
 
             composable<NotesRoute> { noteData ->
-                val categoryName: NotesRoute = noteData.toRoute()
                 NotesScreen(
                     modifier = Modifier.zIndex(1f),
-                    categoryName = categoryName.categoryName,
-                    showCreateDialog = showCreateQuickNoteDialog,
-                    onDialogDismiss = {
-                        showCreateQuickNoteDialog = false
-                    }
-                    )
+                    notesScreenViewModel = viewModel(noteData)
+                )
             }
         }
     }

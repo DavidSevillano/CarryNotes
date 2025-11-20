@@ -18,6 +18,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,89 +41,95 @@ fun CategoriesScreen(
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    Box(modifier = modifier.fillMaxSize().background(Color(0xFF212121))) {
+    LaunchedEffect(Unit) {
+        categoriesScreenViewModel.loadCategories()
+    }
 
-            Column(Modifier.fillMaxSize()) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color(0xFF212121))
+    ) {
+
+        Column(Modifier.fillMaxSize()) {
+            Text(
+                modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
+                text = stringResource(R.string.Main_Screen_Text_Tittle),
+                color = Color.White,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp)
+
+                    .height(60.dp)
+                    .border(
+                        BorderStroke(2.dp, Color.White),
+                        shape = RoundedCornerShape(32.dp)
+                    )
+                    .background(
+                        color = Color(0xFF303030),
+                        shape = RoundedCornerShape(14.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+
                 Text(
-                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                    text = stringResource(R.string.Main_Screen_Text_Tittle),
+                    text = stringResource(R.string.Main_Screen_Button_Achievements),
                     color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.labelLarge
                 )
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
 
-                        .height(60.dp)
-                        .border(
-                            BorderStroke(2.dp, Color.White),
-                            shape = RoundedCornerShape(32.dp)
-                        )
-                        .background(
-                            color = Color(0xFF303030),
-                            shape = RoundedCornerShape(14.dp)
-                        ),
-                    contentAlignment = Alignment.Center
+            }
+            Spacer(
+                modifier = Modifier.padding(12.dp),
+            )
+            if (uiState.categories.isNotEmpty()) {
+                CarryAllCategories(
+                    categories = uiState.categories,
+                    onCategoryClick = { category ->
+                        onCategoryClick(category.id, category.name)
+                    })
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     Text(
-                        text = stringResource(R.string.Main_Screen_Button_Achievements),
+                        text = stringResource(R.string.Categories_Screen_Main_Text_No_Categories),
                         color = Color.White,
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier
+                            .padding(bottom = 32.dp)
                     )
 
-                }
-                Spacer(
-                    modifier = Modifier.padding(12.dp),
-                )
-                if (uiState.categories.isNotEmpty()) {
-                    CarryAllCategories(
-                        categories = uiState.categories,
-                        onCategoryClick = { category ->
-                            onCategoryClick(category.id, category.name)
-                        })
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.Categories_Screen_Main_Text_No_Categories),
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .padding(bottom = 32.dp)
-                        )
-
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(240.dp)
-                                .padding(12.dp)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .clickable{ onAddCategoryClick() },
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            Text(
-                                text = stringResource(R.string.Categories_Screen_Text_Box_Add_Category),
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelLarge,
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .height(240.dp)
+                            .padding(12.dp)
+                            .border(
+                                BorderStroke(2.dp, Color.White),
+                                shape = RoundedCornerShape(14.dp)
                             )
-                        }
+                            .background(
+                                color = Color(0xFF303030),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                            .clickable { onAddCategoryClick() },
+                        contentAlignment = Alignment.Center
+                    ) {
 
+                        Text(
+                            text = stringResource(R.string.Categories_Screen_Text_Box_Add_Category),
+                            color = Color.White,
+                            style = MaterialTheme.typography.labelLarge,
+                        )
                     }
+
                 }
             }
         }
     }
-
-// TODO AL CREAR UNA NUEVA CATEGORY QUE APAREZCA AUTOMATICAMENTE LAS CATEGORIES ACTUALIZADAS
+}

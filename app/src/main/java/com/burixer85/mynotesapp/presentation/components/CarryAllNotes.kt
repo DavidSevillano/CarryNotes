@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,24 +25,62 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.burixer85.mynotesapp.presentation.model.Note
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 
 @Composable
-fun CarryAllNotes(notes: List<Note>, categoryName: String, onNoteClick: (Note) -> Unit) {
+fun CarryAllNotes(
+    notes: List<Note>,
+    categoryName: String,
+    onNoteClick: (Note) -> Unit,
+    onEditCategoryClick: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = categoryName,
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
+        Box(
             modifier = Modifier
+                .fillMaxWidth()
                 .padding(bottom = 32.dp)
-        )
+        ) {
+            Text(
+                text = categoryName,
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.Center)
+            )
+
+            Row(
+                modifier = Modifier.align(Alignment.Center),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = categoryName,
+                    color = Color.Transparent,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.width(62.dp))
+
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Editar nombre de categoría",
+                    tint = Color.White,
+                    modifier = Modifier
+                        .size(30.dp)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            onClick = { onEditCategoryClick() }
+                        )                )
+            }
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()

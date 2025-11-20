@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
@@ -172,8 +173,11 @@ fun CarryCreateQuickNoteDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val iconColor = if (isFormValid) buttonColor else Color.Gray
+
+                        val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
+
                         Icon(
-                            imageVector = Icons.Default.Save,
+                            imageVector = saveIcon,
                             contentDescription = buttonText,
                             tint = iconColor
                         )

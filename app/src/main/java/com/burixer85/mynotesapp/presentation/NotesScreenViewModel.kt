@@ -26,28 +26,39 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     private val categoryId: Int = savedStateHandle.get<Int>("categoryId")!!
 
     init {
-        loadNotes()
+        loadCategoryAndNotes()
     }
 
-    private fun loadNotes() {
+    private fun loadCategoryAndNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
-
-            val notesFromDb = RoomApplication.db.noteDao().getNotesByCategoryId(categoryId)
-            val notesForUi = notesFromDb.map { it.toPresentation() }
-
-            _uiState.update {
-                it.copy(
-                    notes = notesForUi,
-                    isLoading = false
-                )
+            val categoryFromDb = RoomApplication.db.categoryDao().getCategoryById(categoryId)
+            if (categoryFromDb != null) {
+                val categoryForUi = categoryFromDb.toPresentation()
+                _uiState.update {
+                    it.copy(
+                        category = categoryForUi,
+                        notes = categoryForUi.notes,
+                        isLoading = false
+                    )
+                }
+            } else {
+                _uiState.update { it.copy(isLoading = false) }
             }
+        }
+    }
+
+    fun updateCategory(category: Category) {
+        viewModelScope.launch(Dispatchers.IO) {
+            RoomApplication.db.categoryDao().updateCategory(category.toEntity())
+            loadCategoryAndNotes()
         }
     }
 }
 
 
 data class NotesUI (
+    val category: Category? = null,
     val notes: List<Note> = emptyList(),
     val isLoading: Boolean = false,
     val isNoteDeleted: Boolean = false

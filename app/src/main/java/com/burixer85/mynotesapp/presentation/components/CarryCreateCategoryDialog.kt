@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.getValue
@@ -37,9 +38,12 @@ fun CarryCreateCategoryDialog(
     var categoryName by remember(categoryToEdit) { mutableStateOf(categoryToEdit?.name ?: "") }
     var categoryNotes by remember(categoryToEdit) { mutableStateOf(categoryToEdit?.notes ?: emptyList()) }
 
-    val isCategoryNameValid by remember(categoryName) {
+    val isCategoryNameValid by remember(categoryName, categoryToEdit) {
         derivedStateOf {
-            categoryName.isNotBlank()
+            val nameIsNotBlank = categoryName.isNotBlank()
+            val hasChanges = categoryToEdit?.name != categoryName
+
+            nameIsNotBlank && (categoryToEdit == null || hasChanges)
         }
     }
 
@@ -57,8 +61,10 @@ fun CarryCreateCategoryDialog(
                     .padding(24.dp)
                     .fillMaxWidth()
             ) {
+                val titleText = categoryToEdit?.name ?: stringResource(R.string.CreateCategory_Dialog_Main_Text)
+
                 Text(
-                    text = stringResource(R.string.CreateCategory_Dialog_Main_Text),
+                    text = titleText,
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
@@ -69,7 +75,7 @@ fun CarryCreateCategoryDialog(
                     value = categoryName,
                     onValueChange = { categoryName = it },
                     height = 80.dp,
-                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label),
+                    label = stringResource(R.string.CreateCategory_Dialog_Text_Label),
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -117,8 +123,11 @@ fun CarryCreateCategoryDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val iconColor = if (isCategoryNameValid) buttonColor else Color.Gray
+
+                        val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
+
                         Icon(
-                            imageVector = Icons.Default.Save,
+                            imageVector = saveIcon,
                             contentDescription = buttonText,
                             tint = iconColor
                         )
