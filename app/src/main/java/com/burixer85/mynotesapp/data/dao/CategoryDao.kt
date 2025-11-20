@@ -6,8 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import com.burixer85.mynotesapp.data.entity.CategoryEntity
 import com.burixer85.mynotesapp.data.entity.CategoryWithNotes
+import com.burixer85.mynotesapp.data.entity.QuickNoteEntity
 
 @Dao
 interface CategoryDao {
@@ -17,6 +19,9 @@ interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(category: CategoryEntity)
+
+    @Update
+    suspend fun updateCategory(category: CategoryEntity)
 
     @Delete
     suspend fun deleteCategory(category: CategoryEntity)

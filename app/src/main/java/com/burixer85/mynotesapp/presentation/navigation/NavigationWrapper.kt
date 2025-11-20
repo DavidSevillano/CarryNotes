@@ -83,6 +83,10 @@ fun NavigationWrapper() {
                     modifier = Modifier.zIndex(1f),
                     onCategoryClick = { categoryId, categoryName ->
                         navController.navigate(NotesRoute(categoryId, categoryName))
+                    },
+                    categoriesScreenViewModel = categoriesViewModel,
+                    onAddCategoryClick = {
+                        showCreateCategoryDialog = true
                     }
                 )
             }

@@ -3,6 +3,7 @@ package com.burixer85.mynotesapp.presentation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +34,8 @@ import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButto
 fun CategoriesScreen(
     modifier: Modifier = Modifier,
     categoriesScreenViewModel: CategoriesScreenViewModel = viewModel(),
-    onCategoryClick: (categoryId: Int, categoryName: String) -> Unit
+    onCategoryClick: (categoryId: Int, categoryName: String) -> Unit,
+    onAddCategoryClick: () -> Unit
 ) {
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
@@ -105,7 +107,8 @@ fun CategoriesScreen(
                                 .background(
                                     color = Color(0xFF303030),
                                     shape = RoundedCornerShape(14.dp)
-                                ),
+                                )
+                                .clickable{ onAddCategoryClick() },
                             contentAlignment = Alignment.Center
                         ) {
 

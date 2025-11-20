@@ -49,8 +49,8 @@ fun MainScreen(
         CarryCreateQuickNoteDialog(
             noteToEdit = null,
             onDismiss = onDismissQuickNoteDialog,
-            onConfirm = { note ->
-                quickNotesViewModel.addQuickNote(note)
+            onConfirm = { quicknote ->
+                quickNotesViewModel.addQuickNote(quicknote)
                 onDismissQuickNoteDialog()
             }
         )
