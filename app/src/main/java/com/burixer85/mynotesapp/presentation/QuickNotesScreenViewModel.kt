@@ -47,6 +47,7 @@ class QuickNotesScreenViewModel() : ViewModel() {
             _uiState.update { currentState ->
                 currentState.copy(quickNotes = quickNotesForUi)
             }
+            loadQuickNotes()
         }
     }
 
@@ -62,6 +63,7 @@ class QuickNotesScreenViewModel() : ViewModel() {
                 }
                 currentState.copy(quickNotes = updatedList)
             }
+            loadQuickNotes()
         }
     }
 
@@ -75,6 +77,7 @@ class QuickNotesScreenViewModel() : ViewModel() {
                 val updatedList = currentState.quickNotes.filter { it.id != note.id }
                 currentState.copy(quickNotes = updatedList, isQuickNoteDeleted = true)
             }
+            loadQuickNotes()
 
         }
     }

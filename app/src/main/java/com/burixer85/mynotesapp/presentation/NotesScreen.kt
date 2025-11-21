@@ -131,7 +131,7 @@ fun NotesScreen(
                     ) {
                         Text(
                             //text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
-                            text = "Sin notas",
+                            text = currentCategory.name,
                             color = Color.White,
                             style = MaterialTheme.typography.titleLarge,
                             modifier = Modifier
@@ -184,6 +184,24 @@ fun NotesScreen(
 //    if (showNoteDialog && selectedNote != null) {
 //        CarryNoteDialog()
 //    }
+    if (showNoteDialog && selectedNote != null) {
+        CarryNoteDialog(
+            note = selectedNote!!,
+            onDismiss = {
+                showNoteDialog = false
+                selectedNote = null
+            },
+            onEdit = {
+                showNoteDialog = false
+                //showEditNoteDialog = true
+            },
+            onDeleteConfirm = {
+                //quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
+                showNoteDialog = false
+            }
+        )
+    }
+
     if (showEditCategoryDialog) {
         uiState.category?.let { categoryToEdit ->
             CarryCreateCategoryDialog(

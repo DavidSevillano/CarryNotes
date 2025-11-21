@@ -60,6 +60,7 @@ class CategoriesScreenViewModel() : ViewModel(){
             _uiState.update {
                 it.copy(categories = categoriesForUi)
             }
+            loadCategories()
         }
     }
 
@@ -68,9 +69,9 @@ class CategoriesScreenViewModel() : ViewModel(){
     fun addMockDataAndReload() {
         viewModelScope.launch(Dispatchers.IO) {
             val notes = listOf(
-                Note(title = "1", content = "Contenido de la nota 1"),
-                Note(title = "2", content = "Contenido de la nota 2"),
-                Note(title = "3", content = "Contenido de la nota 3")
+                Note(title = "María", content = "9 de Abril"),
+                Note(title = "Jesús", content = "14 de Noviembre"),
+                Note(title = "Antonio", content = "3 de Agosto")
             )
             val notes2 = listOf(
                 Note(title = "1", content = "Contenido de otra nota 1"),
