@@ -51,15 +51,15 @@ class QuickNotesScreenViewModel() : ViewModel() {
         }
     }
 
-    fun updateQuickNote(note: QuickNote) {
+    fun updateQuickNote(quickNote: QuickNote) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity()
+            val quickNoteEntity = quickNote.toEntity()
 
-            RoomApplication.db.quickNoteDao().updateQuickNote(noteEntity)
+            RoomApplication.db.quickNoteDao().updateQuickNote(quickNoteEntity)
 
             _uiState.update { currentState ->
                 val updatedList = currentState.quickNotes.map {
-                    if (it.id == note.id) note else it
+                    if (it.id == quickNote.id) quickNote else it
                 }
                 currentState.copy(quickNotes = updatedList)
             }

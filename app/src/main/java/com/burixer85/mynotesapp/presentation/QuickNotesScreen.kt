@@ -187,13 +187,15 @@ fun QuickNotesScreen(
         }
         if (showEditNoteDialog && selectedNote != null) {
             CarryCreateQuickNoteDialog(
-                noteToEdit = selectedNote,
+                initialTitle = selectedNote?.title,
+                initialContent = selectedNote?.content,
                 onDismiss = {
                     showEditNoteDialog = false
                     selectedNote = null
                 },
-                onConfirm = { note ->
-                    quickNotesScreenViewModel.updateQuickNote(note)
+                onConfirm = { title, content ->
+                    quickNotesScreenViewModel.updateQuickNote(QuickNote(id = selectedNote!!.id, title = title, content =  content))
+                    quickNotesScreenViewModel.loadQuickNotes()
                     showEditNoteDialog = false
                     selectedNote = null
                 }

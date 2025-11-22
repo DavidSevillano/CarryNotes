@@ -14,6 +14,7 @@ import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialo
 import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNavigationBar
+import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
 fun MainScreen(
@@ -47,12 +48,11 @@ fun MainScreen(
 
     if (showCreateQuickNoteDialog) {
         CarryCreateQuickNoteDialog(
-            noteToEdit = null,
             onDismiss = onDismissQuickNoteDialog,
-            onConfirm = { quicknote ->
-                quickNotesViewModel.addQuickNote(quicknote)
+            onConfirm = { title, content ->
+                quickNotesViewModel.addQuickNote(QuickNote(title = title, content = content))
                 onDismissQuickNoteDialog()
-            }
+            },
         )
     }
     if (showCreateCategoryDialog) {

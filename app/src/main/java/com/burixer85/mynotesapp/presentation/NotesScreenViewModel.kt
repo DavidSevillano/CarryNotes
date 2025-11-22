@@ -9,6 +9,7 @@ import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 import com.burixer85.mynotesapp.presentation.model.Category
 import com.burixer85.mynotesapp.presentation.model.Note
+import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
@@ -54,6 +55,23 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
             loadCategoryAndNotes()
         }
     }
+
+    fun updateNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteEntity = note.toEntity(categoryId)
+
+            RoomApplication.db.noteDao().updateNote(noteEntity)
+
+            _uiState.update { currentState ->
+                val updatedList = currentState.notes.map {
+                    if (it.id == note.id) note else it
+                }
+                currentState.copy(notes = updatedList)
+            }
+            loadCategoryAndNotes()
+        }
+    }
+
 }
 
 

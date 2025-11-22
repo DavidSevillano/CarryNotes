@@ -37,9 +37,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryAllNotes
 import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
+import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNoteDialog
 import com.burixer85.mynotesapp.presentation.model.Note
+import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
 fun NotesScreen(
@@ -49,6 +51,8 @@ fun NotesScreen(
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
     var selectedNote by remember { mutableStateOf<Note?>(null) }
+    var showEditNoteDialog by remember { mutableStateOf(false) }
+
 
     var showEditCategoryDialog by remember { mutableStateOf(false) }
 
@@ -181,9 +185,6 @@ fun NotesScreen(
         }
     }
 
-//    if (showNoteDialog && selectedNote != null) {
-//        CarryNoteDialog()
-//    }
     if (showNoteDialog && selectedNote != null) {
         CarryNoteDialog(
             note = selectedNote!!,
@@ -193,7 +194,7 @@ fun NotesScreen(
             },
             onEdit = {
                 showNoteDialog = false
-                //showEditNoteDialog = true
+                showEditNoteDialog = true
             },
             onDeleteConfirm = {
                 //quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
@@ -213,5 +214,21 @@ fun NotesScreen(
                 }
             )
         }
+    }
+
+    if (showEditNoteDialog && selectedNote != null) {
+        CarryCreateQuickNoteDialog(
+            initialTitle = selectedNote?.title,
+            initialContent = selectedNote?.content,
+            onDismiss = {
+                showEditNoteDialog = false
+                selectedNote = null
+            },
+            onConfirm = { title, content ->
+                notesScreenViewModel.updateNote(Note(id = selectedNote!!.id, title = title, content = content))
+                showEditNoteDialog = false
+                selectedNote = null
+            }
+        )
     }
 }

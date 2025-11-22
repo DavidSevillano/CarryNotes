@@ -29,25 +29,27 @@ import com.burixer85.mynotesapp.R
 
 @Composable
 fun CarryCreateQuickNoteDialog(
-    noteToEdit: QuickNote? = null,
+    initialTitle: String? = null,
+    initialContent: String? = null,
     onDismiss: () -> Unit,
-    onConfirm: (QuickNote) -> Unit
+    onConfirm: (title: String, content: String) -> Unit,
 ) {
 
-    var isTitleEnabled by remember { mutableStateOf(noteToEdit?.title?.isNotBlank() ?: false) }
-    var title by remember(noteToEdit) { mutableStateOf(noteToEdit?.title ?: "") }
-    var content by remember(noteToEdit) { mutableStateOf(noteToEdit?.content ?: "") }
+    val isEditing = initialContent != null
 
-    val isFormValid by remember(title, content, noteToEdit, isTitleEnabled) {
+    var isTitleEnabled by remember { mutableStateOf(initialTitle?.isNotBlank() ?: false) }
+    var title by remember(initialTitle) { mutableStateOf(initialTitle ?: "") }
+    var content by remember(initialContent) { mutableStateOf(initialContent ?: "") }
+
+    val isFormValid by remember(title, content, isEditing, isTitleEnabled) {
         derivedStateOf {
             val contentIsNotBlank = content.isNotBlank()
-
             val titleIsValid = if (isTitleEnabled) title.isNotBlank() else true
 
-            val hasChanges = if (noteToEdit != null) {
-                (if (isTitleEnabled) title else "") != noteToEdit.title || content != noteToEdit.content
+            val hasChanges = if (isEditing) {
+                (if (isTitleEnabled) title else "") != (initialTitle ?: "") || content != initialContent
             } else {
-                true
+                content.isNotBlank() || title.isNotBlank()
             }
 
             contentIsNotBlank && titleIsValid && hasChanges
@@ -157,7 +159,6 @@ fun CarryCreateQuickNoteDialog(
                         }
                     }
 
-                    val isEditing = noteToEdit != null
                     val buttonText = if (isEditing) {
                         stringResource(R.string.CreateQuickNote_Dialog_Button_Update)
                     } else {
@@ -185,14 +186,7 @@ fun CarryCreateQuickNoteDialog(
                         TextButton(
                             onClick = {
                                 val finalTitle = if (isTitleEnabled) title else ""
-                                val finalNote = noteToEdit?.copy(
-                                    title = finalTitle,
-                                    content = content
-                                ) ?: QuickNote(
-                                    title = finalTitle,
-                                    content = content
-                                )
-                                onConfirm(finalNote)
+                                onConfirm(finalTitle, content)
                             },
                             enabled = isFormValid,
                             colors = ButtonDefaults.textButtonColors(
