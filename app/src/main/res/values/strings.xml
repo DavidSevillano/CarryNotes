@@ -42,6 +42,14 @@
     <string name="CreateCategory_Dialog_TextButton_Cancel">Cancelar</string>
     <string name="CreateCategory_Dialog_Button_Save">Guardar</string>
     <string name="CreateCategory_Dialog_Button_Update">Actualizar</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Text_Title">Confirmar Borrado</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Text_Content">¿Estás seguro de que quieres borrar esta categoría?</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Button_Delete">Borrar</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Button_Cancel">Cancelar</string>
+
+
+
+
 
 
 

@@ -47,6 +47,7 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 fun NotesScreen(
     modifier: Modifier = Modifier,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
+    onNavigateBackToCategories: () -> Unit
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
@@ -116,61 +117,20 @@ fun NotesScreen(
                 Spacer(
                     modifier = Modifier.padding(12.dp),
                 )
-                if (currentCategory.notes.isNotEmpty()) {
-                    CarryAllNotes(
-                        notes = currentCategory.notes,
-                        categoryName = currentCategory.name,
-                        onNoteClick = { note ->
-                            selectedNote = note
-                            showNoteDialog = true
-                        },
-                        onEditCategoryClick = {
-                            showEditCategoryDialog = true
-                        }
-                    )
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            //text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
-                            text = currentCategory.name,
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .padding(bottom = 32.dp)
-                        )
-
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(240.dp)
-                                .padding(12.dp)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .clickable(
-                                    onClick = { }
-                                ),
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            Text(
-                                //text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
-                                text = "Toca para añadir una nota",
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
-                        }
-
+                CarryAllNotes(
+                    notes = currentCategory.notes,
+                    categoryName = currentCategory.name,
+                    onNoteClick = { note ->
+                        selectedNote = note
+                        showNoteDialog = true
+                    },
+                    onEditCategoryClick = {
+                        showEditCategoryDialog = true
+                    },
+                    onAddNoteClick = {
+                        showEditNoteDialog = true
                     }
-                }
+                )
             }
         } else {
 
@@ -212,6 +172,11 @@ fun NotesScreen(
                 onConfirm = { updatedCategory ->
                     notesScreenViewModel.updateCategory(updatedCategory)
                     showEditCategoryDialog = false
+                },
+                onDeleteConfirm = {
+                    notesScreenViewModel.deleteCategory(categoryToEdit)
+                    showEditCategoryDialog = false
+                    onNavigateBackToCategories()
                 }
             )
         }

@@ -21,6 +21,9 @@ import com.burixer85.mynotesapp.presentation.NotesScreen
 import com.burixer85.mynotesapp.presentation.NotesScreenViewModel
 import com.burixer85.mynotesapp.presentation.QuickNotesScreen
 import com.burixer85.mynotesapp.presentation.QuickNotesScreenViewModel
+import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
+import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
+import com.burixer85.mynotesapp.presentation.model.QuickNote
 import com.burixer85.mynotesapp.presentation.navigation.CategoriesRoute
 
 @Composable
@@ -28,18 +31,9 @@ fun NavigationWrapper() {
     val navController = rememberNavController()
     var showCreateQuickNoteDialog by remember { mutableStateOf(false) }
     var showCreateCategoryDialog by remember { mutableStateOf(false) }
-    val quickNotesViewModel: QuickNotesScreenViewModel = viewModel()
-    val categoriesViewModel: CategoriesScreenViewModel = viewModel()
-
 
     MainScreen(
         navController = navController,
-        showCreateQuickNoteDialog = showCreateQuickNoteDialog,
-        onDismissQuickNoteDialog = { showCreateQuickNoteDialog = false },
-        quickNotesViewModel = quickNotesViewModel,
-        showCreateCategoryDialog = showCreateCategoryDialog,
-        onDismissCategoryDialog = { showCreateCategoryDialog = false },
-        categoriesViewModel = categoriesViewModel,
         onItemClick = { route ->
             val currentDestination = navController.currentDestination
 
@@ -72,6 +66,25 @@ fun NavigationWrapper() {
             modifier = Modifier.padding(scaffoldPadding)
         ) {
             composable<QuickNotesRoute> {
+                val quickNotesViewModel: QuickNotesScreenViewModel = viewModel()
+
+                if (showCreateQuickNoteDialog) {
+                    CarryCreateQuickNoteDialog(
+                        initialTitle = null,
+                        initialContent = null,
+                        onDismiss = { showCreateQuickNoteDialog = false },
+                        onConfirm = { title, content ->
+                            quickNotesViewModel.addQuickNote(
+                                QuickNote(
+                                    title = title,
+                                    content = content
+                                )
+                            )
+                            showCreateQuickNoteDialog = false
+                        }
+                    )
+                }
+
                 QuickNotesScreen(
                     modifier = Modifier.zIndex(1f),
                     quickNotesScreenViewModel = quickNotesViewModel,
@@ -80,6 +93,21 @@ fun NavigationWrapper() {
             }
 
             composable<CategoriesRoute> {
+
+                val categoriesViewModel: CategoriesScreenViewModel = viewModel()
+
+                if (showCreateCategoryDialog) {
+                    CarryCreateCategoryDialog(
+                        onDismiss = { showCreateCategoryDialog = false },
+                        onConfirm = { category ->
+                            categoriesViewModel.addCategory(category)
+                            showCreateCategoryDialog = false
+                        },
+                        categoryToEdit = null,
+                        onDeleteConfirm = {}
+                    )
+                }
+
                 CategoriesScreen(
                     modifier = Modifier.zIndex(1f),
                     onCategoryClick = { categoryId, categoryName ->
@@ -95,7 +123,10 @@ fun NavigationWrapper() {
             composable<NotesRoute> { noteData ->
                 NotesScreen(
                     modifier = Modifier.zIndex(1f),
-                    notesScreenViewModel = viewModel(noteData)
+                    notesScreenViewModel = viewModel(noteData),
+                    onNavigateBackToCategories = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

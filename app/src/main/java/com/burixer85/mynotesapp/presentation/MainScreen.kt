@@ -19,12 +19,6 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 @Composable
 fun MainScreen(
     navController: NavHostController,
-    showCreateQuickNoteDialog: Boolean,
-    showCreateCategoryDialog: Boolean,
-    onDismissQuickNoteDialog: () -> Unit,
-    onDismissCategoryDialog: () -> Unit,
-    quickNotesViewModel: QuickNotesScreenViewModel,
-    categoriesViewModel: CategoriesScreenViewModel,
     onItemClick: (route: Any) -> Unit,
     onFabOptionSelected: (String) -> Unit,
     content: @Composable (padding: PaddingValues) -> Unit
@@ -44,25 +38,5 @@ fun MainScreen(
             )
         }    ) { innerPadding ->
         content(innerPadding)
-    }
-
-    if (showCreateQuickNoteDialog) {
-        CarryCreateQuickNoteDialog(
-            onDismiss = onDismissQuickNoteDialog,
-            onConfirm = { title, content ->
-                quickNotesViewModel.addQuickNote(QuickNote(title = title, content = content))
-                onDismissQuickNoteDialog()
-            },
-        )
-    }
-    if (showCreateCategoryDialog) {
-        CarryCreateCategoryDialog(
-            categoryToEdit = null,
-            onDismiss = onDismissCategoryDialog,
-            onConfirm = { category ->
-                categoriesViewModel.addCategory(category)
-                onDismissCategoryDialog()
-            }
-        )
     }
 }

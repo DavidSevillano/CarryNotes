@@ -39,7 +39,8 @@ fun CarryAllNotes(
     notes: List<Note>,
     categoryName: String,
     onNoteClick: (Note) -> Unit,
-    onEditCategoryClick: () -> Unit
+    onEditCategoryClick: () -> Unit,
+    onAddNoteClick: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -78,71 +79,102 @@ fun CarryAllNotes(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
                             onClick = { onEditCategoryClick() }
-                        )                )
+                        )
+                )
             }
         }
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(notes.chunked(2)) { pair ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    pair.forEach { note ->
-                        Box(
-                            Modifier
-                                .height(120.dp)
-                                .weight(1f)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .clickable(
-                                    onClick = {
-                                        onNoteClick(note)
-                                    }
-                                )
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .padding(8.dp)
+        if (notes.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(notes.chunked(2)) { pair ->
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        pair.forEach { note ->
+                            Box(
+                                Modifier
+                                    .height(120.dp)
+                                    .weight(1f)
+                                    .border(
+                                        BorderStroke(2.dp, Color.White),
+                                        shape = RoundedCornerShape(14.dp)
+                                    )
+                                    .background(
+                                        color = Color(0xFF303030),
+                                        shape = RoundedCornerShape(14.dp)
+                                    )
+                                    .clickable(
+                                        onClick = {
+                                            onNoteClick(note)
+                                        }
+                                    )
                             ) {
-                                if (note.title.isNotEmpty()) {
-                                    Text(
-                                        text = note.title,
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge.copy(
-                                            textDecoration = TextDecoration.Underline
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                } else {
-                                    Text(
-                                        text = note.content.replace("\n", " "),
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Column(
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .padding(8.dp)
+                                ) {
+                                    if (note.title.isNotEmpty()) {
+                                        Text(
+                                            text = note.title,
+                                            color = Color.White,
+                                            style = MaterialTheme.typography.labelLarge.copy(
+                                                textDecoration = TextDecoration.Underline
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    } else {
+                                        Text(
+                                            text = note.content.replace("\n", " "),
+                                            color = Color.White,
+                                            style = MaterialTheme.typography.labelLarge,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
 
+                                }
                             }
                         }
+                        if (pair.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
-                    if (pair.size == 1) {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
+                }
+            }
+        }else {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(240.dp)
+                        .padding(horizontal = 12.dp)
+                        .border(
+                            BorderStroke(2.dp, Color.White),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                        .background(
+                            color = Color(0xFF303030),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                        .clickable { onAddNoteClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Toca para añadir una nota",
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
                 }
             }
         }

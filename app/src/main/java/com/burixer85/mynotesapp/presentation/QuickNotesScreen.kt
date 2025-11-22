@@ -111,53 +111,14 @@ fun QuickNotesScreen(
                 Spacer(
                     modifier = Modifier.padding(12.dp),
                 )
-                if (uiState.quickNotes.isNotEmpty()) {
-                    CarryAllQuickNotes(
-                        quickNotes = uiState.quickNotes,
-                        onQuickNoteClick = { quicknote ->
-                            selectedNote = quicknote
-                            showNoteDialog = true
-                        }
-                    )
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
-                            color = Color.White,
-                            style = MaterialTheme.typography.titleLarge,
-                            modifier = Modifier
-                                .padding(bottom = 32.dp)
-                        )
-
-                        Box(
-                            Modifier
-                                .fillMaxWidth()
-                                .height(240.dp)
-                                .padding(12.dp)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .clickable { onAddQuickNoteClick() },
-                            contentAlignment = Alignment.Center
-                        ) {
-
-                            Text(
-                                text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelLarge,
-                            )
-                        }
-
-                    }
-                }
+                CarryAllQuickNotes(
+                    quickNotes = uiState.quickNotes,
+                    onQuickNoteClick = { quicknote ->
+                        selectedNote = quicknote
+                        showNoteDialog = true
+                    },
+                    onAddQuickNoteClick = onAddQuickNoteClick
+                )
             }
         } else {
             Box(

@@ -26,89 +26,129 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import com.burixer85.mynotesapp.R
 
 @Composable
-fun CarryAllQuickNotes(quickNotes: List<QuickNote>, onQuickNoteClick: (QuickNote) -> Unit) {
+fun CarryAllQuickNotes(
+    quickNotes: List<QuickNote>,
+    onQuickNoteClick: (QuickNote) -> Unit,
+    onAddQuickNoteClick: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "${quickNotes.size} notas rápidas",
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier
-                .padding(bottom = 32.dp)
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            items(quickNotes.chunked(2)) { pair ->
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    pair.forEach { quickNote ->
-                        Box(
-                            Modifier
-                                .height(120.dp)
-                                .weight(1f)
-                                .border(
-                                    BorderStroke(2.dp, Color.White),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .background(
-                                    color = Color(0xFF303030),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
-                                .clickable(
-                                    onClick = {
-                                        onQuickNoteClick(quickNote)
-                                    }
-                                )
-                        ) {
-                            Column(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .padding(8.dp)
-                            ) {
-                                if (quickNote.title.isNotEmpty()) {
-                                    Text(
-                                        text = quickNote.title,
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge.copy(
-                                            textDecoration = TextDecoration.Underline
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                } else {
-                                    Text(
-                                        text = quickNote.content.replace("\n", " "),
-                                        color = Color.White,
-                                        style = MaterialTheme.typography.labelLarge,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
 
+        if (quickNotes.isNotEmpty()) {
+
+            Text(
+                text = "${quickNotes.size} notas rápidas",
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier
+                    .padding(bottom = 32.dp)
+            )
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(quickNotes.chunked(2)) { pair ->
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        pair.forEach { quickNote ->
+                            Box(
+                                Modifier
+                                    .height(120.dp)
+                                    .weight(1f)
+                                    .border(
+                                        BorderStroke(2.dp, Color.White),
+                                        shape = RoundedCornerShape(14.dp)
+                                    )
+                                    .background(
+                                        color = Color(0xFF303030),
+                                        shape = RoundedCornerShape(14.dp)
+                                    )
+                                    .clickable { onQuickNoteClick(quickNote) }
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .align(Alignment.Center)
+                                        .padding(8.dp)
+                                ) {
+                                    if (quickNote.title.isNotEmpty()) {
+                                        Text(
+                                            text = quickNote.title,
+                                            color = Color.White,
+                                            style = MaterialTheme.typography.labelLarge.copy(
+                                                textDecoration = TextDecoration.Underline
+                                            ),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    } else {
+                                        Text(
+                                            text = quickNote.content.replace("\n", " "),
+                                            color = Color.White,
+                                            style = MaterialTheme.typography.labelLarge,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.height(8.dp))
+
+                                }
                             }
                         }
+                        if (pair.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
                     }
-                    if (pair.size == 1) {
-                        Spacer(modifier = Modifier.weight(1f))
-                    }
+                }
+            }
+        } else {
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.QuickNotes_Screen_Main_Text_No_Quicknotes),
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(240.dp)
+                        .padding(horizontal = 12.dp)
+                        .border(
+                            BorderStroke(2.dp, Color.White),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                        .background(
+                            color = Color(0xFF303030),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                        .clickable { onAddQuickNoteClick() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.QuickNotes_Screen_Text_Box_Add_QuickNote),
+                        color = Color.White,
+                        style = MaterialTheme.typography.labelLarge,
+                    )
                 }
             }
         }
     }
+
 }
-
-
-
