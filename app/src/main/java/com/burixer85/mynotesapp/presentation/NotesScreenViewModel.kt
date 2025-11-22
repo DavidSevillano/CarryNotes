@@ -72,6 +72,22 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
+    fun deleteNote(note: Note){
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteEntity = note.toEntity(categoryId)
+
+            RoomApplication.db.noteDao().deleteNote(noteEntity)
+
+            _uiState.update { currentState ->
+                val updatedList = currentState.notes.filter { it.id != note.id }
+                currentState.copy(notes = updatedList, isNoteDeleted = true)
+            }
+            loadCategoryAndNotes()
+        }
+    }
+
+
+
 }
 
 

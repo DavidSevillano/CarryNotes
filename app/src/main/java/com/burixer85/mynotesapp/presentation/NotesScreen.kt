@@ -197,7 +197,8 @@ fun NotesScreen(
                 showEditNoteDialog = true
             },
             onDeleteConfirm = {
-                //quickNotesScreenViewModel.deleteQuickNote(selectedNote!!)
+                notesScreenViewModel.deleteNote(selectedNote!!)
+                selectedNote = null
                 showNoteDialog = false
             }
         )

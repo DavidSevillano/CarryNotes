@@ -67,14 +67,14 @@ class QuickNotesScreenViewModel() : ViewModel() {
         }
     }
 
-    fun deleteQuickNote(note: QuickNote){
+    fun deleteQuickNote(quickNote: QuickNote){
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity()
+            val quickNoteEntity = quickNote.toEntity()
 
-            RoomApplication.db.quickNoteDao().deleteQuickNote(noteEntity)
+            RoomApplication.db.quickNoteDao().deleteQuickNote(quickNoteEntity)
 
             _uiState.update { currentState ->
-                val updatedList = currentState.quickNotes.filter { it.id != note.id }
+                val updatedList = currentState.quickNotes.filter { it.id != quickNote.id }
                 currentState.copy(quickNotes = updatedList, isQuickNoteDeleted = true)
             }
             loadQuickNotes()
