@@ -24,24 +24,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.burixer85.mynotesapp.R
-import com.burixer85.mynotesapp.presentation.model.Category
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
-fun CarryCreateNoteDialog(
-    categories: List<Category>,
+fun CarryCreateQuickNoteDialog(
+    initialTitle: String? = null,
+    initialContent: String? = null,
     onDismiss: () -> Unit,
-    onConfirm: (title: String, content: String, categoryId: Int) -> Unit,)
-{
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf<Category?>(null) }
-    var isMenuExpanded by remember { mutableStateOf(false) }
+    onConfirm: (title: String, content: String) -> Unit,
+) {
 
-    val isEditing = false
+    val isEditing = initialContent != null
 
-    val isFormValid by remember(title, content, selectedCategory) {
+    var isTitleEnabled by remember { mutableStateOf(initialTitle?.isNotBlank() ?: false) }
+    var title by remember(initialTitle) { mutableStateOf(initialTitle ?: "") }
+    var content by remember(initialContent) { mutableStateOf(initialContent ?: "") }
+
+    val isFormValid by remember(title, content, isEditing, isTitleEnabled) {
         derivedStateOf {
-            title.isNotBlank() && content.isNotBlank() && selectedCategory != null
+            val contentIsNotBlank = content.isNotBlank()
+            val titleIsValid = if (isTitleEnabled) title.isNotBlank() else true
+
+            val hasChanges = if (isEditing) {
+                (if (isTitleEnabled) title else "") != (initialTitle ?: "") || content != initialContent
+            } else {
+                content.isNotBlank() || title.isNotBlank()
+            }
+
+            contentIsNotBlank && titleIsValid && hasChanges
         }
     }
 
@@ -60,38 +69,63 @@ fun CarryCreateNoteDialog(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = if (isEditing) stringResource(R.string.CreateNote_Dialog_Main_Text_Edit) else stringResource(R.string.CreateNote_Dialog_Main_Text_Create),
+                    text = stringResource(R.string.CreateQuickNote_Dialog_Main_Text),
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                CarryTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = stringResource(R.string.CreateNote_Dialog_Text_Label_Title),
-                    singleLine = true
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Add_Title),
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Switch(
+                        checked = isTitleEnabled,
+                        onCheckedChange = { isEnabled ->
+                            isTitleEnabled = isEnabled
+                            if (!isEnabled) {
+                                title = ""
+                            }
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedThumbColor = MaterialTheme.colorScheme.primary,
+                            checkedTrackColor = MaterialTheme.colorScheme.primaryContainer,
+                            uncheckedThumbColor = MaterialTheme.colorScheme.outline,
+                            uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        )
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CarryTextFieldWithDropdown(
-                    label = "Categoría",
-                    items = categories.map { it.name },
-                    selectedItem = selectedCategory?.name ?: "Selecciona una categoría",
-                    onItemSelected = { selectedName ->
-                        selectedCategory = categories.find { it.name == selectedName }
+                AnimatedVisibility(
+                    visible = isTitleEnabled,
+                    enter = slideInVertically(initialOffsetY = { -it }),
+                    exit = fadeOut(animationSpec = tween(durationMillis = 200))
+                ) {
+                    Column {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        CarryTextField(
+                            value = title,
+                            onValueChange = { title = it },
+                            label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Title),
+                            singleLine = true,
+                        )
                     }
-                )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 CarryTextField(
                     value = content,
                     onValueChange = { content = it },
-                    height = 200.dp,
-                    label = stringResource(R.string.CreateNote_Dialog_Text_Label_Content),
+                    height = 120.dp,
+                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Content),
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -105,7 +139,7 @@ fun CarryCreateNoteDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Cerrar",
+                            contentDescription = "Close",
                             tint = Color(0xFFFF7043)
                         )
 
@@ -117,16 +151,16 @@ fun CarryCreateNoteDialog(
 
                         ) {
                             Text(
-                                stringResource(R.string.CreateNote_Dialog_TextButton_Cancel),
+                                stringResource(R.string.CreateQuickNote_Dialog_TextButton_Cancel),
                                 style = MaterialTheme.typography.labelMedium
                             )
                         }
                     }
 
                     val buttonText = if (isEditing) {
-                        stringResource(R.string.CreateNote_Dialog_Button_Update)
+                        stringResource(R.string.CreateQuickNote_Dialog_Button_Update)
                     } else {
-                        stringResource(R.string.CreateNote_Dialog_Button_Save)
+                        stringResource(R.string.CreateQuickNote_Dialog_Button_Save)
                     }
 
                     val buttonColor = if (isEditing) {
@@ -138,6 +172,7 @@ fun CarryCreateNoteDialog(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val iconColor = if (isFormValid) buttonColor else Color.Gray
+
                         val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
 
                         Icon(
@@ -148,7 +183,8 @@ fun CarryCreateNoteDialog(
 
                         TextButton(
                             onClick = {
-                                onConfirm(title, content, selectedCategory!!.id)
+                                val finalTitle = if (isTitleEnabled) title else ""
+                                onConfirm(finalTitle, content)
                             },
                             enabled = isFormValid,
                             colors = ButtonDefaults.textButtonColors(

@@ -13,10 +13,12 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.automirrored.outlined.StickyNote2
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.outlined.Article
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.EditNote
 import androidx.compose.material.icons.outlined.StickyNote2
@@ -40,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -86,8 +89,26 @@ fun CarryFloatingActionButton(
                 },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.StickyNote2,
+                        painter = painterResource(id = R.drawable.quicknote_icon),
                         contentDescription = "Añadir nota rápida"
+                    )
+                }
+            )
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                thickness = DividerDefaults.Thickness,
+                color = Color.Gray
+            )
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.Main_Screen_FAB_Add_Note)) },
+                onClick = {
+                    showMenu = false
+                    onOptionSelected("note")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Article,
+                        contentDescription = "Añadir nota"
                     )
                 }
             )

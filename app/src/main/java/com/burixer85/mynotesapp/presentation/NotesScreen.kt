@@ -3,12 +3,9 @@ package com.burixer85.mynotesapp.presentation
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,9 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,11 +31,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryAllNotes
 import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
+import com.burixer85.mynotesapp.presentation.components.CarryCreateNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
-import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNoteDialog
 import com.burixer85.mynotesapp.presentation.model.Note
-import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
 fun NotesScreen(
@@ -56,6 +49,9 @@ fun NotesScreen(
 
 
     var showEditCategoryDialog by remember { mutableStateOf(false) }
+
+    val categoriesViewModel: CategoriesScreenViewModel = viewModel()
+    val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
@@ -164,6 +160,27 @@ fun NotesScreen(
         )
     }
 
+    if (showEditNoteDialog && selectedNote != null) {
+        CarryCreateNoteDialog(
+            categories = categoriesUiState.categories,
+
+            onDismiss = {
+                showEditNoteDialog = false
+                selectedNote = null
+            },
+            onConfirm = { title, content, categoryId ->
+                val updatedNote = Note(
+                    title = title,
+                    content = content,
+                    categoryId = categoryId
+                )
+                notesScreenViewModel.updateNote(updatedNote)
+                showEditNoteDialog = false
+                selectedNote = null
+            }
+        )
+    }
+
     if (showEditCategoryDialog) {
         uiState.category?.let { categoryToEdit ->
             CarryCreateCategoryDialog(
@@ -180,21 +197,5 @@ fun NotesScreen(
                 }
             )
         }
-    }
-
-    if (showEditNoteDialog && selectedNote != null) {
-        CarryCreateQuickNoteDialog(
-            initialTitle = selectedNote?.title,
-            initialContent = selectedNote?.content,
-            onDismiss = {
-                showEditNoteDialog = false
-                selectedNote = null
-            },
-            onConfirm = { title, content ->
-                notesScreenViewModel.updateNote(Note(id = selectedNote!!.id, title = title, content = content))
-                showEditNoteDialog = false
-                selectedNote = null
-            }
-        )
     }
 }

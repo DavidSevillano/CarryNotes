@@ -89,7 +89,7 @@ class CategoriesScreenViewModel() : ViewModel(){
 
             categories.forEach { category ->
                 category.notes.forEach { note ->
-                    val noteEntity = note.toEntity(categoryId = category.id)
+                    val noteEntity = note.toEntity()
                     RoomApplication.db.noteDao().insertNote(noteEntity)
                 }
             }

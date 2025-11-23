@@ -3,7 +3,10 @@ package com.burixer85.mynotesapp.presentation
 import androidx.compose.animation.core.copy
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
@@ -21,19 +24,22 @@ import kotlinx.coroutines.launch
 
 class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
+    constructor() : this(SavedStateHandle())
+
     private val _uiState = MutableStateFlow(NotesUI(isLoading = true))
     val uiState: StateFlow<NotesUI> = _uiState
 
-    private val categoryId: Int = savedStateHandle.get<Int>("categoryId")!!
-
+    private val categoryId: Int? = savedStateHandle.get<Int>("categoryId")
     init {
-        loadCategoryAndNotes()
+        categoryId?.let { id ->
+            loadCategoryAndNotes(id)
+        }
     }
 
-    private fun loadCategoryAndNotes() {
+    private fun loadCategoryAndNotes(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
-            val categoryFromDb = RoomApplication.db.categoryDao().getCategoryById(categoryId)
+            val categoryFromDb = RoomApplication.db.categoryDao().getCategoryById(id)
             if (categoryFromDb != null) {
                 val categoryForUi = categoryFromDb.toPresentation()
                 _uiState.update {
@@ -52,48 +58,51 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     fun updateCategory(category: Category) {
         viewModelScope.launch(Dispatchers.IO) {
             RoomApplication.db.categoryDao().updateCategory(category.toEntity())
-            loadCategoryAndNotes()
+            categoryId?.let { loadCategoryAndNotes(it) }
         }
     }
 
     fun deleteCategory(category: Category) {
         viewModelScope.launch(Dispatchers.IO) {
             RoomApplication.db.categoryDao().deleteCategory(category.toEntity())
-            loadCategoryAndNotes()
         }
+    }
+
+    fun addNote(note: Note){
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteEntity = note.toEntity()
+            RoomApplication.db.noteDao().insertNote(noteEntity)
+
+            if (categoryId == noteEntity.categoryId){
+                loadCategoryAndNotes(categoryId)
+            }
         }
+    }
 
     fun updateNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity(categoryId)
-
+            val noteEntity = note.toEntity()
             RoomApplication.db.noteDao().updateNote(noteEntity)
-
-            _uiState.update { currentState ->
-                val updatedList = currentState.notes.map {
-                    if (it.id == note.id) note else it
-                }
-                currentState.copy(notes = updatedList)
-            }
-            loadCategoryAndNotes()
+            categoryId?.let { loadCategoryAndNotes(it) }
         }
     }
 
     fun deleteNote(note: Note){
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity(categoryId)
-
+            val noteEntity = note.toEntity()
             RoomApplication.db.noteDao().deleteNote(noteEntity)
-
-            _uiState.update { currentState ->
-                val updatedList = currentState.notes.filter { it.id != note.id }
-                currentState.copy(notes = updatedList, isNoteDeleted = true)
-            }
-            loadCategoryAndNotes()
+            categoryId?.let { loadCategoryAndNotes(it) }
         }
     }
 
-
+    class Factory(private val categoryId: Int) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
+            val savedStateHandle = extras.createSavedStateHandle()
+            savedStateHandle["categoryId"] = categoryId
+            return NotesScreenViewModel(savedStateHandle) as T
+        }
+    }
 
 }
 

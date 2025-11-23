@@ -1,20 +1,14 @@
 package com.burixer85.mynotesapp.presentation
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
-import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNavigationBar
-import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
 fun MainScreen(
