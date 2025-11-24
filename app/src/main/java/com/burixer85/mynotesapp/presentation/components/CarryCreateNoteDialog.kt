@@ -100,7 +100,6 @@ fun CarryCreateNoteDialog(
                     onItemSelected = { selectedName ->
                         selectedCategory = categories.find { it.name == selectedName }
                     },
-                    enabled = !isEditing
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

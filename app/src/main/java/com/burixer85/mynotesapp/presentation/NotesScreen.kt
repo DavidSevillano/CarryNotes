@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +57,13 @@ fun NotesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    val categoryId = notesScreenViewModel.categoryId
+
+    LaunchedEffect(categoryId) {
+        if (categoryId != null) {
+            notesScreenViewModel.loadCategoryAndNotes(categoryId)
+        }
+    }
 
 //    LaunchedEffect(uiState.isQuickNoteDeleted) {
 //        if (uiState.isQuickNoteDeleted) {
@@ -172,16 +180,23 @@ fun NotesScreen(
                 selectedNote = null
             },
             onConfirm = { title, content, categoryId ->
-                if (selectedNote == null) {
+                val noteToUpdate = selectedNote
+                if (noteToUpdate == null) {
                     notesScreenViewModel.addNote(
                         Note(title = title, content = content, categoryId = categoryId), categoriesViewModel
                     )
                 } else {
-                    val updatedNote = selectedNote!!.copy(
+                    val originalCategoryId = noteToUpdate.categoryId
+                    val updatedNote = noteToUpdate.copy(
                         title = title,
                         content = content,
+                        categoryId = categoryId
                     )
-                    notesScreenViewModel.updateNote(updatedNote)
+
+                    notesScreenViewModel.updateNote(updatedNote, originalCategoryId, categoriesViewModel)
+
+                    showEditNoteDialog = false
+                    selectedNote = null
                 }
                 showEditNoteDialog = false
                 selectedNote = null

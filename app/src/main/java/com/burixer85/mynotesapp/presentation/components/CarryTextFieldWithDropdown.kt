@@ -31,7 +31,6 @@ fun CarryTextFieldWithDropdown(
     items: List<String>,
     selectedItem: String,
     onItemSelected: (String) -> Unit,
-    enabled: Boolean
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -64,7 +63,7 @@ fun CarryTextFieldWithDropdown(
                 focusedTrailingIconColor = Color.White,
                 unfocusedTrailingIconColor = Color.Gray
             ),
-            enabled = enabled
+            enabled = true
         )
 
         ExposedDropdownMenu(

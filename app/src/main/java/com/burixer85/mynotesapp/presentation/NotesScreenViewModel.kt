@@ -29,7 +29,8 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     private val _uiState = MutableStateFlow(NotesUI(isLoading = true))
     val uiState: StateFlow<NotesUI> = _uiState
 
-    private val categoryId: Int? = savedStateHandle.get<Int>("categoryId")
+    val categoryId: Int? = savedStateHandle.get<Int>("categoryId")
+
     init {
         categoryId?.let { id ->
             loadCategoryAndNotes(id)
@@ -68,12 +69,12 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    fun addNote(note: Note, categoriesViewModel: CategoriesScreenViewModel){
+    fun addNote(note: Note, categoriesViewModel: CategoriesScreenViewModel) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteEntity = note.toEntity()
             RoomApplication.db.noteDao().insertNote(noteEntity)
 
-            if (categoryId == noteEntity.categoryId){
+            if (categoryId == noteEntity.categoryId) {
                 loadCategoryAndNotes(categoryId)
             }
 
@@ -81,15 +82,31 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    fun updateNote(note: Note) {
+    fun updateNote(note: Note, originalCategoryId: Int, categoriesViewModel: CategoriesScreenViewModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity()
-            RoomApplication.db.noteDao().updateNote(noteEntity)
-            categoryId?.let { loadCategoryAndNotes(it) }
+            RoomApplication.db.noteDao().updateNote(
+                id = note.id,
+                title = note.title,
+                content = note.content,
+                categoryId = note.categoryId
+            )
+
+            val currentScreenCategoryId = categoryId
+
+            if (currentScreenCategoryId == originalCategoryId) {
+                loadCategoryAndNotes(originalCategoryId)
+            }
+
+            else if (currentScreenCategoryId == note.categoryId) {
+                loadCategoryAndNotes(note.categoryId)
+            }
+
+           categoriesViewModel.loadCategories()
         }
     }
 
-    fun deleteNote(note: Note){
+
+    fun deleteNote(note: Note) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteEntity = note.toEntity()
             RoomApplication.db.noteDao().deleteNote(noteEntity)
@@ -109,7 +126,7 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 }
 
 
-data class NotesUI (
+data class NotesUI(
     val category: Category? = null,
     val notes: List<Note> = emptyList(),
     val isLoading: Boolean = false,

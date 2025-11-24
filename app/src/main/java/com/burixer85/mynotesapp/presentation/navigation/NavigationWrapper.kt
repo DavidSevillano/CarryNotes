@@ -2,6 +2,7 @@ package com.burixer85.mynotesapp.presentation.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,11 +38,14 @@ fun NavigationWrapper() {
 
     val quickNotesViewModel: QuickNotesScreenViewModel = viewModel()
     val categoriesViewModel: CategoriesScreenViewModel = viewModel()
-    val notesViewModel: NotesScreenViewModel = viewModel()
 
     val categoriesUiState by categoriesViewModel.uiState.collectAsState()
 
     val categories = categoriesUiState.categories
+
+    var currentAddNoteAction by remember {
+        mutableStateOf<((Note) -> Unit)?>(null)
+    }
 
     MainScreen(
         navController = navController,
@@ -111,6 +115,15 @@ fun NavigationWrapper() {
                     factory = NotesScreenViewModel.Factory(noteData.categoryId)
                 )
 
+                DisposableEffect(notesScreenViewModel) {
+                    currentAddNoteAction = { note ->
+                        notesScreenViewModel.addNote(note, categoriesViewModel)
+                    }
+                    onDispose {
+                        currentAddNoteAction = null
+                    }
+                }
+
                 NotesScreen(
                     modifier = Modifier.zIndex(1f),
                     notesScreenViewModel = notesScreenViewModel,
@@ -146,7 +159,7 @@ fun NavigationWrapper() {
             onConfirm = { title, content, categoryId ->
                 val newNote = Note(title = title, content = content, categoryId = categoryId)
 
-                notesViewModel.addNote(newNote, categoriesViewModel)
+                currentAddNoteAction?.invoke(newNote)
 
                 showCreateNoteDialog = false
             }
