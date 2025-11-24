@@ -140,14 +140,14 @@ fun NavigationWrapper() {
     }
 
     if (showCreateNoteDialog) {
-
         CarryCreateNoteDialog(
             categories = categories,
             onDismiss = { showCreateNoteDialog = false },
             onConfirm = { title, content, categoryId ->
-                notesViewModel.addNote(
-                    Note(title = title, content = content, categoryId = categoryId)
-                )
+                val newNote = Note(title = title, content = content, categoryId = categoryId)
+
+                notesViewModel.addNote(newNote, categoriesViewModel)
+
                 showCreateNoteDialog = false
             }
         )

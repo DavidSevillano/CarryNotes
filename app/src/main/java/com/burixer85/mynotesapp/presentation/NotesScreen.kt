@@ -44,9 +44,9 @@ fun NotesScreen(
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
-    var selectedNote by remember { mutableStateOf<Note?>(null) }
     var showEditNoteDialog by remember { mutableStateOf(false) }
 
+    var selectedNote by remember { mutableStateOf<Note?>(null) }
 
     var showEditCategoryDialog by remember { mutableStateOf(false) }
 
@@ -124,6 +124,7 @@ fun NotesScreen(
                         showEditCategoryDialog = true
                     },
                     onAddNoteClick = {
+                        selectedNote = null
                         showEditNoteDialog = true
                     }
                 )
@@ -163,18 +164,25 @@ fun NotesScreen(
     if (showEditNoteDialog && selectedNote != null) {
         CarryCreateNoteDialog(
             categories = categoriesUiState.categories,
-
+            initialTitle = selectedNote?.title,
+            initialContent = selectedNote?.content,
+            initialCategory = categoriesUiState.categories.find { it.id == selectedNote?.categoryId },
             onDismiss = {
                 showEditNoteDialog = false
                 selectedNote = null
             },
             onConfirm = { title, content, categoryId ->
-                val updatedNote = Note(
-                    title = title,
-                    content = content,
-                    categoryId = categoryId
-                )
-                notesScreenViewModel.updateNote(updatedNote)
+                if (selectedNote == null) {
+                    notesScreenViewModel.addNote(
+                        Note(title = title, content = content, categoryId = categoryId), categoriesViewModel
+                    )
+                } else {
+                    val updatedNote = selectedNote!!.copy(
+                        title = title,
+                        content = content,
+                    )
+                    notesScreenViewModel.updateNote(updatedNote)
+                }
                 showEditNoteDialog = false
                 selectedNote = null
             }

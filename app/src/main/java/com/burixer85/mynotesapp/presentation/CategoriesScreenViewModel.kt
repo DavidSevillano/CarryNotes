@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class CategoriesScreenViewModel() : ViewModel(){
+class CategoriesScreenViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(CategoriesScreenUI())
     val uiState: StateFlow<CategoriesScreenUI> = _uiState
 
@@ -35,15 +35,11 @@ class CategoriesScreenViewModel() : ViewModel(){
                     category.toPresentation()
                 }
 
-            if (categoriesFromDb.isEmpty()) {
-                addMockDataAndReload()
-            } else {
-                _uiState.update {
-                    it.copy(
-                        categories = categoriesFromDb,
-                        isLoading = false
-                    )
-                }
+            _uiState.update {
+                it.copy(
+                    categories = categoriesFromDb,
+                    isLoading = false
+                )
             }
         }
     }
@@ -63,42 +59,9 @@ class CategoriesScreenViewModel() : ViewModel(){
             loadCategories()
         }
     }
-
-    // Prueba, no estará para la aplicación final
-
-    fun addMockDataAndReload() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val notes = listOf(
-                Note(title = "María", content = "9 de Abril"),
-                Note(title = "Jesús", content = "14 de Noviembre"),
-                Note(title = "Antonio", content = "3 de Agosto")
-            )
-            val notes2 = listOf(
-                Note(title = "1", content = "Contenido de otra nota 1"),
-                Note(title = "2", content = "Contenido de otra nota 2"),
-                Note(title = "3", content = "Contenido de otra nota 3")
-            )
-            val categories = listOf(
-                Category(id = 1, name = "Cumpleaños", notes = notes),
-                Category(id = 2, name = "Recetas", notes = notes2)
-            )
-
-            categories.forEach { category ->
-                RoomApplication.db.categoryDao().insertCategory(category.toEntity())
-            }
-
-            categories.forEach { category ->
-                category.notes.forEach { note ->
-                    val noteEntity = note.toEntity()
-                    RoomApplication.db.noteDao().insertNote(noteEntity)
-                }
-            }
-            loadCategories()
-        }
-    }
 }
 
-data class CategoriesScreenUI (
+data class CategoriesScreenUI(
     val notes: List<Note> = emptyList(),
     val categories: List<Category> = emptyList(),
     val isLoading: Boolean = false,

@@ -10,8 +10,8 @@ data class Note(
 ) : DisplayableNote
 
 fun Note.toEntity() = NoteEntity(
-    id = id,
-    title = title,
-    content = content,
+    id = this.id,
+    title = this.title,
+    content = this.content,
     categoryId = this.categoryId
 )

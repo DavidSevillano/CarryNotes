@@ -25,23 +25,38 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.model.Category
+import com.burixer85.mynotesapp.presentation.model.Note
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarryCreateNoteDialog(
     categories: List<Category>,
+    initialTitle: String? = null,
+    initialContent: String? = null,
+    initialCategory: Category? = null,
     onDismiss: () -> Unit,
-    onConfirm: (title: String, content: String, categoryId: Int) -> Unit,)
-{
-    var title by remember { mutableStateOf("") }
-    var content by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf<Category?>(null) }
-    var isMenuExpanded by remember { mutableStateOf(false) }
+    onConfirm: (title: String, content: String, categoryId: Int) -> Unit
+) {
 
-    val isEditing = false
+    val isEditing = initialTitle != null || initialContent != null || initialCategory != null
+
+    var title by remember(initialTitle) { mutableStateOf(initialTitle ?: "") }
+    var content by remember(initialContent) { mutableStateOf(initialContent ?: "") }
+    var selectedCategory by remember(initialCategory) { mutableStateOf(initialCategory) }
 
     val isFormValid by remember(title, content, selectedCategory) {
         derivedStateOf {
-            title.isNotBlank() && content.isNotBlank() && selectedCategory != null
+            val fieldsAreValid =
+                title.isNotBlank() && content.isNotBlank() && selectedCategory != null
+            if (!fieldsAreValid) {
+                false
+            } else {
+                if (isEditing) {
+                    title != initialTitle || content != initialContent || selectedCategory != initialCategory
+                } else {
+                    true
+                }
+            }
         }
     }
 
@@ -60,7 +75,9 @@ fun CarryCreateNoteDialog(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = if (isEditing) stringResource(R.string.CreateNote_Dialog_Main_Text_Edit) else stringResource(R.string.CreateNote_Dialog_Main_Text_Create),
+                    text = if (isEditing) stringResource(R.string.CreateNote_Dialog_Main_Text_Edit) else stringResource(
+                        R.string.CreateNote_Dialog_Main_Text_Create
+                    ),
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
@@ -82,7 +99,8 @@ fun CarryCreateNoteDialog(
                     selectedItem = selectedCategory?.name ?: "Selecciona una categoría",
                     onItemSelected = { selectedName ->
                         selectedCategory = categories.find { it.name == selectedName }
-                    }
+                    },
+                    enabled = !isEditing
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -129,23 +147,19 @@ fun CarryCreateNoteDialog(
                         stringResource(R.string.CreateNote_Dialog_Button_Save)
                     }
 
-                    val buttonColor = if (isEditing) {
-                        Color(0xFF2196F3)
-                    } else {
-                        Color(0xFF64B5F6)
-                    }
+                    val buttonColor = if (isEditing) Color(0xFF2196F3) else Color(0xFF64B5F6)
+                    val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         val iconColor = if (isFormValid) buttonColor else Color.Gray
-                        val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
 
                         Icon(
                             imageVector = saveIcon,
                             contentDescription = buttonText,
                             tint = iconColor
                         )
-
                         TextButton(
                             onClick = {
                                 onConfirm(title, content, selectedCategory!!.id)
@@ -156,7 +170,6 @@ fun CarryCreateNoteDialog(
                                 disabledContentColor = Color.Gray
                             ),
                             contentPadding = PaddingValues(6.dp)
-
                         ) {
                             Text(
                                 text = buttonText,

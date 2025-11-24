@@ -36,10 +36,10 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    private fun loadCategoryAndNotes(id: Int) {
+    fun loadCategoryAndNotes(categoryId: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
-            val categoryFromDb = RoomApplication.db.categoryDao().getCategoryById(id)
+            val categoryFromDb = RoomApplication.db.categoryDao().getCategoryById(categoryId)
             if (categoryFromDb != null) {
                 val categoryForUi = categoryFromDb.toPresentation()
                 _uiState.update {
@@ -68,7 +68,7 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    fun addNote(note: Note){
+    fun addNote(note: Note, categoriesViewModel: CategoriesScreenViewModel){
         viewModelScope.launch(Dispatchers.IO) {
             val noteEntity = note.toEntity()
             RoomApplication.db.noteDao().insertNote(noteEntity)
@@ -76,6 +76,8 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
             if (categoryId == noteEntity.categoryId){
                 loadCategoryAndNotes(categoryId)
             }
+
+            categoriesViewModel.loadCategories()
         }
     }
 

@@ -27,6 +27,7 @@ fun NoteEntity.toPresentation(): Note {
     return Note(
         id = this.id,
         title = this.title,
-        content = this.content
+        content = this.content,
+        categoryId = this.categoryId
     )
 }
