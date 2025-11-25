@@ -1,5 +1,9 @@
 package com.burixer85.mynotesapp.presentation.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -84,8 +88,27 @@ fun NavigationWrapper() {
             startDestination = QuickNotesRoute,
             modifier = Modifier.padding(scaffoldPadding)
         ) {
-            composable<QuickNotesRoute> {
 
+            composable<QuickNotesRoute>(
+                enterTransition = {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(400)
+                        )
+                },
+                exitTransition = {
+                        slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                            animationSpec = tween(400)
+                        )
+                },
+                popEnterTransition = {
+                    slideIntoContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(400)
+                    )
+                },
+            ) {
                 QuickNotesScreen(
                     modifier = Modifier.zIndex(1f),
                     quickNotesScreenViewModel = quickNotesViewModel,
@@ -93,8 +116,40 @@ fun NavigationWrapper() {
                 )
             }
 
-            composable<CategoriesRoute> {
-
+            composable<CategoriesRoute>(
+                enterTransition = {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Start,
+                            animationSpec = tween(400)
+                        )
+                },
+                exitTransition = {
+                    if (targetState.destination.route?.startsWith(NotesRoute::class.qualifiedName!!) == true) {
+                        fadeOut(animationSpec = tween(0))
+                    } else {
+                        slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.End,
+                            animationSpec = tween(400)
+                        )
+                    }
+                },
+                popEnterTransition = {
+                    if (initialState.destination.route?.startsWith(NotesRoute::class.qualifiedName!!) == true) {
+                        fadeIn(animationSpec = tween(0))
+                    } else {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(400)
+                        )
+                    }
+                },
+                popExitTransition = {
+                    slideOutOfContainer(
+                        towards = AnimatedContentTransitionScope.SlideDirection.End,
+                        animationSpec = tween(400)
+                    )
+                }
+            )  {
                 CategoriesScreen(
                     modifier = Modifier.zIndex(1f),
                     onCategoryClick = { categoryId, categoryName ->
@@ -107,7 +162,41 @@ fun NavigationWrapper() {
                 )
             }
 
-            composable<NotesRoute> { backStackEntry ->
+            composable<NotesRoute>(
+                enterTransition = {
+                    if (initialState.destination.route?.startsWith(CategoriesRoute::class.qualifiedName!!) == true) {
+                        fadeIn(animationSpec = tween(0))
+                    } else {
+                        slideIntoContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Up,
+                            animationSpec = tween(400)
+                        )
+                    }
+                },
+                exitTransition = {
+                    if (targetState.destination.route?.startsWith(QuickNotesRoute::class.qualifiedName!!) == true) {
+                        slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(400)
+                        )
+                    }else{
+                        slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(100)
+                        )
+                    }
+                },
+                popExitTransition = {
+                    if (targetState.destination.route?.startsWith(CategoriesRoute::class.qualifiedName!!) == true) {
+                        fadeOut(animationSpec = tween(0))
+                    } else {
+                        slideOutOfContainer(
+                            towards = AnimatedContentTransitionScope.SlideDirection.Down,
+                            animationSpec = tween(100)
+                        )
+                    }
+                }
+            ) { backStackEntry ->
 
                 val noteData: NotesRoute = backStackEntry.toRoute()
 
