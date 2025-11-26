@@ -41,7 +41,9 @@ import com.burixer85.mynotesapp.presentation.model.Note
 fun NotesScreen(
     modifier: Modifier = Modifier,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
-    onNavigateBackToCategories: () -> Unit
+    onNavigateBackToCategories: () -> Unit,
+    sharedViewModel: SharedViewModel,
+    categoriesViewModel: CategoriesScreenViewModel
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     var showNoteDialog by remember { mutableStateOf(false) }
@@ -51,17 +53,17 @@ fun NotesScreen(
 
     var showEditCategoryDialog by remember { mutableStateOf(false) }
 
-    val categoriesViewModel: CategoriesScreenViewModel = viewModel()
     val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
-    val categoryId = notesScreenViewModel.categoryId
-
-    LaunchedEffect(categoryId) {
-        if (categoryId != null) {
-            notesScreenViewModel.loadCategoryAndNotes(categoryId)
+    LaunchedEffect(Unit) {
+        sharedViewModel.noteAddedFlow.collect { categoryId ->
+            if (notesScreenViewModel.categoryId == categoryId) {
+                notesScreenViewModel.loadCategoryAndNotes(categoryId)
+            }
+            categoriesViewModel.loadCategories()
         }
     }
 

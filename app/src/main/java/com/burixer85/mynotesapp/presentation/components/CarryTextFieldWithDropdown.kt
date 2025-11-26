@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,13 +35,19 @@ fun CarryTextFieldWithDropdown(
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
+    var localSelectedItem by remember { mutableStateOf(selectedItem) }
+
+    LaunchedEffect(selectedItem) {
+        localSelectedItem = selectedItem
+    }
+
     ExposedDropdownMenuBox(
         expanded = isExpanded,
         onExpandedChange = { isExpanded = it },
         modifier = modifier
     ) {
         TextField(
-            value = selectedItem,
+            value = localSelectedItem,
             onValueChange = {},
             readOnly = true,
             label = { Text(label) },
@@ -74,6 +81,7 @@ fun CarryTextFieldWithDropdown(
                 DropdownMenuItem(
                     text = { Text(text = item) },
                     onClick = {
+                        localSelectedItem = item
                         onItemSelected(item)
                         isExpanded = false
                     }

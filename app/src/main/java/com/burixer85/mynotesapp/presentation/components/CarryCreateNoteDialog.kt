@@ -38,7 +38,7 @@ fun CarryCreateNoteDialog(
     onConfirm: (title: String, content: String, categoryId: Int) -> Unit
 ) {
 
-    val isEditing = initialTitle != null || initialContent != null || initialCategory != null
+    val isEditing = initialTitle != null || initialContent != null
 
     var title by remember(initialTitle) { mutableStateOf(initialTitle ?: "") }
     var content by remember(initialContent) { mutableStateOf(initialContent ?: "") }
@@ -52,7 +52,7 @@ fun CarryCreateNoteDialog(
                 false
             } else {
                 if (isEditing) {
-                    title != initialTitle || content != initialContent || selectedCategory != initialCategory
+                    title != initialTitle || content != initialContent
                 } else {
                     true
                 }

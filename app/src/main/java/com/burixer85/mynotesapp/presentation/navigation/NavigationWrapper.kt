@@ -1,5 +1,6 @@
 package com.burixer85.mynotesapp.presentation.navigation
 
+import androidx.activity.result.launch
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -11,6 +12,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.zIndex
@@ -18,6 +20,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.burixer85.mynotesapp.presentation.CategoriesScreen
@@ -27,11 +30,13 @@ import com.burixer85.mynotesapp.presentation.NotesScreen
 import com.burixer85.mynotesapp.presentation.NotesScreenViewModel
 import com.burixer85.mynotesapp.presentation.QuickNotesScreen
 import com.burixer85.mynotesapp.presentation.QuickNotesScreenViewModel
+import com.burixer85.mynotesapp.presentation.SharedViewModel
 import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
 import com.burixer85.mynotesapp.presentation.model.Note
 import com.burixer85.mynotesapp.presentation.model.QuickNote
+import kotlinx.coroutines.launch
 
 @Composable
 fun NavigationWrapper() {
@@ -42,14 +47,10 @@ fun NavigationWrapper() {
 
     val quickNotesViewModel: QuickNotesScreenViewModel = viewModel()
     val categoriesViewModel: CategoriesScreenViewModel = viewModel()
+    val sharedViewModel: SharedViewModel = viewModel()
 
     val categoriesUiState by categoriesViewModel.uiState.collectAsState()
-
     val categories = categoriesUiState.categories
-
-    var currentAddNoteAction by remember {
-        mutableStateOf<((Note) -> Unit)?>(null)
-    }
 
     MainScreen(
         navController = navController,
@@ -204,21 +205,12 @@ fun NavigationWrapper() {
                     factory = NotesScreenViewModel.Factory(noteData.categoryId)
                 )
 
-                DisposableEffect(notesScreenViewModel) {
-                    currentAddNoteAction = { note ->
-                        notesScreenViewModel.addNote(note, categoriesViewModel)
-                    }
-                    onDispose {
-                        currentAddNoteAction = null
-                    }
-                }
-
                 NotesScreen(
                     modifier = Modifier.zIndex(1f),
                     notesScreenViewModel = notesScreenViewModel,
-                    onNavigateBackToCategories = {
-                        navController.popBackStack()
-                    }
+                    onNavigateBackToCategories = { navController.popBackStack() },
+                    sharedViewModel = sharedViewModel,
+                    categoriesViewModel = categoriesViewModel
                 )
             }
         }
@@ -242,13 +234,33 @@ fun NavigationWrapper() {
     }
 
     if (showCreateNoteDialog) {
+        val genericNotesViewModel: NotesScreenViewModel = viewModel()
+        val coroutineScope = rememberCoroutineScope()
+
+        val backStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = backStackEntry?.destination?.route
+
+        val initialCategoryId: Int? = if (currentRoute?.startsWith(NotesRoute::class.qualifiedName!!) == true) {
+            backStackEntry?.toRoute<NotesRoute>()?.categoryId
+        } else {
+            null
+        }
+
+        val initialCategory = initialCategoryId?.let { id ->
+            categories.find { it.id == id }
+        }
+
         CarryCreateNoteDialog(
             categories = categories,
+            initialCategory = initialCategory,
             onDismiss = { showCreateNoteDialog = false },
             onConfirm = { title, content, categoryId ->
                 val newNote = Note(title = title, content = content, categoryId = categoryId)
 
-                currentAddNoteAction?.invoke(newNote)
+                genericNotesViewModel.addNote(newNote, categoriesViewModel)
+                coroutineScope.launch {
+                    sharedViewModel.notifyNoteAdded(categoryId)
+                }
 
                 showCreateNoteDialog = false
             }
