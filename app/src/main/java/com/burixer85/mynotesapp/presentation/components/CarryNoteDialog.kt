@@ -40,7 +40,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.model.DisplayableNote
-import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 @Composable
 fun CarryNoteDialog(
@@ -68,13 +67,14 @@ fun CarryNoteDialog(
                             .fillMaxWidth()
                             .padding(24.dp)
                     ) {
-                        if (note.title.isNotEmpty()) {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = note.title,
+                                    text = note.title.ifEmpty {
+                                        stringResource(R.string.Note_Dialog_Text_No_Title)
+                                                              },
                                     modifier = Modifier
                                         .padding(end = 40.dp),
                                     style = MaterialTheme.typography.titleSmall,
@@ -85,20 +85,21 @@ fun CarryNoteDialog(
 
                             Spacer(modifier = Modifier.height(16.dp))
 
-                            Text(
-                                text = note.content,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White
-                            )
-
-                        }else{
-                            Text(
-                                text = note.content,
+                            Box(
                                 modifier = Modifier
-                                    .padding(end = 40.dp),
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = Color.White)
-                        }
+                                    .fillMaxWidth()
+                                    .background(
+                                        color = Color(0xFF424242),
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                            ) {
+                                Text(
+                                    text = note.content,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    color = Color.White
+                                )
+                            }
                         Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -123,7 +124,7 @@ fun CarryNoteDialog(
 
                                 ) {
                                     Text(
-                                        text = stringResource(R.string.QuickNote_Dialog_TextButton_Edit),
+                                        text = stringResource(R.string.Note_Dialog_TextButton_Edit),
                                         style = MaterialTheme.typography.labelMedium,
                                     )
                                 }
@@ -145,7 +146,7 @@ fun CarryNoteDialog(
 
                                 ) {
                                     Text(
-                                        text = stringResource(R.string.QuickNote_Dialog_TextButton_Close),
+                                        text = stringResource(R.string.Note_Dialog_TextButton_Close),
                                         style = MaterialTheme.typography.labelMedium,
                                     )
                                 }
@@ -182,14 +183,14 @@ fun CarryNoteDialog(
             onDismissRequest = {},
             title = {
                 Text(
-                    stringResource(R.string.QuickNote_Dialog_AlertDialog_Text_Title),
+                    stringResource(R.string.Note_Dialog_AlertDialog_Text_Title),
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
             },
             text = {
                 Text(
-                    stringResource(R.string.QuickNote_Dialog_AlertDialog_Text_Content),
+                    stringResource(R.string.Note_Dialog_AlertDialog_Text_Content),
                     style = MaterialTheme.typography.bodyLarge,
                     color = Color.LightGray
                 )
@@ -208,7 +209,7 @@ fun CarryNoteDialog(
                         }
                     ) {
                         Text(
-                            stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Cancel),
+                            stringResource(R.string.Note_Dialog_AlertDialog_Button_Cancel),
                             color = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -222,7 +223,7 @@ fun CarryNoteDialog(
                         }
                     ) {
                         Text(
-                            stringResource(R.string.QuickNote_Dialog_AlertDialog_Button_Delete),
+                            stringResource(R.string.Note_Dialog_AlertDialog_Button_Delete),
                             color = MaterialTheme.colorScheme.error
                         )
                     }

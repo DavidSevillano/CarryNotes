@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.Dp.Companion.Unspecified
 @Composable
 fun CarryTextFieldWithDropdown(
     modifier: Modifier = Modifier,
-    label: String,
     items: List<String>,
     selectedItem: String,
     onItemSelected: (String) -> Unit,
@@ -50,7 +49,6 @@ fun CarryTextFieldWithDropdown(
             value = localSelectedItem,
             onValueChange = {},
             readOnly = true,
-            label = { Text(label) },
             modifier = Modifier
                 .menuAnchor()
                 .fillMaxWidth(),
@@ -74,6 +72,7 @@ fun CarryTextFieldWithDropdown(
         )
 
         ExposedDropdownMenu(
+            modifier = Modifier.exposedDropdownSize(),
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false }
         ) {

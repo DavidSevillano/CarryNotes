@@ -113,6 +113,7 @@ fun NavigationWrapper() {
                 QuickNotesScreen(
                     modifier = Modifier.zIndex(1f),
                     quickNotesScreenViewModel = quickNotesViewModel,
+                    sharedViewModel = sharedViewModel,
                     onAddQuickNoteClick = { showCreateQuickNoteDialog = true }
                 )
             }
@@ -192,8 +193,8 @@ fun NavigationWrapper() {
                         fadeOut(animationSpec = tween(0))
                     } else {
                         slideOutOfContainer(
-                            towards = AnimatedContentTransitionScope.SlideDirection.Down,
-                            animationSpec = tween(100)
+                            towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                            animationSpec = tween(400)
                         )
                     }
                 }
@@ -228,6 +229,8 @@ fun NavigationWrapper() {
                         content = content
                     )
                 )
+                sharedViewModel.notifyQuickNoteUpdated()
+
                 showCreateQuickNoteDialog = false
             }
         )

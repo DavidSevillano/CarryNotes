@@ -84,22 +84,21 @@ fun CarryCreateNoteDialog(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                CarryTextFieldWithDropdown(
+                    items = categories.map { it.name },
+                    selectedItem = selectedCategory?.name ?: stringResource(R.string.CreateNote_Dialog_Text_DropdownNo_Category),
+                    onItemSelected = { selectedName ->
+                        selectedCategory = categories.find { it.name == selectedName }
+                    },
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 CarryTextField(
                     value = title,
                     onValueChange = { title = it },
                     label = stringResource(R.string.CreateNote_Dialog_Text_Label_Title),
                     singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CarryTextFieldWithDropdown(
-                    label = "Categoría",
-                    items = categories.map { it.name },
-                    selectedItem = selectedCategory?.name ?: "Selecciona una categoría",
-                    onItemSelected = { selectedName ->
-                        selectedCategory = categories.find { it.name == selectedName }
-                    },
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

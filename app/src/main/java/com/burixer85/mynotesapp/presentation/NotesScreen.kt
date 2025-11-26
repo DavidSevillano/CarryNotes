@@ -85,60 +85,21 @@ fun NotesScreen(
 
         if (!uiState.isLoading) {
             val currentCategory = uiState.category!!
-
-            Column(
-                Modifier
-                    .fillMaxSize()
-            ) {
-                Text(
-                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                    text = stringResource(R.string.Main_Screen_Text_Tittle),
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp)
-
-                        .height(60.dp)
-                        .border(
-                            BorderStroke(2.dp, Color.White),
-                            shape = RoundedCornerShape(32.dp)
-                        )
-                        .background(
-                            color = Color(0xFF303030),
-                            shape = RoundedCornerShape(14.dp)
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-
-                    Text(
-                        text = stringResource(R.string.Main_Screen_Button_Achievements),
-                        color = Color.White,
-                        style = MaterialTheme.typography.labelLarge
-                    )
-
+            CarryAllNotes(
+                notes = currentCategory.notes,
+                categoryName = currentCategory.name,
+                onNoteClick = { note ->
+                    selectedNote = note
+                    showNoteDialog = true
+                },
+                onEditCategoryClick = {
+                    showEditCategoryDialog = true
+                },
+                onAddNoteClick = {
+                    selectedNote = null
+                    showEditNoteDialog = true
                 }
-                Spacer(
-                    modifier = Modifier.padding(12.dp),
-                )
-                CarryAllNotes(
-                    notes = currentCategory.notes,
-                    categoryName = currentCategory.name,
-                    onNoteClick = { note ->
-                        selectedNote = note
-                        showNoteDialog = true
-                    },
-                    onEditCategoryClick = {
-                        showEditCategoryDialog = true
-                    },
-                    onAddNoteClick = {
-                        selectedNote = null
-                        showEditNoteDialog = true
-                    }
-                )
-            }
+            )
         } else {
 
             Box(
@@ -185,7 +146,8 @@ fun NotesScreen(
                 val noteToUpdate = selectedNote
                 if (noteToUpdate == null) {
                     notesScreenViewModel.addNote(
-                        Note(title = title, content = content, categoryId = categoryId), categoriesViewModel
+                        Note(title = title, content = content, categoryId = categoryId),
+                        categoriesViewModel
                     )
                 } else {
                     val originalCategoryId = noteToUpdate.categoryId
@@ -195,7 +157,11 @@ fun NotesScreen(
                         categoryId = categoryId
                     )
 
-                    notesScreenViewModel.updateNote(updatedNote, originalCategoryId, categoriesViewModel)
+                    notesScreenViewModel.updateNote(
+                        updatedNote,
+                        originalCategoryId,
+                        categoriesViewModel
+                    )
 
                     showEditNoteDialog = false
                     selectedNote = null
