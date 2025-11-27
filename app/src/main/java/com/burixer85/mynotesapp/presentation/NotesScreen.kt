@@ -132,12 +132,18 @@ fun NotesScreen(
         )
     }
 
-    if (showEditNoteDialog && selectedNote != null) {
+    if (showEditNoteDialog) {
+        val currentCategory = uiState.category
+
         CarryCreateNoteDialog(
             categories = categoriesUiState.categories,
             initialTitle = selectedNote?.title,
             initialContent = selectedNote?.content,
-            initialCategory = categoriesUiState.categories.find { it.id == selectedNote?.categoryId },
+            initialCategory = if (selectedNote != null) {
+                categoriesUiState.categories.find { it.id == selectedNote?.categoryId }
+            } else {
+                currentCategory
+            },
             onDismiss = {
                 showEditNoteDialog = false
                 selectedNote = null
