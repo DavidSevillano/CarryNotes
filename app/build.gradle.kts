@@ -57,7 +57,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.material.icons.extended)
     implementation(libs.datastore.preferences)
-    implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.core.splashscreen)
@@ -87,4 +86,20 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.jetbrains.kotlin:kotlin-test:1.9.0")
+
+    // Navegación 3
+    implementation(libs.androidx.navigation3.runtime)
+    implementation(libs.androidx.navigation3.ui)
+
+    // Lifecycle + Navigation3
+    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+
+    // Kotlin Serialization
+    implementation(libs.kotlinx.serialization.core)
+    implementation(libs.kotlinx.serialization.json)
+
+    // Material 3 Adaptive
+    implementation(libs.androidx.material3.adaptive)
+    implementation(libs.androidx.material3.adaptive.navigation3)
 }
