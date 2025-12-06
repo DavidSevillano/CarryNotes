@@ -3,30 +3,57 @@ package com.burixer85.mynotesapp.presentation
 import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SharedViewModel : ViewModel() {
 
-    // Flujo para el NotesScreen
+    private val _currentRoute = MutableStateFlow<NavigationDestination>(NavigationDestination.QuickNotesNav)
+    val currentRoute = _currentRoute.asStateFlow()
 
-    private val _noteAddedFlow = MutableSharedFlow<Int>(replay = 0)
-    val noteAddedFlow = _noteAddedFlow.asSharedFlow()
+    private var _isFromNavHost = false
 
-    suspend fun notifyNoteAdded(categoryId: Int) {
-        _noteAddedFlow.emit(categoryId)
-    }
-
-    // Flujo para el QuickNoteScreen
-
-    private val _quickNoteUpdatedFlow = MutableSharedFlow<Unit>(replay = 0)
-    val quickNoteUpdatedFlow = _quickNoteUpdatedFlow.asSharedFlow()
-
-    fun notifyQuickNoteUpdated() {
-        viewModelScope.launch {
-            _quickNoteUpdatedFlow.emit(Unit)
+    fun setCurrentRoute(route: NavigationDestination, fromNavHost: Boolean = false) {
+        if (fromNavHost) {
+            _isFromNavHost = true
+            if (_currentRoute.value != route) {
+                _currentRoute.value = route
+            }
+        } else {
+            _isFromNavHost = false
+            _currentRoute.value = route
         }
     }
 
+    fun isNavigationFromNavHost(): Boolean {
+        val fromNavHost = _isFromNavHost
+        if (fromNavHost) {
+            _isFromNavHost = false
+        }
+        return fromNavHost
+    }
+
+    private val _fabAction = MutableStateFlow<String?>(null)
+    val fabAction = _fabAction.asStateFlow()
+
+    fun onFabOptionSelected(option: String) {
+        _fabAction.value = option
+    }
+
+    fun onFabActionConsumed() {
+        _fabAction.value = null
+    }
+
+    private val _dataChanged = MutableSharedFlow<Unit>(replay = 1)
+    val dataChanged = _dataChanged.asSharedFlow()
+
+    fun notifyDataChanged() {
+        viewModelScope.launch {
+            _dataChanged.emit(Unit)
+        }
+    }
 }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,37 +16,43 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 import com.burixer85.mynotesapp.presentation.components.CarryNavigationBar
+import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination
+import com.burixer85.mynotesapp.presentation.navigation.NavigationHost
 
 @Composable
-fun MainScreen(
-    navController: NavHostController,
-    onItemClick: (route: Any) -> Unit,
-    onFabOptionSelected: (String) -> Unit,
-    content: @Composable (padding: PaddingValues) -> Unit
-) {
+fun MainScreen() {
+
+    val sharedViewModel: SharedViewModel = viewModel()
+    val currentRoute by sharedViewModel.currentRoute.collectAsState()
 
     Scaffold(
         contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
         containerColor = Color(0xFF212121),
         bottomBar = {
             CarryNavigationBar(
-                navController = navController,
-                onItemClick = onItemClick
+                currentDestination = currentRoute as NavigationDestination,
+                onItemClick = { destination ->
+                    sharedViewModel.setCurrentRoute(destination)
+                }
             )
         },
         floatingActionButton = {
             CarryFloatingActionButton(
                 modifier = Modifier.padding(16.dp),
-                onOptionSelected = onFabOptionSelected
+                onOptionSelected = { option ->
+                    sharedViewModel.onFabOptionSelected(option)
+                }
             )
         }    ) { innerPadding ->
         Column(
@@ -87,7 +92,7 @@ fun MainScreen(
             Spacer(
                 modifier = Modifier.padding(12.dp),
             )
-            content(PaddingValues())
+            NavigationHost(modifier = Modifier.weight(1f))
         }
 
     }

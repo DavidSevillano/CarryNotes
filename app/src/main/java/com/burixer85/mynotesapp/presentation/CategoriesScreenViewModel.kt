@@ -1,13 +1,11 @@
 package com.burixer85.mynotesapp.presentation
 
-import android.R.attr.category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 import com.burixer85.mynotesapp.presentation.model.Category
 import com.burixer85.mynotesapp.presentation.model.Note
-import com.burixer85.mynotesapp.presentation.model.QuickNote
 import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,6 +39,13 @@ class CategoriesScreenViewModel() : ViewModel() {
                     isLoading = false
                 )
             }
+        }
+    }
+
+    fun addNote(note: Note) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val noteEntity = note.toEntity()
+            RoomApplication.db.noteDao().insertNote(noteEntity)
         }
     }
 
