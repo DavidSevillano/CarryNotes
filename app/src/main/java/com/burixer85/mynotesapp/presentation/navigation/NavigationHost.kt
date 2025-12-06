@@ -1,6 +1,13 @@
 package com.burixer85.mynotesapp.presentation.navigation
 
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -8,10 +15,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.key
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.burixer85.mynotesapp.core.ex.navigateTo
 import com.burixer85.mynotesapp.presentation.CategoriesScreen
 import com.burixer85.mynotesapp.presentation.CategoriesScreenViewModel
 import com.burixer85.mynotesapp.presentation.NotesScreen
@@ -72,7 +82,7 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                 CategoriesScreen(
                     categoriesScreenViewModel = categoriesViewModel,
                     onCategoryClick = { categoryId, categoryName ->
-                        backStack.add(NotesNav(categoryId, categoryName))
+                        backStack.navigateTo(NotesNav(categoryId, categoryName))
                     },
                     onAddCategoryClick = { sharedViewModel.onFabOptionSelected("category") }
                 )
@@ -91,6 +101,53 @@ fun NavigationHost(modifier: Modifier = Modifier) {
             }
             entry<ErrorNav> {
                 Text("Pantalla no encontrada")
+            }
+        },
+        transitionSpec = {
+            val forwardAnimation = slideInHorizontally(tween(300)) { it } togetherWith
+                    slideOutHorizontally(tween(300)) { -it }
+
+            val backwardAnimation = slideInHorizontally(tween(300)) { -it } togetherWith
+                    slideOutHorizontally(tween(300)) { it }
+
+            val inAnimation = slideIntoContainer(
+                AnimatedContentTransitionScope.SlideDirection.Up,
+                animationSpec = tween(300)
+            ) togetherWith fadeOut(animationSpec = tween(300))
+
+            val outAnimation = fadeIn(
+                animationSpec = tween(300)
+            ) togetherWith slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(300)
+            )
+
+            val fromRouteName = initialState.key.toString()
+            val toRouteName = targetState.key.toString()
+
+            when {
+                // CASO 1: QuickNotes -> Categories (Lateral)
+                fromRouteName.startsWith(QuickNotesNav::class.simpleName!!) &&
+                        toRouteName.startsWith(CategoriesNav::class.simpleName!!) -> {
+                    forwardAnimation
+                }
+
+                // CASO 2: Categories -> Notes (Adentro)
+                fromRouteName.startsWith(CategoriesNav::class.simpleName!!) &&
+                        toRouteName.startsWith(NotesNav::class.simpleName!!) -> {
+                    inAnimation
+                }
+
+                // CASO 3: Notes -> Categories (Afuera)
+                fromRouteName.startsWith(NotesNav::class.simpleName!!) &&
+                        toRouteName.startsWith(CategoriesNav::class.simpleName!!) -> {
+                    outAnimation
+                }
+
+                else -> {
+                    // CASO 4: Si no es alguno de esos casos específicos, usa la animacion que queda
+                    backwardAnimation
+                }
             }
         }
     )
