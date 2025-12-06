@@ -10,7 +10,7 @@ import com.burixer85.mynotesapp.data.entity.NoteEntity
 import com.burixer85.mynotesapp.data.entity.QuickNoteEntity
 
 @Database(entities = [NoteEntity::class, QuickNoteEntity::class, CategoryEntity::class],
-    version = 2, exportSchema = false)
+    version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun noteDao(): NoteDao
     abstract fun quickNoteDao(): QuickNoteDao
