@@ -42,40 +42,29 @@ fun NotesScreen(
     modifier: Modifier = Modifier,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
     onNavigateBackToCategories: () -> Unit,
-    sharedViewModel: SharedViewModel,
     categoriesViewModel: CategoriesScreenViewModel
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
-    var showNoteDialog by remember { mutableStateOf(false) }
-    var showEditNoteDialog by remember { mutableStateOf(false) }
-
-    var selectedNote by remember { mutableStateOf<Note?>(null) }
-
-    var showEditCategoryDialog by remember { mutableStateOf(false) }
-
     val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
 
-    val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
+    var showNoteDialog by remember { mutableStateOf(false) }
+    var showEditNoteDialog by remember { mutableStateOf(false) }
+    var showEditCategoryDialog by remember { mutableStateOf(false) }
+    var selectedNote by remember { mutableStateOf<Note?>(null) }
 
-    LaunchedEffect(Unit) {
-        sharedViewModel.noteAddedFlow.collect { categoryId ->
-            if (notesScreenViewModel.categoryId == categoryId) {
-                notesScreenViewModel.loadCategoryAndNotes(categoryId)
-            }
+    val sharedViewModel: SharedViewModel = viewModel()
+
+    LaunchedEffect(key1 = notesScreenViewModel.categoryId!!, key2 = sharedViewModel) {
+
+        val currentCategoryId = notesScreenViewModel.categoryId
+
+        notesScreenViewModel.loadCategoryAndNotes(currentCategoryId)
+
+        sharedViewModel.dataChanged.collect {
+            notesScreenViewModel.loadCategoryAndNotes(currentCategoryId)
             categoriesViewModel.loadCategories()
         }
     }
-
-//    LaunchedEffect(uiState.isQuickNoteDeleted) {
-//        if (uiState.isQuickNoteDeleted) {
-//            snackbarHostState.showSnackbar(
-//                message = context.getString(R.string.Notes_Screen_Text_Text_SnackBar),
-//                duration = SnackbarDuration.Short
-//            )
-//            NotesScreenViewModel.NoteDeleted()
-//        }
-//    }
 
     Box(
         modifier = modifier

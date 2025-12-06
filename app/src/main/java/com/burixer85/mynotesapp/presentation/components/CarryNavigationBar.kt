@@ -1,24 +1,19 @@
 package com.burixer85.mynotesapp.presentation.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.compose.currentBackStackEntryAsState
-import com.burixer85.mynotesapp.presentation.navigation.CategoriesRoute
-import com.burixer85.mynotesapp.presentation.navigation.QuickNotesRoute
 import com.burixer85.mynotesapp.R
+import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination
 
 private data class BottomBarItem(
     val route: Any,
@@ -28,48 +23,61 @@ private data class BottomBarItem(
 )
 @Composable
 fun CarryNavigationBar(
-    navController: NavController,
-    onItemClick: (route: Any) -> Unit
+    currentDestination: NavigationDestination,
+    onItemClick: (NavigationDestination) -> Unit
 ) {
-    val bottomBarItems = listOf(
-        BottomBarItem(
-            route = QuickNotesRoute,
-            label = "QuickNotes",
-            painter = painterResource(id = R.drawable.quicknote_icon)
-        ),
-        BottomBarItem(
-            route = CategoriesRoute,
-            label = "Categories",
-            imageVector = Icons.Outlined.Category
-        )
+
+    val items = listOf(
+        NavigationDestination.QuickNotesNav,
+        NavigationDestination.CategoriesNav
     )
 
-    NavigationBar {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination
-
-        bottomBarItems.forEach { item ->
-            val isSelected = currentDestination?.hierarchy?.any {
-                it.route?.startsWith(item.route::class.qualifiedName!!) == true
-            } == true
+    NavigationBar(
+        containerColor = Color(0xFF212121),
+    ) {
+        items.forEach { destination ->
+            val isSelected = currentDestination::class == destination::class
 
             NavigationBarItem(
                 selected = isSelected,
-                onClick = { onItemClick(item.route) },
+                onClick = { onItemClick(destination) },
                 icon = {
-                    if (item.imageVector != null) {
-                        Icon(
-                            imageVector = item.imageVector,
-                            contentDescription = item.label
-                        )
-                    } else if (item.painter != null) {
-                        Icon(
-                            painter = item.painter,
-                            contentDescription = item.label
-                        )
+                   when (destination) {
+                        is NavigationDestination.QuickNotesNav -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.quicknote_icon),
+                                contentDescription = "Icono de notas rápidas"
+                            )
+                        }
+                        is NavigationDestination.CategoriesNav -> {
+                            Icon(
+                                imageVector = Icons.Outlined.Category,
+                                contentDescription = "Icono de categorías"
+                            )
+                        }
+                        else -> {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_launcher_background),
+                                contentDescription = "Error"
+                            )
+                        }
                     }
                 },
-                label = { Text(item.label) }
+                label = {
+                    val labelText = when (destination) {
+                        is NavigationDestination.QuickNotesNav -> "QuickNotes"
+                        is NavigationDestination.CategoriesNav -> "Categorias"
+                        else -> "Error"
+                    }
+                    Text(text = labelText)
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    unselectedIconColor = Color.Gray,
+                    unselectedTextColor = Color.Gray,
+                    indicatorColor = Color(0xFF424242)
+                )
             )
         }
     }

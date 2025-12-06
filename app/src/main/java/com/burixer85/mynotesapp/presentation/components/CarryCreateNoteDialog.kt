@@ -1,9 +1,5 @@
 package com.burixer85.mynotesapp.presentation.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +21,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.model.Category
-import com.burixer85.mynotesapp.presentation.model.Note
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,7 +47,7 @@ fun CarryCreateNoteDialog(
                 false
             } else {
                 if (isEditing) {
-                    title != initialTitle || content != initialContent
+                    title != initialTitle || content != initialContent || selectedCategory != initialCategory
                 } else {
                     true
                 }

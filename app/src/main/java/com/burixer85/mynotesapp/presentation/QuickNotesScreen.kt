@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryAllQuickNotes
 import com.burixer85.mynotesapp.presentation.components.CarryNoteDialog
@@ -28,7 +29,6 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 fun QuickNotesScreen(
     modifier: Modifier = Modifier,
     quickNotesScreenViewModel: QuickNotesScreenViewModel,
-    sharedViewModel: SharedViewModel,
     onAddQuickNoteClick: () -> Unit
 ) {
     val uiState by quickNotesScreenViewModel.uiState.collectAsStateWithLifecycle()
@@ -38,8 +38,10 @@ fun QuickNotesScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val context = LocalContext.current
 
+    val sharedViewModel: SharedViewModel = viewModel()
+
     LaunchedEffect(Unit) {
-        sharedViewModel.quickNoteUpdatedFlow.collect {
+        sharedViewModel.dataChanged.collect {
             quickNotesScreenViewModel.loadQuickNotes()
         }
     }
@@ -54,7 +56,9 @@ fun QuickNotesScreen(
         }
     }
 
-    Box(modifier = modifier.fillMaxSize().background(Color(0xFF212121))) {
+    Box(modifier = modifier
+        .fillMaxSize()
+        .background(Color(0xFF212121))) {
         if (!uiState.isLoading) {
             Column(
                 Modifier
@@ -111,8 +115,6 @@ fun QuickNotesScreen(
                         content = content
                     )
                     quickNotesScreenViewModel.updateQuickNote(updatedQuickNote)
-
-                    sharedViewModel.notifyQuickNoteUpdated()
 
                     showEditQuickNoteDialog = false
                     selectedQuickNote = null

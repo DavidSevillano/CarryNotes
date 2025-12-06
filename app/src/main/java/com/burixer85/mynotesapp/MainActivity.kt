@@ -9,8 +9,6 @@ import androidx.activity.compose.setContent
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import com.burixer85.mynotesapp.presentation.MainScreen
-import com.burixer85.mynotesapp.presentation.components.CarryNavigationBar
-import com.burixer85.mynotesapp.presentation.navigation.NavigationWrapper
 import com.burixer85.mynotesapp.ui.theme.MyNotesAppTheme
 
 
@@ -29,7 +27,7 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             MyNotesAppTheme(darkTheme = true) {
-                NavigationWrapper()
+                MainScreen()
             }
         }
     }

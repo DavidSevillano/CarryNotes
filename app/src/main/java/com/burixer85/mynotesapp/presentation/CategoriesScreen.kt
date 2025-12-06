@@ -6,16 +6,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -29,7 +25,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.components.CarryAllCategories
-import com.burixer85.mynotesapp.presentation.components.CarryFloatingActionButton
 
 @Composable
 fun CategoriesScreen(
@@ -41,8 +36,12 @@ fun CategoriesScreen(
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
+    val sharedViewModel: SharedViewModel = viewModel()
     LaunchedEffect(Unit) {
         categoriesScreenViewModel.loadCategories()
+        sharedViewModel.dataChanged.collect {
+            categoriesScreenViewModel.loadCategories()
+        }
     }
 
     Box(
