@@ -4,8 +4,8 @@ import android.app.Application
 import androidx.room.Room
 import com.burixer85.mynotesapp.data.database.AppDatabase
 
-class RoomApplication: Application() {
-    companion object{
+class RoomApplication : Application() {
+    companion object {
         lateinit var db: AppDatabase
     }
 
@@ -16,7 +16,8 @@ class RoomApplication: Application() {
             applicationContext,
             AppDatabase::class.java,
             "app_database"
-        ).build(
-        )
+        ).fallbackToDestructiveMigration()
+            .build(
+            )
     }
 }
