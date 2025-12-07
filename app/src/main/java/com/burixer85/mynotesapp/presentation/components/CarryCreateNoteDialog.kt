@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Sync
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -30,7 +32,8 @@ fun CarryCreateNoteDialog(
     initialContent: String? = null,
     initialCategory: Category? = null,
     onDismiss: () -> Unit,
-    onConfirm: (title: String, content: String, categoryId: Int) -> Unit
+    onConfirm: (title: String, content: String, categoryId: Int) -> Unit,
+    onCreateCategoryRequest: () -> Unit
 ) {
 
     val isEditing = initialTitle != null || initialContent != null
@@ -54,7 +57,6 @@ fun CarryCreateNoteDialog(
             }
         }
     }
-
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(dismissOnClickOutside = false)
@@ -64,114 +66,191 @@ fun CarryCreateNoteDialog(
             color = Color(0xFF303030),
             border = BorderStroke(1.dp, Color.White)
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(24.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(
-                    text = if (isEditing) stringResource(R.string.CreateNote_Dialog_Main_Text_Edit) else stringResource(
-                        R.string.CreateNote_Dialog_Main_Text_Create
-                    ),
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                CarryTextFieldWithDropdown(
-                    items = categories.map { it.name },
-                    selectedItem = selectedCategory?.name ?: stringResource(R.string.CreateNote_Dialog_Text_DropdownNo_Category),
-                    onItemSelected = { selectedName ->
-                        selectedCategory = categories.find { it.name == selectedName }
-                    },
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CarryTextField(
-                    value = title,
-                    onValueChange = { title = it },
-                    label = stringResource(R.string.CreateNote_Dialog_Text_Label_Title),
-                    singleLine = true
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                CarryTextField(
-                    value = content,
-                    onValueChange = { content = it },
-                    height = 200.dp,
-                    label = stringResource(R.string.CreateNote_Dialog_Text_Label_Content),
-                )
-
-                Spacer(modifier = Modifier.height(28.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+            if (categories.isEmpty() && !isEditing) {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth(),
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Cerrar",
-                            tint = Color(0xFFFF7043)
+                    Text(
+                        text = stringResource(R.string.CreateNote_Dialog_Text_No_Categories_Label),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = stringResource(R.string.CreateNote_Dialog_Text_No_Categories_Content),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color(0xFFE0E0E0),
+
                         )
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                        TextButton(
-                            onClick = onDismiss, colors = ButtonDefaults.textButtonColors(
-                                contentColor = Color(0xFFFF7043)
-                            ),
-                            contentPadding = PaddingValues(6.dp)
-
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                stringResource(R.string.CreateNote_Dialog_TextButton_Cancel),
-                                style = MaterialTheme.typography.labelMedium
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Cerrar",
+                                tint = Color(0xFFFF7043)
                             )
+
+                            TextButton(
+                                onClick = onDismiss, colors = ButtonDefaults.textButtonColors(
+                                    contentColor = Color(0xFFFF7043)
+                                ),
+                                contentPadding = PaddingValues(6.dp)
+
+                            ) {
+                                Text(
+                                    stringResource(R.string.CreateNote_Dialog_TextButton_Cancel),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                        }
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Check,
+                                contentDescription = stringResource(R.string.CreateNote_Dialog_Button_Save),
+                                tint = Color(0xFF64B5F6)
+                            )
+                            TextButton(
+                                onClick = {
+                                    onCreateCategoryRequest()
+                                },
+                                colors = ButtonDefaults.textButtonColors(
+                                    contentColor = Color(0xFF64B5F6),
+                                    disabledContentColor = Color.Gray
+                                ),
+                                contentPadding = PaddingValues(6.dp)
+                            ) {
+                                Text(
+                                    text = stringResource(R.string.CreateNote_Dialog_Button_No_Categories_Create),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
                         }
                     }
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(24.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = if (isEditing) stringResource(R.string.CreateNote_Dialog_Main_Text_Edit) else stringResource(
+                            R.string.CreateNote_Dialog_Main_Text_Create
+                        ),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.White
+                    )
 
-                    val buttonText = if (isEditing) {
-                        stringResource(R.string.CreateNote_Dialog_Button_Update)
-                    } else {
-                        stringResource(R.string.CreateNote_Dialog_Button_Save)
-                    }
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                    val buttonColor = if (isEditing) Color(0xFF2196F3) else Color(0xFF64B5F6)
-                    val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
+                    CarryTextFieldWithDropdown(
+                        items = categories.map { it.name },
+                        selectedItem = selectedCategory?.name
+                            ?: stringResource(R.string.CreateNote_Dialog_Text_DropdownNo_Category),
+                        onItemSelected = { selectedName ->
+                            selectedCategory = categories.find { it.name == selectedName }
+                        },
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CarryTextField(
+                        value = title,
+                        onValueChange = { title = it },
+                        label = stringResource(R.string.CreateNote_Dialog_Text_Label_Title),
+                        singleLine = true
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    CarryTextField(
+                        value = content,
+                        onValueChange = { content = it },
+                        height = 200.dp,
+                        label = stringResource(R.string.CreateNote_Dialog_Text_Label_Content),
+                    )
+
+                    Spacer(modifier = Modifier.height(28.dp))
 
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        val iconColor = if (isFormValid) buttonColor else Color.Gray
-
-                        Icon(
-                            imageVector = saveIcon,
-                            contentDescription = buttonText,
-                            tint = iconColor
-                        )
-                        TextButton(
-                            onClick = {
-                                onConfirm(title, content, selectedCategory!!.id)
-                            },
-                            enabled = isFormValid,
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = buttonColor,
-                                disabledContentColor = Color.Gray
-                            ),
-                            contentPadding = PaddingValues(6.dp)
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text(
-                                text = buttonText,
-                                style = MaterialTheme.typography.labelMedium
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = "Cerrar",
+                                tint = Color(0xFFFF7043)
                             )
+
+                            TextButton(
+                                onClick = onDismiss, colors = ButtonDefaults.textButtonColors(
+                                    contentColor = Color(0xFFFF7043)
+                                ),
+                                contentPadding = PaddingValues(6.dp)
+
+                            ) {
+                                Text(
+                                    stringResource(R.string.CreateNote_Dialog_TextButton_Cancel),
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
+                        }
+
+                        val buttonText = if (isEditing) {
+                            stringResource(R.string.CreateNote_Dialog_Button_Update)
+                        } else {
+                            stringResource(R.string.CreateNote_Dialog_Button_Save)
+                        }
+
+                        val buttonColor = if (isEditing) Color(0xFF2196F3) else Color(0xFF64B5F6)
+                        val saveIcon = if (isEditing) Icons.Default.Sync else Icons.Default.Save
+
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            val iconColor = if (isFormValid) buttonColor else Color.Gray
+
+                            Icon(
+                                imageVector = saveIcon,
+                                contentDescription = buttonText,
+                                tint = iconColor
+                            )
+                            TextButton(
+                                onClick = {
+                                    onConfirm(title, content, selectedCategory!!.id)
+                                },
+                                enabled = isFormValid,
+                                colors = ButtonDefaults.textButtonColors(
+                                    contentColor = buttonColor,
+                                    disabledContentColor = Color.Gray
+                                ),
+                                contentPadding = PaddingValues(6.dp)
+                            ) {
+                                Text(
+                                    text = buttonText,
+                                    style = MaterialTheme.typography.labelMedium
+                                )
+                            }
                         }
                     }
                 }
             }
         }
+
     }
 }

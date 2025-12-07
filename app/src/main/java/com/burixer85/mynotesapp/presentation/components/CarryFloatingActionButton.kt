@@ -99,24 +99,6 @@ fun CarryFloatingActionButton(
                 thickness = DividerDefaults.Thickness,
                 color = Color.Gray
             )
-            DropdownMenuItem(
-                text = { Text(stringResource(R.string.Main_Screen_FAB_Add_Note)) },
-                onClick = {
-                    showMenu = false
-                    onOptionSelected("note")
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Outlined.Article,
-                        contentDescription = "Añadir nota"
-                    )
-                }
-            )
-            HorizontalDivider(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                thickness = DividerDefaults.Thickness,
-                color = Color.Gray
-            )
 
             DropdownMenuItem(
                 text = { Text(stringResource(R.string.Main_Screen_FAB_Add_Category)) },
@@ -128,6 +110,26 @@ fun CarryFloatingActionButton(
                     Icon(
                         imageVector = Icons.Outlined.Category,
                         contentDescription = "Añadir categoría"
+                    )
+                }
+            )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                thickness = DividerDefaults.Thickness,
+                color = Color.Gray
+            )
+
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.Main_Screen_FAB_Add_Note)) },
+                onClick = {
+                    showMenu = false
+                    onOptionSelected("note")
+                },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Outlined.Article,
+                        contentDescription = "Añadir nota"
                     )
                 }
             )

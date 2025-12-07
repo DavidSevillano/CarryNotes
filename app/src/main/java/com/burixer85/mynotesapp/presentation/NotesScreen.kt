@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.presentation.components.CarryAllNotes
 import com.burixer85.mynotesapp.presentation.components.CarryCreateCategoryDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateNoteDialog
@@ -42,7 +43,8 @@ fun NotesScreen(
     modifier: Modifier = Modifier,
     notesScreenViewModel: NotesScreenViewModel = viewModel(),
     onNavigateBackToCategories: () -> Unit,
-    categoriesViewModel: CategoriesScreenViewModel
+    categoriesViewModel: CategoriesScreenViewModel,
+    sharedViewModel: SharedViewModel
 ) {
     val uiState by notesScreenViewModel.uiState.collectAsStateWithLifecycle()
     val categoriesUiState by categoriesViewModel.uiState.collectAsStateWithLifecycle()
@@ -52,18 +54,8 @@ fun NotesScreen(
     var showEditCategoryDialog by remember { mutableStateOf(false) }
     var selectedNote by remember { mutableStateOf<Note?>(null) }
 
-    val sharedViewModel: SharedViewModel = viewModel()
-
-    LaunchedEffect(key1 = notesScreenViewModel.categoryId!!, key2 = sharedViewModel) {
-
-        val currentCategoryId = notesScreenViewModel.categoryId
-
-        notesScreenViewModel.loadCategoryAndNotes(currentCategoryId)
-
-        sharedViewModel.dataChanged.collect {
-            notesScreenViewModel.loadCategoryAndNotes(currentCategoryId)
-            categoriesViewModel.loadCategories()
-        }
+    val onCompleteLambda: (ScreenEvent) -> Unit = { event ->
+        sharedViewModel.postEvent(event)
     }
 
     Box(
@@ -114,7 +106,7 @@ fun NotesScreen(
                 showEditNoteDialog = true
             },
             onDeleteConfirm = {
-                notesScreenViewModel.deleteNote(selectedNote!!)
+                notesScreenViewModel.deleteNote(selectedNote!!, onCompleteLambda)
                 selectedNote = null
                 showNoteDialog = false
             }
@@ -142,7 +134,7 @@ fun NotesScreen(
                 if (noteToUpdate == null) {
                     notesScreenViewModel.addNote(
                         Note(title = title, content = content, categoryId = categoryId),
-                        categoriesViewModel
+                        categoriesViewModel, onCompleteLambda
                     )
                 } else {
                     val originalCategoryId = noteToUpdate.categoryId
@@ -155,7 +147,8 @@ fun NotesScreen(
                     notesScreenViewModel.updateNote(
                         updatedNote,
                         originalCategoryId,
-                        categoriesViewModel
+                        categoriesViewModel,
+                        onCompleteLambda
                     )
 
                     showEditNoteDialog = false
@@ -163,7 +156,8 @@ fun NotesScreen(
                 }
                 showEditNoteDialog = false
                 selectedNote = null
-            }
+            },
+            onCreateCategoryRequest = {}
         )
     }
 
@@ -173,11 +167,11 @@ fun NotesScreen(
                 categoryToEdit = categoryToEdit,
                 onDismiss = { showEditCategoryDialog = false },
                 onConfirm = { updatedCategory ->
-                    notesScreenViewModel.updateCategory(updatedCategory)
+                    notesScreenViewModel.updateCategory(updatedCategory, onCompleteLambda)
                     showEditCategoryDialog = false
                 },
                 onDeleteConfirm = {
-                    notesScreenViewModel.deleteCategory(categoryToEdit)
+                    notesScreenViewModel.deleteCategory(categoryToEdit, onCompleteLambda)
                     showEditCategoryDialog = false
                     onNavigateBackToCategories()
                 }

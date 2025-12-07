@@ -8,6 +8,8 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.burixer85.mynotesapp.R
+import com.burixer85.mynotesapp.core.EventType
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 import com.burixer85.mynotesapp.presentation.model.Category
@@ -23,8 +25,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
-
-    constructor() : this(SavedStateHandle())
 
     private val _uiState = MutableStateFlow(NotesUI(isLoading = true))
     val uiState: StateFlow<NotesUI> = _uiState
@@ -56,40 +56,51 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
         }
     }
 
-    fun updateCategory(category: Category) {
+    fun updateCategory(category: Category, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             RoomApplication.db.categoryDao().updateCategory(category.toEntity())
+
+            onComplete(ScreenEvent.Updated(EventType.Category))
+
             categoryId?.let { loadCategoryAndNotes(it) }
         }
     }
 
-    fun deleteCategory(category: Category) {
+    fun deleteCategory(category: Category, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             RoomApplication.db.categoryDao().deleteCategory(category.toEntity())
+
+            onComplete(ScreenEvent.Deleted(EventType.Category))
+
         }
     }
 
-    fun addNote(note: Note, categoriesViewModel: CategoriesScreenViewModel) {
+    fun addNote(note: Note, categoriesViewModel: CategoriesScreenViewModel, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             val noteEntity = note.toEntity()
+
             RoomApplication.db.noteDao().insertNote(noteEntity)
+
+            onComplete(ScreenEvent.Created(EventType.Note))
 
             if (categoryId == noteEntity.categoryId) {
                 loadCategoryAndNotes(categoryId)
             }
-
             categoriesViewModel.loadCategories()
         }
     }
 
-    fun updateNote(note: Note, originalCategoryId: Int, categoriesViewModel: CategoriesScreenViewModel) {
+    fun updateNote(note: Note, originalCategoryId: Int, categoriesViewModel: CategoriesScreenViewModel, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
+
             RoomApplication.db.noteDao().updateNote(
                 id = note.id,
                 title = note.title,
                 content = note.content,
                 categoryId = note.categoryId
             )
+
+            onComplete(ScreenEvent.Updated(EventType.Note))
 
             val currentScreenCategoryId = categoryId
 
@@ -106,13 +117,16 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     }
 
 
-    fun deleteNote(note: Note) {
+    fun deleteNote(note: Note, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity()
-            RoomApplication.db.noteDao().deleteNote(noteEntity)
+            RoomApplication.db.noteDao().deleteNote(note.toEntity())
+
+            onComplete(ScreenEvent.Deleted(EventType.Note))
+
             categoryId?.let { loadCategoryAndNotes(it) }
         }
     }
+
 
     class Factory(private val categoryId: Int) : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
@@ -130,5 +144,4 @@ data class NotesUI(
     val category: Category? = null,
     val notes: List<Note> = emptyList(),
     val isLoading: Boolean = false,
-    val isNoteDeleted: Boolean = false
 )

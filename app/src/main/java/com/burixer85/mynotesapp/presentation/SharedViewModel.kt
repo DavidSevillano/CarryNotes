@@ -3,11 +3,14 @@ package com.burixer85.mynotesapp.presentation
 import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class SharedViewModel : ViewModel() {
@@ -16,6 +19,15 @@ class SharedViewModel : ViewModel() {
     val currentRoute = _currentRoute.asStateFlow()
 
     private var _isFromNavHost = false
+
+    private val _eventChannel = Channel<ScreenEvent>()
+    val eventFlow = _eventChannel.receiveAsFlow()
+
+    fun postEvent(event: ScreenEvent) {
+        viewModelScope.launch {
+            _eventChannel.send(event)
+        }
+    }
 
     fun setCurrentRoute(route: NavigationDestination, fromNavHost: Boolean = false) {
         if (fromNavHost) {

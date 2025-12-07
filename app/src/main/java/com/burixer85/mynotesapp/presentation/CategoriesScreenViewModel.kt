@@ -2,6 +2,8 @@ package com.burixer85.mynotesapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer85.mynotesapp.core.EventType
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 import com.burixer85.mynotesapp.presentation.model.Category
@@ -42,17 +44,21 @@ class CategoriesScreenViewModel() : ViewModel() {
         }
     }
 
-    fun addNote(note: Note) {
+    fun addNote(note: Note, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = note.toEntity()
-            RoomApplication.db.noteDao().insertNote(noteEntity)
+
+            RoomApplication.db.noteDao().insertNote(note.toEntity())
+
+            onComplete(ScreenEvent.Created(EventType.Note))
         }
     }
 
-    fun addCategory(category: Category) {
+    fun addCategory(category: Category, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val categoryEntity = category.toEntity()
-            RoomApplication.db.categoryDao().insertCategory(categoryEntity)
+
+            RoomApplication.db.categoryDao().insertCategory(category.toEntity())
+
+            onComplete(ScreenEvent.Created(EventType.Category))
 
             val updatedCategoriesFromDb = RoomApplication.db.categoryDao().getAllCategories()
 
@@ -61,7 +67,6 @@ class CategoriesScreenViewModel() : ViewModel() {
             _uiState.update {
                 it.copy(categories = categoriesForUi)
             }
-            loadCategories()
         }
     }
 }

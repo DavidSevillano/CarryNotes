@@ -2,6 +2,8 @@ package com.burixer85.mynotesapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer85.mynotesapp.core.EventType
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 
@@ -21,6 +23,7 @@ class QuickNotesScreenViewModel() : ViewModel() {
     init {
         loadQuickNotes()
     }
+
     fun loadQuickNotes() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.update { it.copy(isLoading = true) }
@@ -35,27 +38,28 @@ class QuickNotesScreenViewModel() : ViewModel() {
         }
     }
 
-    fun addQuickNote(quickNote: QuickNote) {
+    fun addQuickNote(quickNote: QuickNote, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val noteEntity = quickNote.toEntity()
-            RoomApplication.db.quickNoteDao().insertQuickNote(noteEntity)
+            RoomApplication.db.quickNoteDao().insertQuickNote(quickNote.toEntity())
 
             val updatedNotesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()
 
             val quickNotesForUi = updatedNotesFromDb.map { it.toPresentation() }
 
+            onComplete(ScreenEvent.Created(EventType.QuickNote))
+
             _uiState.update { currentState ->
                 currentState.copy(quickNotes = quickNotesForUi)
             }
-            loadQuickNotes()
         }
     }
 
-    fun updateQuickNote(quickNote: QuickNote) {
+    fun updateQuickNote(quickNote: QuickNote, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            val quickNoteEntity = quickNote.toEntity()
 
-            RoomApplication.db.quickNoteDao().updateQuickNote(quickNoteEntity)
+            RoomApplication.db.quickNoteDao().updateQuickNote(quickNote.toEntity())
+
+            onComplete(ScreenEvent.Updated(EventType.QuickNote))
 
             _uiState.update { currentState ->
                 val updatedList = currentState.quickNotes.map {
@@ -63,36 +67,25 @@ class QuickNotesScreenViewModel() : ViewModel() {
                 }
                 currentState.copy(quickNotes = updatedList)
             }
-            loadQuickNotes()
         }
     }
 
-    fun deleteQuickNote(quickNote: QuickNote){
+    fun deleteQuickNote(quickNote: QuickNote, onComplete: (ScreenEvent) -> Unit){
         viewModelScope.launch(Dispatchers.IO) {
-            val quickNoteEntity = quickNote.toEntity()
+            RoomApplication.db.quickNoteDao().deleteQuickNote(quickNote.toEntity())
 
-            RoomApplication.db.quickNoteDao().deleteQuickNote(quickNoteEntity)
+            onComplete(ScreenEvent.Deleted(EventType.QuickNote))
 
             _uiState.update { currentState ->
                 val updatedList = currentState.quickNotes.filter { it.id != quickNote.id }
-                currentState.copy(quickNotes = updatedList, isQuickNoteDeleted = true)
+                currentState.copy(quickNotes = updatedList)
             }
-            loadQuickNotes()
-
         }
     }
-
-    fun quickNoteDeleted() {
-        _uiState.update { currentState ->
-            currentState.copy(isQuickNoteDeleted = false)
-        }
-    }
-
 }
 
 
 data class QuickNotesUI (
     val quickNotes: List<QuickNote> = emptyList(),
     val isLoading: Boolean = false,
-    val isQuickNoteDeleted: Boolean = false
 )

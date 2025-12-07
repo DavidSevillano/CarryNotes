@@ -31,12 +31,12 @@ fun CategoriesScreen(
     modifier: Modifier = Modifier,
     categoriesScreenViewModel: CategoriesScreenViewModel = viewModel(),
     onCategoryClick: (categoryId: Int, categoryName: String) -> Unit,
-    onAddCategoryClick: () -> Unit
+    onAddCategoryClick: () -> Unit,
+    sharedViewModel: SharedViewModel,
 ) {
 
     val uiState by categoriesScreenViewModel.uiState.collectAsStateWithLifecycle()
 
-    val sharedViewModel: SharedViewModel = viewModel()
     LaunchedEffect(Unit) {
         categoriesScreenViewModel.loadCategories()
         sharedViewModel.dataChanged.collect {

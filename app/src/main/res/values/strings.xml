@@ -4,6 +4,8 @@
     <!--Strings Principales -->
     <string name="Main_Screen_Text_Tittle">CARRYNOTES</string>
     <string name="Main_Screen_Button_Achievements">Logros</string>
+
+    <!-- FAB -->
     <string name="Main_Screen_FAB_Add_QuickNote">Añadir Nota Rápida</string>
     <string name="Main_Screen_FAB_Add_Note">Añadir Nota</string>
     <string name="Main_Screen_FAB_Add_Category">Añadir Categoría</string>
@@ -12,13 +14,19 @@
     <string name="QuickNotes_Screen_Main_Text_No_Quicknotes">Sin Notas Rápidas</string>
     <string name="QuickNotes_Screen_Main_Text_Number_Of_Quicknotes">%1$d Notas Rápidas</string>
     <string name="QuickNotes_Screen_Text_Box_Add_QuickNote">Añadir Nota Rápida</string>
-    <string name="QuickNotes_Screen_Text_Text_SnackBar">Nota rápida eliminada</string>
+    <string name="QuickNotes_Screen_Text_SnackBar_Deleted">Nota rápida eliminada</string>
+    <string name="QuickNotes_Screen_Text_SnackBar_Added">Nota rápida añadida</string>
+    <string name="QuickNotes_Screen_Text_SnackBar_Updated">Nota rápida actualizada</string>
 
 
     <!-- Categories Screen -->
     <string name="Categories_Screen_Main_Text_No_Categories">Sin Categorías</string>
     <string name="Categories_Screen_Main_Text_Number_Of_Categories">%1$d Categorías</string>
     <string name="Categories_Screen_Text_Box_Add_Category">Añadir Categoría</string>
+    <string name="Categories_Screen_Text_Text_SnackBar">Categoría eliminada</string>
+
+    <!-- Notes Screen -->
+    <string name="Notes_Screen_Text_Text_SnackBar">Nota eliminada</string>
 
     <!-- QuickNote Dialog -->
     <string name="Note_Dialog_AlertDialog_Text_Title">Confirmar Borrado</string>
@@ -48,7 +56,10 @@
     <string name="CreateNote_Dialog_Button_Update">Actualizar</string>
     <string name="CreateNote_Dialog_Button_Save">Guardar</string>
     <string name="CreateNote_Dialog_Text_DropdownNo_Category">Selecciona una categoría</string>
-
+    <string name="CreateNote_Dialog_Text_No_Categories_Label">No hay categorías</string>
+    <string name="CreateNote_Dialog_Text_No_Categories_Content">"Antes de crear una nota debes crear una categoría. ¿Quieres crearla?"</string>
+    <string name="CreateNote_Dialog_Button_No_Categories_Create">Crear</string>
+    <string name="CreateNote_Dialog_Text_Label_Dropdown">Guardar</string>
 
     <!-- CreateCategory Dialog -->
     <string name="CreateCategory_Dialog_Main_Text">Crear Categoría</string>
@@ -60,6 +71,14 @@
     <string name="CreateCategory_Dialog_AlertDialog_Text_Content">¿Estás seguro de que quieres borrar esta categoría?</string>
     <string name="CreateCategory_Dialog_AlertDialog_Button_Delete">Borrar</string>
     <string name="CreateCategory_Dialog_AlertDialog_Button_Cancel">Cancelar</string>
+
+    <!-- Snackbars -->
+    <string name="event_type_quicknote">"Nota rápida"</string>
+    <string name="event_type_note">"Nota"</string>
+    <string name="event_type_category">"Categoría"</string>
+    <string name="snackbar_item_added">"%1$s añadida"</string>
+    <string name="snackbar_item_updated">"%1$s actualizada"</string>
+    <string name="snackbar_item_deleted">"%1$s eliminada"</string>
 
 
 </resources>

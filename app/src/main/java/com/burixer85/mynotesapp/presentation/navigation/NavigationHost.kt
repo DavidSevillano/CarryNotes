@@ -21,6 +21,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.core.ex.navigateTo
 import com.burixer85.mynotesapp.presentation.CategoriesScreen
 import com.burixer85.mynotesapp.presentation.CategoriesScreenViewModel
@@ -46,7 +47,6 @@ fun NavigationHost(modifier: Modifier = Modifier) {
     val quickNotesViewModel: QuickNotesScreenViewModel = viewModel()
     val categoriesViewModel: CategoriesScreenViewModel = viewModel()
     val sharedViewModel: SharedViewModel = viewModel()
-    val coroutineScope = rememberCoroutineScope()
 
     val requestedRoute by sharedViewModel.currentRoute.collectAsState()
     val fabAction by sharedViewModel.fabAction.collectAsState()
@@ -75,7 +75,8 @@ fun NavigationHost(modifier: Modifier = Modifier) {
             entry<QuickNotesNav> {
                 QuickNotesScreen(
                     quickNotesScreenViewModel = quickNotesViewModel,
-                    onAddQuickNoteClick = { sharedViewModel.onFabOptionSelected("quicknote") }
+                    onAddQuickNoteClick = { sharedViewModel.onFabOptionSelected("quicknote") },
+                    sharedViewModel = sharedViewModel
                 )
             }
             entry<CategoriesNav> {
@@ -84,7 +85,8 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                     onCategoryClick = { categoryId, categoryName ->
                         backStack.navigateTo(NotesNav(categoryId, categoryName))
                     },
-                    onAddCategoryClick = { sharedViewModel.onFabOptionSelected("category") }
+                    onAddCategoryClick = { sharedViewModel.onFabOptionSelected("category") },
+                    sharedViewModel = sharedViewModel
                 )
             }
             entry<NotesNav> { key ->
@@ -96,7 +98,8 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                 NotesScreen(
                     notesScreenViewModel = notesScreenViewModel,
                     onNavigateBackToCategories = { backStack.removeLastOrNull() },
-                    categoriesViewModel = categoriesViewModel
+                    categoriesViewModel = categoriesViewModel,
+                    sharedViewModel = sharedViewModel
                 )
             }
             entry<ErrorNav> {
@@ -157,8 +160,13 @@ fun NavigationHost(modifier: Modifier = Modifier) {
             CarryCreateQuickNoteDialog(
                 onDismiss = { sharedViewModel.onFabActionConsumed() },
                 onConfirm = { title, content ->
+                    val onCompleteLambda: (ScreenEvent) -> Unit = { event ->
+                        sharedViewModel.postEvent(event)
+                    }
                     quickNotesViewModel.addQuickNote(
-                        QuickNote(title = title, content = content)
+                        QuickNote(title = title, content = content),
+                        onComplete = onCompleteLambda
+
                     )
                     sharedViewModel.notifyDataChanged()
 
@@ -170,7 +178,13 @@ fun NavigationHost(modifier: Modifier = Modifier) {
             CarryCreateCategoryDialog(
                 onDismiss = { sharedViewModel.onFabActionConsumed() },
                 onConfirm = { category ->
-                    categoriesViewModel.addCategory(category)
+                    val onCompleteLambda: (ScreenEvent) -> Unit = { event ->
+                        sharedViewModel.postEvent(event)
+                    }
+
+                    categoriesViewModel.addCategory(category,
+                    onComplete = onCompleteLambda
+                    )
 
                     sharedViewModel.notifyDataChanged()
 
@@ -187,13 +201,21 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                 initialCategory = initialCategoryId?.let { id -> categories.find { it.id == id } },
                 onDismiss = { sharedViewModel.onFabActionConsumed() },
                 onConfirm = { title, content, categoryId ->
+                    val onCompleteLambda: (ScreenEvent) -> Unit = { event ->
+                        sharedViewModel.postEvent(event)
+                    }
+
                     val newNote = Note(title = title, content = content, categoryId = categoryId)
 
-                    categoriesViewModel.addNote(newNote)
+                    categoriesViewModel.addNote(newNote, onCompleteLambda)
 
                     sharedViewModel.notifyDataChanged()
 
                     sharedViewModel.onFabActionConsumed()
+                },
+                onCreateCategoryRequest = {
+                    sharedViewModel.onFabActionConsumed()
+                    sharedViewModel.onFabOptionSelected("category")
                 }
             )
         }

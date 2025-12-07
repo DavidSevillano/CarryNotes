@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer85.mynotesapp.R
+import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.presentation.components.CarryAllQuickNotes
 import com.burixer85.mynotesapp.presentation.components.CarryNoteDialog
 import com.burixer85.mynotesapp.presentation.components.CarryCreateQuickNoteDialog
@@ -28,6 +29,7 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 @Composable
 fun QuickNotesScreen(
     modifier: Modifier = Modifier,
+    sharedViewModel: SharedViewModel,
     quickNotesScreenViewModel: QuickNotesScreenViewModel,
     onAddQuickNoteClick: () -> Unit
 ) {
@@ -35,25 +37,9 @@ fun QuickNotesScreen(
     var showQuickNoteDialog by remember { mutableStateOf(false) }
     var showEditQuickNoteDialog by remember { mutableStateOf(false) }
     var selectedQuickNote by remember { mutableStateOf<QuickNote?>(null) }
-    val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
 
-    val sharedViewModel: SharedViewModel = viewModel()
-
-    LaunchedEffect(Unit) {
-        sharedViewModel.dataChanged.collect {
-            quickNotesScreenViewModel.loadQuickNotes()
-        }
-    }
-
-    LaunchedEffect(uiState.isQuickNoteDeleted) {
-        if (uiState.isQuickNoteDeleted) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(R.string.QuickNotes_Screen_Text_Text_SnackBar),
-                duration = SnackbarDuration.Short
-            )
-            quickNotesScreenViewModel.quickNoteDeleted()
-        }
+    val onCompleteLambda: (ScreenEvent) -> Unit = { event ->
+        sharedViewModel.postEvent(event)
     }
 
     Box(modifier = modifier
@@ -83,6 +69,7 @@ fun QuickNotesScreen(
                 CircularProgressIndicator()
             }
         }
+
         if (showQuickNoteDialog && selectedQuickNote != null) {
             CarryNoteDialog(
                 note = selectedQuickNote!!,
@@ -95,7 +82,7 @@ fun QuickNotesScreen(
                     showEditQuickNoteDialog = true
                 },
                 onDeleteConfirm = {
-                    quickNotesScreenViewModel.deleteQuickNote(selectedQuickNote!!)
+                    quickNotesScreenViewModel.deleteQuickNote(selectedQuickNote!!, onCompleteLambda)
                     selectedQuickNote = null
                     showQuickNoteDialog = false
                 }
@@ -114,7 +101,7 @@ fun QuickNotesScreen(
                         title = title,
                         content = content
                     )
-                    quickNotesScreenViewModel.updateQuickNote(updatedQuickNote)
+                    quickNotesScreenViewModel.updateQuickNote(updatedQuickNote, onCompleteLambda)
 
                     showEditQuickNoteDialog = false
                     selectedQuickNote = null
