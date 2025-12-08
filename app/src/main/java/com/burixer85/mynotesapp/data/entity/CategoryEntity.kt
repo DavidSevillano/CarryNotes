@@ -10,6 +10,7 @@ data class CategoryEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") val id: Int = 0,
     @ColumnInfo(name = "name") val name: String,
+    @ColumnInfo(name = "createdAt") val createdAt: Long = System.currentTimeMillis()
 )
 
 fun CategoryEntity.toPresentation(): Category {

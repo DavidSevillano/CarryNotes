@@ -10,7 +10,7 @@ import com.burixer85.mynotesapp.data.entity.QuickNoteEntity
 
 @Dao
 interface QuickNoteDao {
-    @Query("SELECT * FROM quick_notes")
+    @Query("SELECT * FROM quick_notes ORDER BY createdAt DESC")
     suspend fun getAllQuickNotes(): List<QuickNoteEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

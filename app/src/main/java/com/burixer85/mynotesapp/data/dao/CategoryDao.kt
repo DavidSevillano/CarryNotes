@@ -14,7 +14,7 @@ import com.burixer85.mynotesapp.data.entity.QuickNoteEntity
 @Dao
 interface CategoryDao {
     @Transaction
-    @Query("SELECT * FROM categories")
+    @Query("SELECT * FROM categories ORDER BY createdAt DESC")
     suspend fun getAllCategories(): List<CategoryWithNotes>
 
     @Transaction

@@ -45,7 +45,7 @@ fun CarryAllQuickNotes(
         if (quickNotes.isNotEmpty()) {
 
             Text(
-                text = "${quickNotes.size} notas rápidas",
+                text = stringResource(R.string.QuickNotes_Screen_Main_Text),
                 color = Color.White,
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier

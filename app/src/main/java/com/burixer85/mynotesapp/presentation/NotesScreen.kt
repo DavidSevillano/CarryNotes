@@ -58,6 +58,18 @@ fun NotesScreen(
         sharedViewModel.postEvent(event)
     }
 
+    LaunchedEffect(key1 = notesScreenViewModel.categoryId!!, key2 = sharedViewModel) {
+
+        val currentCategoryId = notesScreenViewModel.categoryId
+
+        notesScreenViewModel.loadCategoryAndNotes(currentCategoryId)
+
+        sharedViewModel.dataChanged.collect {
+            notesScreenViewModel.loadCategoryAndNotes(currentCategoryId)
+            categoriesViewModel.loadCategories()
+        }
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()

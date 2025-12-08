@@ -18,6 +18,7 @@ fun CategoryWithNotes.toPresentation(): Category {
     return Category(
         id = this.category.id,
         name = this.category.name,
+        createdAt = this.category.createdAt,
         notes = this.notes.map { noteEntity ->
             noteEntity.toPresentation()
         }

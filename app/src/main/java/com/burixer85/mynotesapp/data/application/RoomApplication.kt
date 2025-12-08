@@ -15,7 +15,7 @@ class RoomApplication : Application() {
         db = Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java,
-            "app_database"
+            "carry_notes_database"
         ).fallbackToDestructiveMigration()
             .build(
             )
