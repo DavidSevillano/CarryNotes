@@ -25,9 +25,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.burixer85.mynotesapp.presentation.model.Note
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -45,41 +48,70 @@ fun CarryAllNotes(
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        Box(
+
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 32.dp)
+                .padding(bottom = 32.dp, start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = categoryName,
-                color = Color.White,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.Center)
-            )
-
-            Row(
-                modifier = Modifier.align(Alignment.Center),
-                verticalAlignment = Alignment.CenterVertically
+            Box(
+                modifier = Modifier.padding(start = 40.dp).weight(1f)
             ) {
                 Text(
-                    text = categoryName,
-                    color = Color.Transparent,
-                    style = MaterialTheme.typography.titleLarge
+                    text = categoryName.replaceFirstChar { if (it.isLowerCase()) it.uppercase() else it.toString() },
+                    color = Color.White,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.align(Alignment.Center)
                 )
 
-                Spacer(modifier = Modifier.width(62.dp))
+                Row(
+                    modifier = Modifier.align(Alignment.Center),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = categoryName,
+                        color = Color.Transparent,
+                        style = MaterialTheme.typography.titleLarge
+                    )
 
+                    Spacer(modifier = Modifier.width(62.dp))
+
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Editar nombre de categoría",
+                        tint = Color.White,
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                onClick = { onEditCategoryClick() }
+                            )
+                    )
+                }
+            }
+
+            // EL NUEVO BOTÓN DE AÑADIR NOTA
+            IconButton(
+                onClick = { onAddNoteClick() },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFF303030),
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+            ) {
                 Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Editar nombre de categoría",
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Añadir Nota",
                     tint = Color.White,
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            onClick = { onEditCategoryClick() }
-                        )
+                    modifier = Modifier.size(32.dp)
                 )
             }
         }

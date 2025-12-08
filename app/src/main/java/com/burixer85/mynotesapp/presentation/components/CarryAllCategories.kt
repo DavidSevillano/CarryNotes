@@ -8,7 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,21 +27,54 @@ import com.burixer85.mynotesapp.presentation.model.Category
 import com.burixer85.mynotesapp.R
 
 
-
-
 @Composable
-fun CarryAllCategories(categories: List<Category>, onCategoryClick: (Category) -> Unit) {
+fun CarryAllCategories(
+    categories: List<Category>,
+    onCategoryClick: (Category) -> Unit,
+    onAddCategoryClick: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(R.string.Categories_Screen_Main_Text),
-            color = Color.White,
-            style = MaterialTheme.typography.titleLarge,
+        Row(
             modifier = Modifier
-                .padding(bottom = 32.dp)
-        )
+                .fillMaxWidth()
+                .padding(bottom = 32.dp, start = 16.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Spacer(modifier = Modifier.width(48.dp))
+
+            Text(
+                text = stringResource(R.string.Categories_Screen_Main_Text),
+                color = Color.White,
+                style = MaterialTheme.typography.titleLarge
+            )
+
+            IconButton(
+                onClick = { onAddCategoryClick() },
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(
+                        color = Color(0xFF303030),
+                        shape = CircleShape
+                    )
+                    .border(
+                        width = 1.dp,
+                        color = Color.White,
+                        shape = CircleShape
+                    )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Añadir Categoría",
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,7 +94,7 @@ fun CarryAllCategories(categories: List<Category>, onCategoryClick: (Category) -
                                 shape = RoundedCornerShape(14.dp)
                             )
                             .background(
-                                color = Color(0xFaF303030),
+                                color = Color(0xFF303030),
                                 shape = RoundedCornerShape(14.dp)
                             )
                             .clickable { onCategoryClick(category) }
@@ -70,8 +108,7 @@ fun CarryAllCategories(categories: List<Category>, onCategoryClick: (Category) -
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = category.name,
-                                color = Color.White,
+                                text = category.name.replaceFirstChar { if (it.isLowerCase()) it.uppercase() else it.toString() },                                color = Color.White,
                                 style = MaterialTheme.typography.labelLarge,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,

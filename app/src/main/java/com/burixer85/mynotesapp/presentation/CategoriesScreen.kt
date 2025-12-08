@@ -54,7 +54,9 @@ fun CategoriesScreen(
                 categories = uiState.categories,
                 onCategoryClick = { category ->
                     onCategoryClick(category.id, category.name)
-                })
+                },
+                onAddCategoryClick = onAddCategoryClick
+                )
         } else {
             Column(
                 modifier = Modifier.fillMaxWidth(),
