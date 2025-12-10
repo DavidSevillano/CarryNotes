@@ -32,8 +32,12 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 
@@ -48,35 +52,22 @@ fun CarryAllNotes(
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
-
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 32.dp, start = 16.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = Modifier.width(48.dp))
+
             Box(
-                modifier = Modifier.padding(start = 40.dp).weight(1f)
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = categoryName.replaceFirstChar { if (it.isLowerCase()) it.uppercase() else it.toString() },
-                    color = Color.White,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
                 Row(
-                    modifier = Modifier.align(Alignment.Center),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = categoryName,
-                        color = Color.Transparent,
-                        style = MaterialTheme.typography.titleLarge
-                    )
-
-                    Spacer(modifier = Modifier.width(62.dp))
-
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Editar nombre de categoría",
@@ -89,32 +80,46 @@ fun CarryAllNotes(
                                 onClick = { onEditCategoryClick() }
                             )
                     )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    Text(
+                        text = categoryName.replaceFirstChar { if (it.isLowerCase()) it.uppercase() else it.toString() },
+                        color = Color.White,
+                        style = MaterialTheme.typography.titleLarge,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
                 }
             }
 
-            // EL NUEVO BOTÓN DE AÑADIR NOTA
-            IconButton(
-                onClick = { onAddNoteClick() },
-                modifier = Modifier
-                    .size(48.dp)
-                    .background(
-                        color = Color(0xFF303030),
-                        shape = CircleShape
+            if (notes.isNotEmpty()){
+                IconButton(
+                    onClick = { onAddNoteClick() },
+                    modifier = Modifier
+                        .size(48.dp)
+                        .background(
+                            color = Color(0xFF303030),
+                            shape = CircleShape
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = Color.White,
+                            shape = CircleShape
+                        )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Añadir Nota",
+                        tint = Color.White,
+                        modifier = Modifier.size(32.dp)
                     )
-                    .border(
-                        width = 1.dp,
-                        color = Color.White,
-                        shape = CircleShape
-                    )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Añadir Nota",
-                    tint = Color.White,
-                    modifier = Modifier.size(32.dp)
-                )
+                }
+            } else {
+                Spacer(modifier = Modifier.width(48.dp))
             }
         }
+
         if (notes.isNotEmpty()) {
             LazyColumn(
                 modifier = Modifier
@@ -140,11 +145,7 @@ fun CarryAllNotes(
                                         color = Color(0xFF303030),
                                         shape = RoundedCornerShape(14.dp)
                                     )
-                                    .clickable(
-                                        onClick = {
-                                            onNoteClick(note)
-                                        }
-                                    )
+                                    .clickable { onNoteClick(note) }
                             ) {
                                 Column(
                                     modifier = Modifier
@@ -171,7 +172,6 @@ fun CarryAllNotes(
                                         )
                                     }
                                     Spacer(modifier = Modifier.height(8.dp))
-
                                 }
                             }
                         }
@@ -181,7 +181,7 @@ fun CarryAllNotes(
                     }
                 }
             }
-        }else {
+        } else {
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally

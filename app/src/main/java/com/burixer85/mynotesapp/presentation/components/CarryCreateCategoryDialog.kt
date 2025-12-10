@@ -79,6 +79,8 @@ fun CarryCreateCategoryDialog(
 
                         Text(
                             text = titleText,
+                            modifier = Modifier
+                                .padding(end = 40.dp),
                             style = MaterialTheme.typography.titleMedium,
                             color = Color.White
                         )
