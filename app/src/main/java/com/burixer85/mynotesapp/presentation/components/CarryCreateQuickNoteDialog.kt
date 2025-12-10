@@ -7,7 +7,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Save
@@ -67,6 +69,7 @@ fun CarryCreateQuickNoteDialog(
                 modifier = Modifier
                     .padding(24.dp)
                     .fillMaxWidth()
+                    .heightIn(max = 500.dp)
             ) {
                 Text(
                     text = stringResource(R.string.CreateQuickNote_Dialog_Main_Text),
@@ -121,12 +124,17 @@ fun CarryCreateQuickNoteDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                CarryTextField(
-                    value = content,
-                    onValueChange = { content = it },
-                    height = 120.dp,
-                    label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Content),
-                )
+                Box(
+                    modifier = Modifier
+                        .weight(1f, fill = false)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    CarryTextField(
+                        value = content,
+                        onValueChange = { content = it },
+                        label = stringResource(R.string.CreateQuickNote_Dialog_Text_Label_Content),
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(28.dp))
 

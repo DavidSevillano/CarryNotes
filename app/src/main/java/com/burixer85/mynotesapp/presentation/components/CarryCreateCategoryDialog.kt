@@ -9,8 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Save
@@ -73,6 +75,7 @@ fun CarryCreateCategoryDialog(
                         modifier = Modifier
                             .padding(24.dp)
                             .fillMaxWidth()
+                            .heightIn(max = 500.dp)
                     ) {
                         val titleText = categoryToEdit?.name
                             ?: stringResource(R.string.CreateCategory_Dialog_Main_Text)
@@ -87,12 +90,17 @@ fun CarryCreateCategoryDialog(
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        CarryTextField(
-                            value = categoryName,
-                            onValueChange = { categoryName = it },
-                            height = 80.dp,
-                            label = stringResource(R.string.CreateCategory_Dialog_Text_Label),
-                        )
+                        Box(
+                            modifier = Modifier
+                                .weight(1f, fill = false)
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            CarryTextField(
+                                value = categoryName,
+                                onValueChange = { categoryName = it },
+                                label = stringResource(R.string.CreateCategory_Dialog_Text_Label),
+                            )
+                        }
 
                         Spacer(modifier = Modifier.height(28.dp))
 

@@ -1,9 +1,12 @@
 package com.burixer85.mynotesapp.presentation.components
 
+import androidx.activity.result.launch
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -23,6 +26,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.model.Category
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +45,9 @@ fun CarryCreateNoteDialog(
     var title by remember(initialTitle) { mutableStateOf(initialTitle ?: "") }
     var content by remember(initialContent) { mutableStateOf(initialContent ?: "") }
     var selectedCategory by remember(initialCategory) { mutableStateOf(initialCategory) }
+
+    val contentScrollState = rememberScrollState()
+    val coroutineScope = rememberCoroutineScope()
 
     val isFormValid by remember(title, content, selectedCategory) {
         derivedStateOf {
@@ -70,7 +77,7 @@ fun CarryCreateNoteDialog(
                 Column(
                     modifier = Modifier
                         .padding(24.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
                 ) {
                     Text(
                         text = stringResource(R.string.CreateNote_Dialog_Text_No_Categories_Label),
@@ -144,6 +151,7 @@ fun CarryCreateNoteDialog(
                     modifier = Modifier
                         .padding(24.dp)
                         .fillMaxWidth()
+                        .heightIn(max = 520.dp)
                 ) {
                     Text(
                         text = if (isEditing) stringResource(R.string.CreateNote_Dialog_Main_Text_Edit) else stringResource(
@@ -175,12 +183,20 @@ fun CarryCreateNoteDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    CarryTextField(
-                        value = content,
-                        onValueChange = { content = it },
-                        height = 200.dp,
-                        label = stringResource(R.string.CreateNote_Dialog_Text_Label_Content),
-                    )
+                    Box(
+                        modifier = Modifier
+                            .weight(1f, fill = false)
+                            .verticalScroll(contentScrollState)
+                    ) {
+                        CarryTextField(
+                            value = content,
+                            onValueChange = { content = it
+                                coroutineScope.launch {
+                                    contentScrollState.animateScrollTo(contentScrollState.maxValue)
+                                }},
+                            label = stringResource(R.string.CreateNote_Dialog_Text_Label_Content),
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(28.dp))
 
