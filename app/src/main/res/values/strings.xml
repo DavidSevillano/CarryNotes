@@ -40,7 +40,8 @@
 
 
     <!-- CreateQuickNote Dialog -->
-    <string name="CreateQuickNote_Dialog_Main_Text">Crear Nota Rápida</string>
+    <string name="CreateQuickNote_Dialog_Main_Text_Create">Crear Nota Rápida</string>
+    <string name="CreateQuickNote_Dialog_Main_Text_Edit">Crear Nota Rápida</string>
     <string name="CreateQuickNote_Dialog_Text_Label_Title">Título</string>
     <string name="CreateQuickNote_Dialog_Text_Label_Content">Contenido</string>
     <string name="CreateQuickNote_Dialog_TextButton_Cancel">Cancelar</string>

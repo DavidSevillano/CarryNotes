@@ -11,10 +11,10 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.burixer85.mynotesapp"
+        applicationId = "com.burixer.carrynotes"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
+        versionCode = 2
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

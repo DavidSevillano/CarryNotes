@@ -72,7 +72,9 @@ fun CarryCreateQuickNoteDialog(
                     .heightIn(max = 500.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.CreateQuickNote_Dialog_Main_Text),
+                    text = if (isEditing) stringResource(R.string.CreateQuickNote_Dialog_Main_Text_Edit) else stringResource(
+                        R.string.CreateQuickNote_Dialog_Main_Text_Create
+                    ),
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
