@@ -10,6 +10,10 @@
     <string name="Main_Screen_FAB_Add_Note">Añadir Nota</string>
     <string name="Main_Screen_FAB_Add_Category">Añadir Categoría</string>
 
+    <!-- Bottom Navigation Bar -->
+    <string name="Main_Screen_Bottom_Navigation_Bar_QuickNotes">Notas Rápidas</string>
+    <string name="Main_Screen_Bottom_Navigation_Bar_Categories">Categorias</string>
+
     <!-- QuickNotes Screen -->
     <string name="QuickNotes_Screen_Main_Text_No_Quicknotes">Sin Notas Rápidas</string>
     <string name="QuickNotes_Screen_Main_Text">Notas Rápidas</string>

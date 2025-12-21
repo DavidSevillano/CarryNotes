@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.burixer85.mynotesapp.R
 import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination
 
@@ -65,8 +66,8 @@ fun CarryNavigationBar(
                 },
                 label = {
                     val labelText = when (destination) {
-                        is NavigationDestination.QuickNotesNav -> "QuickNotes"
-                        is NavigationDestination.CategoriesNav -> "Categorias"
+                        is NavigationDestination.QuickNotesNav -> stringResource(R.string.Main_Screen_Bottom_Navigation_Bar_QuickNotes)
+                        is NavigationDestination.CategoriesNav -> stringResource(R.string.Main_Screen_Bottom_Navigation_Bar_Categories)
                         else -> "Error"
                     }
                     Text(text = labelText)
