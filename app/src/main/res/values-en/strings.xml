@@ -1,0 +1,89 @@
+<resources>
+    <string name="app_name">CarryNotes</string>
+
+    <!-- Main Strings -->
+    <string name="Main_Screen_Text_Tittle">CARRYNOTES</string>
+    <string name="Main_Screen_Button_Achievements">Achievements</string>
+
+    <!-- FAB -->
+    <string name="Main_Screen_FAB_Add_QuickNote">Add Quick Note</string>
+    <string name="Main_Screen_FAB_Add_Note">Add Note</string>
+    <string name="Main_Screen_FAB_Add_Category">Add Category</string>
+
+    <!-- Bottom Navigation Bar -->
+    <string name="Main_Screen_Bottom_Navigation_Bar_QuickNotes">Quick Notes</string>
+    <string name="Main_Screen_Bottom_Navigation_Bar_Categories">Categories</string>
+
+    <!-- QuickNotes Screen -->
+    <string name="QuickNotes_Screen_Main_Text_No_Quicknotes">No Quick Notes</string>
+    <string name="QuickNotes_Screen_Main_Text">Quick Notes</string>
+    <string name="QuickNotes_Screen_Text_Box_Add_QuickNote">Add Quick Note</string>
+    <string name="QuickNotes_Screen_Text_SnackBar_Deleted">Quick note deleted</string>
+    <string name="QuickNotes_Screen_Text_SnackBar_Added">Quick note added</string>
+    <string name="QuickNotes_Screen_Text_SnackBar_Updated">Quick note updated</string>
+
+    <!-- Categories Screen -->
+    <string name="Categories_Screen_Main_Text_No_Categories">No Categories</string>
+    <string name="Categories_Screen_Main_Text">Categories</string>
+    <string name="Categories_Screen_Main_Text_Number_Of_Categories">%1$d Categories</string>
+    <string name="Categories_Screen_Text_Box_Add_Category">Add Category</string>
+    <string name="Categories_Screen_Text_Text_SnackBar">Category deleted</string>
+
+    <!-- Notes Screen -->
+    <string name="Notes_Screen_Text_Text_SnackBar">Note deleted</string>
+
+    <!-- QuickNote Dialog -->
+    <string name="Note_Dialog_AlertDialog_Text_Title">Confirm Deletion</string>
+    <string name="Note_Dialog_TextButton_Close">Close</string>
+    <string name="Note_Dialog_TextButton_Edit">Edit</string>
+    <string name="Note_Dialog_AlertDialog_Text_Content">Are you sure you want to delete this note?</string>
+    <string name="Note_Dialog_AlertDialog_Button_Delete">Delete</string>
+    <string name="Note_Dialog_AlertDialog_Button_Cancel">Cancel</string>
+    <string name="Note_Dialog_Text_No_Title">Untitled</string>
+
+    <!-- CreateQuickNote Dialog -->
+    <string name="CreateQuickNote_Dialog_Main_Text_Create">Create Quick Note</string>
+    <string name="CreateQuickNote_Dialog_Main_Text_Edit">Edit Quick Note</string>
+    <string name="CreateQuickNote_Dialog_Text_Label_Title">Title</string>
+    <string name="CreateQuickNote_Dialog_Text_Label_Content">Content</string>
+    <string name="CreateQuickNote_Dialog_TextButton_Cancel">Cancel</string>
+    <string name="CreateQuickNote_Dialog_Button_Save">Save</string>
+    <string name="CreateQuickNote_Dialog_Button_Update">Update</string>
+    <string name="CreateQuickNote_Dialog_Text_Label_Add_Title">Add title</string>
+
+    <!-- CreateNote Dialog -->
+    <string name="CreateNote_Dialog_Main_Text_Create">Create New Note</string>
+    <string name="CreateNote_Dialog_Main_Text_Edit">Edit Note</string>
+    <string name="CreateNote_Dialog_Text_Label_Title">Title</string>
+    <string name="CreateNote_Dialog_Text_Label_Content">Content</string>
+    <string name="CreateNote_Dialog_TextButton_Cancel">Cancel</string>
+    <string name="CreateNote_Dialog_Button_Update">Update</string>
+    <string name="CreateNote_Dialog_Button_Save">Save</string>
+    <string name="CreateNote_Dialog_Text_DropdownNo_Category">Select a category</string>
+    <string name="CreateNote_Dialog_Text_No_Categories_Label">No categories</string>
+    <string name="CreateNote_Dialog_Text_No_Categories_Content">Before you can create a note, you must create a category. Would you like to create one?</string>
+    <string name="CreateNote_Dialog_Button_No_Categories_Create">Create</string>
+    <string name="CreateNote_Dialog_Text_Label_Dropdown">Save</string>
+
+    <!-- CreateCategory Dialog -->
+    <string name="CreateCategory_Dialog_Main_Text">Create Category</string>
+    <string name="CreateCategory_Dialog_Text_Label">Name</string>
+    <string name="CreateCategory_Dialog_TextButton_Cancel">Cancel</string>
+    <string name="CreateCategory_Dialog_Button_Save">Save</string>
+    <string name="CreateCategory_Dialog_Button_Update">Update</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Text_Title">Confirm Deletion</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Text_Content">Are you sure you want to delete this category?</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Button_Delete">Delete</string>
+    <string name="CreateCategory_Dialog_AlertDialog_Button_Cancel">Cancel</string>
+
+    <!-- Snackbars -->
+    <string name="event_type_quicknote">"Quick note"</string>
+    <string name="event_type_note">"Note"</string>
+    <string name="event_type_category">"Category"</string>
+    <string name="snackbar_item_added">"%1$s added"</string>
+    <string name="snackbar_item_updated">"%1$s updated"</string>
+    <string name="snackbar_item_deleted">"%1$s deleted"</string>
+
+    <!-- Toast -->
+    <string name="toast_achievements">Coming soon!</string>
+</resources>
