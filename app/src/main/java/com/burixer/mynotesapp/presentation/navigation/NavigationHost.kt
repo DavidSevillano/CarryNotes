@@ -107,6 +107,7 @@ fun NavigationHost(modifier: Modifier = Modifier) {
             }
         },
         transitionSpec = {
+
             val forwardAnimation = slideInHorizontally(tween(300)) { it } togetherWith
                     slideOutHorizontally(tween(300)) { -it }
 
@@ -152,6 +153,36 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                     backwardAnimation
                 }
             }
+        },
+        popTransitionSpec = {
+
+            val outAnimation = fadeIn(
+                animationSpec = tween(300)
+            ) togetherWith slideOutOfContainer(
+                AnimatedContentTransitionScope.SlideDirection.Down,
+                animationSpec = tween(300)
+            )
+
+            val backwardAnimation = slideInHorizontally(tween(300)) { -it } togetherWith
+                    slideOutHorizontally(tween(300)) { it }
+
+            val fromRouteName = initialState.key.toString()
+            val toRouteName = targetState.key.toString()
+
+            when {
+
+                // CASO 3: Notes -> Categories (Afuera)
+                fromRouteName.startsWith(NotesNav::class.simpleName!!) &&
+                        toRouteName.startsWith(CategoriesNav::class.simpleName!!) -> {
+                    outAnimation
+                }
+
+                else -> {
+                    backwardAnimation
+                }
+            }
+
+
         }
     )
 
