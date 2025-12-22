@@ -21,6 +21,7 @@ import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import com.burixer.mynotesapp.presentation.AchievementsScreen
 import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.core.ex.navigateTo
 import com.burixer85.mynotesapp.presentation.CategoriesScreen
@@ -38,6 +39,7 @@ import com.burixer85.mynotesapp.presentation.model.QuickNote
 import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination.QuickNotesNav
 import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination.CategoriesNav
 import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination.NotesNav
+import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination.AchievementsNav
 import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination.ErrorNav
 
 @Composable
@@ -101,6 +103,9 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                     categoriesViewModel = categoriesViewModel,
                     sharedViewModel = sharedViewModel
                 )
+            }
+            entry<AchievementsNav> { key ->
+                AchievementsScreen()
             }
             entry<ErrorNav> {
                 Text("Pantalla no encontrada")

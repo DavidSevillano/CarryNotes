@@ -131,13 +131,7 @@ fun MainScreen() {
                         color = Color(0xFF303030),
                         shape = RoundedCornerShape(32.dp)
                     ).clickable {
-                        Toast
-                            .makeText(
-                                context,
-                                context.getString(R.string.toast_achievements),
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
+                        sharedViewModel.setCurrentRoute(NavigationDestination.AchievementsNav)
                     },
                 contentAlignment = Alignment.Center
             ) {

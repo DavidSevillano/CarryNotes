@@ -11,5 +11,7 @@ sealed class NavigationDestination : NavKey {
     @Serializable
     data class NotesNav (val categoryId: Int, val categoryName: String) : NavigationDestination()
     @Serializable
+    data object AchievementsNav : NavigationDestination()
+    @Serializable
     data object ErrorNav : NavigationDestination()
 }
