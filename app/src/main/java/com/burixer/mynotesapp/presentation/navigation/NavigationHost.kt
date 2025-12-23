@@ -55,8 +55,13 @@ fun NavigationHost(modifier: Modifier = Modifier) {
 
     val currentNavHostRoute = backStack.lastOrNull()
 
+
     if (requestedRoute != currentNavHostRoute && !sharedViewModel.isNavigationFromNavHost()) {
-        backStack.replaceAll { requestedRoute }
+        if (requestedRoute is AchievementsNav) {
+            backStack.add(requestedRoute)
+        } else {
+            backStack.replaceAll { requestedRoute }
+        }
     }
 
     val lastSeenRoute = remember(currentNavHostRoute) {
@@ -141,6 +146,7 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                     forwardAnimation
                 }
 
+
                 // CASO 2: Categories -> Notes (Adentro)
                 fromRouteName.startsWith(CategoriesNav::class.simpleName!!) &&
                         toRouteName.startsWith(NotesNav::class.simpleName!!) -> {
@@ -153,8 +159,18 @@ fun NavigationHost(modifier: Modifier = Modifier) {
                     outAnimation
                 }
 
+                // CASO 4: Cualquier Screen -> Achievements (Adentro)
+                toRouteName.startsWith(AchievementsNav::class.simpleName!!) -> {
+                    inAnimation
+                }
+
+                // CASO 5: Achievements -> Cualquier Screen (Afuera)
+                fromRouteName.contains(AchievementsNav::class.simpleName!!) -> {
+                    outAnimation
+                }
+
                 else -> {
-                    // CASO 4: Si no es alguno de esos casos específicos, usa la animacion que queda
+                    // CASO 6: Si no es alguno de esos casos específicos, usa la animacion que queda
                     backwardAnimation
                 }
             }
@@ -176,7 +192,12 @@ fun NavigationHost(modifier: Modifier = Modifier) {
 
             when {
 
-                // CASO 3: Notes -> Categories (Afuera)
+                // CASO 1: Achievements -> Cualquier Screen (Afuera)
+                fromRouteName.startsWith(AchievementsNav::class.simpleName!!) -> {
+                    outAnimation
+                }
+
+                // CASO 2: Notes -> Categories (Afuera)
                 fromRouteName.startsWith(NotesNav::class.simpleName!!) &&
                         toRouteName.startsWith(CategoriesNav::class.simpleName!!) -> {
                     outAnimation
