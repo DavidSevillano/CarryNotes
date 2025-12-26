@@ -1,4 +1,4 @@
-package com.burixer.mynotesapp.presentation.Screens
+package com.burixer.mynotesapp.presentation.Screens.Achievements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.burixer.mynotesapp.presentation.Screens
+package com.burixer.mynotesapp.presentation.Screens.Achievements
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

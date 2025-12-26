@@ -12,7 +12,7 @@ interface AchievementDao {
     suspend fun getAllAchievements(): List<AchievementEntity>
 
     @Query("UPDATE achievements SET isUnlocked = 1 WHERE id = :id AND isUnlocked = 0")
-    suspend fun unlockAchievement(id: Int)
+    suspend fun unlockAchievement(id: Int): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAchievements(achievements: List<AchievementEntity>)

@@ -18,7 +18,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.burixer.mynotesapp.presentation.Screens.AchievementsScreen
+import com.burixer.mynotesapp.presentation.Screens.Achievements.AchievementsScreen
 import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.core.ex.navigateTo
 import com.burixer85.mynotesapp.presentation.CategoriesScreen
