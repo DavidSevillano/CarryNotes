@@ -2,6 +2,7 @@ package com.burixer85.mynotesapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer.mynotesapp.data.manager.AchievementManager
 import com.burixer85.mynotesapp.core.EventType
 import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.data.application.RoomApplication
@@ -41,6 +42,11 @@ class QuickNotesScreenViewModel() : ViewModel() {
     fun addQuickNote(quickNote: QuickNote, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             RoomApplication.db.quickNoteDao().insertQuickNote(quickNote.toEntity())
+
+            val manager = AchievementManager(RoomApplication.db)
+
+            manager.checkQuickNoteAchievements()
+            manager.checkGlobalAchievements()
 
             val updatedNotesFromDb = RoomApplication.db.quickNoteDao().getAllQuickNotes()
 

@@ -1,6 +1,5 @@
 package com.burixer85.mynotesapp.presentation
 
-import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.burixer85.mynotesapp.core.ScreenEvent

@@ -68,23 +68,21 @@ class RoomApplication : Application() {
 
                             AchievementEntity(4, "Organizador", "Crea tu primera categoría",  false),
 
-                            AchievementEntity(5, "Maestro organizador", "Ten 5 categorías creadas",  false),
+                            AchievementEntity(5, "Maestro organizador", "Crea 5 categorías creadas",  false),
 
-                            AchievementEntity(6, "Arquitecto de ideas", "Ten 10 categorías creadas",  false),
+                            AchievementEntity(6, "Arquitecto de ideas", "Crea 10 categorías creadas",  false),
 
-                            AchievementEntity(7, "Escritor", "Crea tu primera nota detallada",  false),
+                            AchievementEntity(7, "Escritor", "Crea tu primera nota",  false),
 
-                            AchievementEntity(8, "Diario personal", "Crea 10 notas detalladas",  false),
+                            AchievementEntity(8, "Diario personal", "Crea 10 notas",  false),
 
-                            AchievementEntity(9, "Autor prolífico", "Crea 50 notas detalladas",  false),
+                            AchievementEntity(9, "Autor prolífico", "Crea 50 notas",  false),
 
                             AchievementEntity(10, "Mente limpia", "Borra una nota por primera vez",  false),
 
-                            AchievementEntity(11, "Seguridad ante todo", "Haz un backup de tus notas",  false),
+                            AchievementEntity(11, "Coleccionista", "Desbloquea 5 logros",  false),
 
-                            AchievementEntity(12, "Coleccionista", "Desbloquea 5 logros",  false),
-
-                            AchievementEntity(13, "Maestro de logros", "Desbloquea todos los logros",  false),
+                            AchievementEntity(12, "Maestro de logros", "Desbloquea todos los logros",  false),
 
                         )
                         dao.insertAchievements(initial)

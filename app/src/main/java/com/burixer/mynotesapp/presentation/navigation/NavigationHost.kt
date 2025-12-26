@@ -13,15 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.key
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
-import com.burixer.mynotesapp.presentation.AchievementsScreen
+import com.burixer.mynotesapp.presentation.Screens.AchievementsScreen
 import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.core.ex.navigateTo
 import com.burixer85.mynotesapp.presentation.CategoriesScreen

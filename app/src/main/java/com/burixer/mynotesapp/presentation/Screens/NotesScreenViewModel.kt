@@ -1,26 +1,23 @@
 package com.burixer85.mynotesapp.presentation
 
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.burixer85.mynotesapp.R
+import com.burixer.mynotesapp.data.manager.AchievementManager
 import com.burixer85.mynotesapp.core.EventType
 import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.data.application.RoomApplication
 import com.burixer85.mynotesapp.data.entity.toPresentation
 import com.burixer85.mynotesapp.presentation.model.Category
 import com.burixer85.mynotesapp.presentation.model.Note
-import com.burixer85.mynotesapp.presentation.model.QuickNote
 
 import com.burixer85.mynotesapp.presentation.model.toEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -81,6 +78,11 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 
             RoomApplication.db.noteDao().insertNote(noteEntity)
 
+            val manager = AchievementManager(RoomApplication.db)
+
+            manager.checkNoteAchievements()
+            manager.checkGlobalAchievements()
+
             onComplete(ScreenEvent.Created(EventType.Note))
 
             if (categoryId == noteEntity.categoryId) {
@@ -120,6 +122,10 @@ class NotesScreenViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
     fun deleteNote(note: Note, onComplete: (ScreenEvent) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             RoomApplication.db.noteDao().deleteNote(note.toEntity())
+
+            val manager = AchievementManager(RoomApplication.db)
+            manager.checkDeleteAchievement()
+            manager.checkGlobalAchievements()
 
             onComplete(ScreenEvent.Deleted(EventType.Note))
 

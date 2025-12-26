@@ -14,6 +14,9 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE categoryId = :categoryId ORDER BY createdAt DESC")
     suspend fun getNotesByCategoryId(categoryId: Int): List<NoteEntity>
 
+    @Query("SELECT COUNT(*) FROM notes")
+    suspend fun getTotalNotesCount(): Int
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNote(note: NoteEntity)
 

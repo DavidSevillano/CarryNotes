@@ -21,6 +21,8 @@ interface CategoryDao {
     @Query("SELECT * FROM categories WHERE id = :categoryId")
     suspend fun getCategoryById(categoryId: Int): CategoryWithNotes?
 
+    @Query("SELECT COUNT(*) FROM categories")
+    suspend fun getCategoriesCount(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCategory(category: CategoryEntity)

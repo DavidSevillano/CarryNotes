@@ -1,7 +1,5 @@
-package com.burixer.mynotesapp.presentation
+package com.burixer.mynotesapp.presentation.Screens
 
-import androidx.activity.result.launch
-import androidx.compose.animation.core.copy
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.burixer.mynotesapp.data.entity.toPresentation

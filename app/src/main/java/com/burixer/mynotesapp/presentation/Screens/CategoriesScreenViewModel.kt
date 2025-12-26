@@ -2,6 +2,7 @@ package com.burixer85.mynotesapp.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.burixer.mynotesapp.data.manager.AchievementManager
 import com.burixer85.mynotesapp.core.EventType
 import com.burixer85.mynotesapp.core.ScreenEvent
 import com.burixer85.mynotesapp.data.application.RoomApplication
@@ -57,6 +58,11 @@ class CategoriesScreenViewModel() : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
 
             RoomApplication.db.categoryDao().insertCategory(category.toEntity())
+
+            val manager = AchievementManager(RoomApplication.db)
+
+            manager.checkCategoryAchievements()
+            manager.checkGlobalAchievements()
 
             onComplete(ScreenEvent.Created(EventType.Category))
 
