@@ -86,4 +86,28 @@
 
     <!-- Toast -->
     <string name="toast_achievements">Coming soon!</string>
+    <string name="Achievements_title_1">First Steps</string>
+    <string name="Achievements_description_1">Create your first quick note</string>
+    <string name="Achievements_title_2">Quick Thinking</string>
+    <string name="Achievements_description_2">Create 5 quick notes</string>
+    <string name="Achievements_title_3">Flash</string>
+    <string name="Achievements_description_3">Create 20 quick notes</string>
+    <string name="Achievements_title_4">Organizer</string>
+    <string name="Achievements_description_4">Create your first category</string>
+    <string name="Achievements_title_5">Master Organizer</string>
+    <string name="Achievements_description_5">Create 5 categories</string>
+    <string name="Achievements_title_6">Idea Architect</string>
+    <string name="Achievements_description_6">Create 10 categories</string>
+    <string name="Achievements_title_7">Writer</string>
+    <string name="Achievements_description_7">Create your first note</string>
+    <string name="Achievements_title_8">Personal Diary</string>
+    <string name="Achievements_description_8">Create 10 notes</string>
+    <string name="Achievements_title_9">Prolific Author</string>
+    <string name="Achievements_description_9">Create 50 notes</string>
+    <string name="Achievements_title_10">Clean Mind</string>
+    <string name="Achievements_description_10">Delete a note for the first time</string>
+    <string name="Achievements_title_11">Collector</string>
+    <string name="Achievements_description_11">Unlock 5 achievements</string>
+    <string name="Achievements_title_12">Achievement Master</string>
+    <string name="Achievements_description_12">Unlock all achievements</string>
 </resources>

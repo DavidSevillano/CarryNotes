@@ -68,7 +68,7 @@ fun MainScreen() {
     LaunchedEffect(Unit) {
         AchievementNotificationManager.achievementQueue.collect { name ->
             unlockedAchievementName = name
-            delay(4000) // Se muestra durante 4 segundos
+            delay(4000)
             unlockedAchievementName = null
         }
     }
@@ -175,13 +175,10 @@ fun MainScreen() {
             visible = unlockedAchievementName != null,
             enter = slideInHorizontally(
                 initialOffsetX = { fullWidth -> fullWidth }
-            ) + fadeIn(
-                animationSpec = tween(1000)
             ),
             exit = slideOutHorizontally(
                 targetOffsetX = { fullWidth -> fullWidth }
-            ) + fadeOut()
-            ,
+            ),
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 40.dp)

@@ -14,6 +14,33 @@
     <string name="Main_Screen_Bottom_Navigation_Bar_QuickNotes">Notas Rápidas</string>
     <string name="Main_Screen_Bottom_Navigation_Bar_Categories">Categorias</string>
 
+    <!-- Achievements -->
+    <string name="Achievements_title_1">Primeros pasos</string>
+    <string name="Achievements_description_1">Crea tu primera nota rápida</string>
+    <string name="Achievements_title_2">Pensamiento veloz</string>
+    <string name="Achievements_description_2">Crea 5 notas rápidas</string>
+    <string name="Achievements_title_3">Flash</string>
+    <string name="Achievements_description_3">Crea 20 notas rápidas</string>
+    <string name="Achievements_title_4">Organizador</string>
+    <string name="Achievements_description_4">Crea tu primera categoría</string>
+    <string name="Achievements_title_5">Maestro organizador</string>
+    <string name="Achievements_description_5">Crea 5 categorías creadas</string>
+    <string name="Achievements_title_6">Arquitecto de ideas</string>
+    <string name="Achievements_description_6">Crea 10 categorías creadas</string>
+    <string name="Achievements_title_7">Escritor</string>
+    <string name="Achievements_description_7">Crea tu primera nota</string>
+    <string name="Achievements_title_8">Diario personal</string>
+    <string name="Achievements_description_8">Crea 10 notas</string>
+    <string name="Achievements_title_9">Autor prolífico</string>
+    <string name="Achievements_description_9">Crea 50 notas</string>
+    <string name="Achievements_title_10">Mente limpia</string>
+    <string name="Achievements_description_10">Borra una nota por primera vez</string>
+    <string name="Achievements_title_11">Coleccionista</string>
+    <string name="Achievements_description_11">Desbloquea 5 logros</string>
+    <string name="Achievements_title_12">Maestro de logros</string>
+    <string name="Achievements_description_12">Desbloquea todos los logros</string>
+
+
     <!-- QuickNotes Screen -->
     <string name="QuickNotes_Screen_Main_Text_No_Quicknotes">Sin Notas Rápidas</string>
     <string name="QuickNotes_Screen_Main_Text">Notas Rápidas</string>
