@@ -29,7 +29,7 @@ class RoomApplication : Application() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "carry_notes_database"
+                    "carry_notes_database_v2"
                 )
                     .fallbackToDestructiveMigration()
                     .addCallback(AppDatabaseCallback(context.applicationContext, scope))                    .build()
@@ -64,74 +64,74 @@ class RoomApplication : Application() {
 
                             AchievementEntity(
                                 id = 1,
-                                title = context.getString(R.string.Achievements_title_1),
-                                description = context.getString(R.string.Achievements_description_1),
+                                title = R.string.Achievements_title_1,
+                                description = R.string.Achievements_description_1,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 2,
-                                title = context.getString(R.string.Achievements_title_2),
-                                description = context.getString(R.string.Achievements_description_2),
+                                title = R.string.Achievements_title_2,
+                                description = R.string.Achievements_description_2,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 3,
-                                title = context.getString(R.string.Achievements_title_3),
-                                description = context.getString(R.string.Achievements_description_3),
+                                title = R.string.Achievements_title_3,
+                                description = R.string.Achievements_description_3,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 4,
-                                title = context.getString(R.string.Achievements_title_4),
-                                description = context.getString(R.string.Achievements_description_4),
+                                title = R.string.Achievements_title_4,
+                                description = R.string.Achievements_description_4,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 5,
-                                title = context.getString(R.string.Achievements_title_5),
-                                description = context.getString(R.string.Achievements_description_5),
+                                title = R.string.Achievements_title_5,
+                                description = R.string.Achievements_description_5,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 6,
-                                title = context.getString(R.string.Achievements_title_6),
-                                description = context.getString(R.string.Achievements_description_6),
+                                title = R.string.Achievements_title_6,
+                                description = R.string.Achievements_description_6,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 7,
-                                title = context.getString(R.string.Achievements_title_7),
-                                description = context.getString(R.string.Achievements_description_7),
+                                title = R.string.Achievements_title_7,
+                                description = R.string.Achievements_description_7,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 8,
-                                title = context.getString(R.string.Achievements_title_8),
-                                description = context.getString(R.string.Achievements_description_8),
+                                title = R.string.Achievements_title_8,
+                                description = R.string.Achievements_description_8,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 9,
-                                title = context.getString(R.string.Achievements_title_9),
-                                description = context.getString(R.string.Achievements_description_9),
+                                title = R.string.Achievements_title_9,
+                                description = R.string.Achievements_description_9,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 10,
-                                title = context.getString(R.string.Achievements_title_10),
-                                description = context.getString(R.string.Achievements_description_10),
+                                title = R.string.Achievements_title_10,
+                                description = R.string.Achievements_description_10,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 11,
-                                title = context.getString(R.string.Achievements_title_11),
-                                description = context.getString(R.string.Achievements_description_11),
+                                title = R.string.Achievements_title_11,
+                                description = R.string.Achievements_description_11,
                                 isUnlocked = false
                             ),
                             AchievementEntity(
                                 id = 12,
-                                title = context.getString(R.string.Achievements_title_12),
-                                description = context.getString(R.string.Achievements_description_12),
+                                title = R.string.Achievements_title_12,
+                                description = R.string.Achievements_description_12,
                                 isUnlocked = false
                             )
                         )

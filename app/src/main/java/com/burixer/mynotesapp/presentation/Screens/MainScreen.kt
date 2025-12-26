@@ -1,9 +1,6 @@
 package com.burixer85.mynotesapp.presentation
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.BorderStroke
@@ -41,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.burixer.mynotesapp.core.utilities.getTranslatedAchievement
 import com.burixer.mynotesapp.data.manager.AchievementNotificationManager
 import com.burixer.mynotesapp.presentation.components.AchievementPopup
 import com.burixer85.mynotesapp.R
@@ -191,8 +189,7 @@ fun MainScreen() {
                     lastValidName = unlockedAchievementName!!
                 }
             }
-            AchievementPopup(name = lastValidName)
-        }
+            AchievementPopup(name = getTranslatedAchievement(lastValidName))        }
     }
 
 }

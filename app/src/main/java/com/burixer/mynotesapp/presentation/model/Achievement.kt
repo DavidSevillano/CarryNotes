@@ -4,8 +4,8 @@ import com.burixer.mynotesapp.data.entity.AchievementEntity
 
 data class Achievement(
     val id: Int,
-    val title: String,
-    val description: String,
+    val title: Int,
+    val description: Int,
     val isUnlocked: Boolean = false
 )
 

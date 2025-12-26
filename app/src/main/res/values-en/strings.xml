@@ -32,6 +32,9 @@
     <!-- Notes Screen -->
     <string name="Notes_Screen_Text_Text_SnackBar">Note deleted</string>
 
+    <!-- Achievements Screen -->
+    <string name="Achievements_Screen_Text_Title_Popup">Achievement unlocked!</string>
+
     <!-- QuickNote Dialog -->
     <string name="Note_Dialog_AlertDialog_Text_Title">Confirm Deletion</string>
     <string name="Note_Dialog_TextButton_Close">Close</string>

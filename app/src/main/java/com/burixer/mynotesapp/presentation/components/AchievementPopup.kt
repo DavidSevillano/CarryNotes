@@ -20,8 +20,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.burixer85.mynotesapp.R
 
 @Composable
 fun AchievementPopup(name: String) {
@@ -44,7 +46,7 @@ fun AchievementPopup(name: String) {
             )
             Spacer(Modifier.width(8.dp))
             Column {
-                Text("¡Logro desbloqueado!", color = Color.White, style = MaterialTheme.typography.labelSmall)
+                Text(stringResource(R.string.Achievements_Screen_Text_Title_Popup), color = Color.White, style = MaterialTheme.typography.labelSmall)
                 Spacer(Modifier.height(4.dp))
                 Text(name, color = Color.White, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold)
             }
