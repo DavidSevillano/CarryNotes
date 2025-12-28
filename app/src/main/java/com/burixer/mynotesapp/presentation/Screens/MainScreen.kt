@@ -1,5 +1,6 @@
 package com.burixer85.mynotesapp.presentation
 
+import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
@@ -78,7 +79,16 @@ fun MainScreen() {
 
     LaunchedEffect(Unit) {
         AchievementNotificationManager.achievementQueue.collect { name ->
+            try {
+                val mediaPlayer = MediaPlayer.create(context, R.raw.achievement_ding)
+                mediaPlayer.setOnCompletionListener { it.release() }
+                mediaPlayer.start()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             unlockedAchievementName = name
+
             delay(4000)
             unlockedAchievementName = null
         }
