@@ -14,7 +14,7 @@ android {
         applicationId = "com.burixer.carrynotes"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
+        versionCode = 7
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -57,6 +57,7 @@ dependencies {
     implementation(libs.datastore.preferences)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.appcompat)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))

@@ -12,6 +12,7 @@ nav3 = "1.0.0"
 coreSplashscreen = "1.2.0"
 kotlinxSerialization = "1.7.1"
 ksp = "2.0.10-1.0.24"
+appcompat = "1.7.1"
 
 
 [libraries]
@@ -44,6 +45,7 @@ androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 kotlinx-serialization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinxSerialization" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 
 
 [plugins]

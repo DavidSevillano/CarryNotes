@@ -1,5 +1,6 @@
 package com.burixer85.mynotesapp.presentation
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -9,12 +10,15 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -23,6 +27,7 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.burixer.mynotesapp.core.utilities.getTranslatedAchievement
 import com.burixer.mynotesapp.data.manager.AchievementNotificationManager
@@ -50,6 +56,11 @@ import com.burixer85.mynotesapp.presentation.navigation.NavigationDestination
 import com.burixer85.mynotesapp.presentation.navigation.NavigationHost
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Language
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 
 @Composable
 fun MainScreen() {
@@ -62,6 +73,8 @@ fun MainScreen() {
     val context = LocalContext.current
 
     var unlockedAchievementName by remember { mutableStateOf<String?>(null) }
+
+    var expanded by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         AchievementNotificationManager.achievementQueue.collect { name ->
@@ -81,9 +94,20 @@ fun MainScreen() {
             }
 
             val message = when (event) {
-                is ScreenEvent.Created -> context.getString(R.string.snackbar_item_added, itemTypeString)
-                is ScreenEvent.Updated -> context.getString(R.string.snackbar_item_updated, itemTypeString)
-                is ScreenEvent.Deleted -> context.getString(R.string.snackbar_item_deleted, itemTypeString)
+                is ScreenEvent.Created -> context.getString(
+                    R.string.snackbar_item_added,
+                    itemTypeString
+                )
+
+                is ScreenEvent.Updated -> context.getString(
+                    R.string.snackbar_item_updated,
+                    itemTypeString
+                )
+
+                is ScreenEvent.Deleted -> context.getString(
+                    R.string.snackbar_item_deleted,
+                    itemTypeString
+                )
             }
 
             scope.launch {
@@ -125,18 +149,86 @@ fun MainScreen() {
                         sharedViewModel.onFabOptionSelected(option)
                     }
                 )
-            }    ) { innerPadding ->
+            }) { innerPadding ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                Text(
-                    modifier = Modifier.padding(top = 24.dp, start = 24.dp, end = 24.dp),
-                    text = stringResource(R.string.Main_Screen_Text_Tittle),
-                    color = Color.White,
-                    style = MaterialTheme.typography.headlineSmall
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 36.dp, start = 24.dp, end = 24.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = stringResource(R.string.Main_Screen_Text_Tittle),
+                        color = Color.White,
+                        style = MaterialTheme.typography.headlineSmall
+                    )
+
+                    Box {
+                        Icon(
+                            imageVector = Icons.Default.Language,
+                            contentDescription = "Cambiar idioma",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(50.dp)
+                                .clickable { expanded = true }
+                                .padding(8.dp)
+                        )
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            shape = RoundedCornerShape(16.dp),
+                            modifier = Modifier
+                                .background(Color(0xFF333333))
+                                .border(
+                                    0.5.dp,
+                                    Color.White.copy(alpha = 0.2f),
+                                    RoundedCornerShape(16.dp)
+                                )
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(stringResource(R.string.Main_Screen_Icon_Language_Spanish), style = MaterialTheme.typography.titleMedium)
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(stringResource(R.string.Main_Screen_Text_Language_Spanish), color = Color.White)
+                                    }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    scope.launch {
+                                        delay(150)
+                                        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("es")
+                                        AppCompatDelegate.setApplicationLocales(appLocale)
+                                    }
+                                }
+                            )
+
+                            DropdownMenuItem(
+                                text = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(stringResource(R.string.Main_Screen_Icon_Language_English), style = MaterialTheme.typography.titleMedium)
+                                        Spacer(modifier = Modifier.width(8.dp))
+                                        Text(stringResource(R.string.Main_Screen_Text_Language_English), color = Color.White)
+                                    }
+                                },
+                                onClick = {
+                                    expanded = false
+                                    scope.launch {
+                                        delay(150)
+                                        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("en")
+                                        AppCompatDelegate.setApplicationLocales(appLocale)
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
                 Box(
                     Modifier
                         .fillMaxWidth()
@@ -182,14 +274,15 @@ fun MainScreen() {
                 .padding(top = 40.dp)
         ) {
 
-            var lastValidName by remember{ mutableStateOf("")}
+            var lastValidName by remember { mutableStateOf("") }
 
             LaunchedEffect(unlockedAchievementName) {
                 if (unlockedAchievementName != null) {
                     lastValidName = unlockedAchievementName!!
                 }
             }
-            AchievementPopup(name = getTranslatedAchievement(lastValidName))        }
+            AchievementPopup(name = getTranslatedAchievement(lastValidName))
+        }
     }
 
 }

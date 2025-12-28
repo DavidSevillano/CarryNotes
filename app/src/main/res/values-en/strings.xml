@@ -4,6 +4,10 @@
     <!-- Main Strings -->
     <string name="Main_Screen_Text_Tittle">CARRYNOTES</string>
     <string name="Main_Screen_Button_Achievements">Achievements</string>
+    <string name="Main_Screen_Icon_Language_Spanish">🇪🇸 </string>
+    <string name="Main_Screen_Text_Language_Spanish">Spanish</string>
+    <string name="Main_Screen_Icon_Language_English">🇬🇧 </string>
+    <string name="Main_Screen_Text_Language_English">English</string>
 
     <!-- FAB -->
     <string name="Main_Screen_FAB_Add_QuickNote">Add Quick Note</string>
