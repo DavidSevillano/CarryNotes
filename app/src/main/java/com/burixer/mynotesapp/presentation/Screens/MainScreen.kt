@@ -1,5 +1,6 @@
 package com.burixer85.mynotesapp.presentation
 
+import android.app.Activity
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.AnimatedVisibility
@@ -59,9 +60,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun MainScreen() {
@@ -76,6 +80,12 @@ fun MainScreen() {
     var unlockedAchievementName by remember { mutableStateOf<String?>(null) }
 
     var expanded by remember { mutableStateOf(false) }
+
+    var isChangingLanguage by remember { mutableStateOf(false) }
+
+    val titleText = stringResource(R.string.Main_Screen_Text_Tittle)
+    var mFontSize by remember(titleText) { mutableStateOf(42.sp) }
+
 
     LaunchedEffect(Unit) {
         AchievementNotificationManager.achievementQueue.collect { name ->
@@ -172,10 +182,19 @@ fun MainScreen() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.Main_Screen_Text_Tittle),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(end = 8.dp),
+                        text = titleText,
                         color = Color.White,
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineMedium.copy(fontSize = mFontSize),
+                        maxLines = 1,
+                        softWrap = false,
+                        onTextLayout = { textLayoutResult ->
+                            if (textLayoutResult.hasVisualOverflow) {
+                                mFontSize *= 0.95f
+                            }
+                        }
                     )
 
                     Box {
@@ -184,7 +203,7 @@ fun MainScreen() {
                             contentDescription = "Cambiar idioma",
                             tint = Color.White,
                             modifier = Modifier
-                                .size(50.dp)
+                                .size(48.dp)
                                 .clickable { expanded = true }
                                 .padding(8.dp)
                         )
@@ -204,17 +223,36 @@ fun MainScreen() {
                             DropdownMenuItem(
                                 text = {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.Main_Screen_Icon_Language_Spanish), style = MaterialTheme.typography.titleMedium)
+                                        Text(
+                                            stringResource(R.string.Main_Screen_Icon_Language_Spanish),
+                                            style = MaterialTheme.typography.titleMedium
+                                        )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text(stringResource(R.string.Main_Screen_Text_Language_Spanish), color = Color.White)
+                                        Text(
+                                            stringResource(R.string.Main_Screen_Text_Language_Spanish),
+                                            color = Color.White
+                                        )
                                     }
                                 },
                                 onClick = {
                                     expanded = false
                                     scope.launch {
-                                        delay(150)
-                                        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("es")
+                                        isChangingLanguage = true
+                                        delay(100)
+
+                                        val appLocale: LocaleListCompat =
+                                            LocaleListCompat.forLanguageTags("es")
                                         AppCompatDelegate.setApplicationLocales(appLocale)
+
+                                        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) {
+                                            (context as? Activity)?.let { activity ->
+                                                delay(400)
+                                                activity.recreate()
+                                            }
+                                        } else {
+                                            delay(400)
+                                            isChangingLanguage = false
+                                        }
                                     }
                                 }
                             )
@@ -222,17 +260,36 @@ fun MainScreen() {
                             DropdownMenuItem(
                                 text = {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(stringResource(R.string.Main_Screen_Icon_Language_English), style = MaterialTheme.typography.titleMedium)
+                                        Text(
+                                            stringResource(R.string.Main_Screen_Icon_Language_English),
+                                            style = MaterialTheme.typography.titleMedium
+                                        )
                                         Spacer(modifier = Modifier.width(8.dp))
-                                        Text(stringResource(R.string.Main_Screen_Text_Language_English), color = Color.White)
+                                        Text(
+                                            stringResource(R.string.Main_Screen_Text_Language_English),
+                                            color = Color.White
+                                        )
                                     }
                                 },
                                 onClick = {
                                     expanded = false
                                     scope.launch {
-                                        delay(150)
-                                        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags("en")
+                                        isChangingLanguage = true
+                                        delay(100)
+
+                                        val appLocale: LocaleListCompat =
+                                            LocaleListCompat.forLanguageTags("en")
                                         AppCompatDelegate.setApplicationLocales(appLocale)
+
+                                        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) {
+                                            (context as? Activity)?.let { activity ->
+                                                delay(500)
+                                                activity.recreate()
+                                            }
+                                        } else {
+                                            delay(500)
+                                            isChangingLanguage = false
+                                        }
                                     }
                                 }
                             )
@@ -293,6 +350,16 @@ fun MainScreen() {
             }
             AchievementPopup(name = getTranslatedAchievement(lastValidName))
         }
+        if (isChangingLanguage) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0xFF212121))
+                    .clickable(enabled = false) { },
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = Color.White)
+            }
+        }
     }
-
 }

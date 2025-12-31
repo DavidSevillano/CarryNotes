@@ -31,8 +31,8 @@ class RoomApplication : Application() {
                     AppDatabase::class.java,
                     "carry_notes_database_v2"
                 )
-                    .fallbackToDestructiveMigration()
-                    .addCallback(AppDatabaseCallback(context.applicationContext, scope))                    .build()
+                    .addCallback(AppDatabaseCallback(context.applicationContext, scope))
+                    .build()
                 INSTANCE = instance
                 instance
             }
