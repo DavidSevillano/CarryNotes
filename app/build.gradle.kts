@@ -13,8 +13,8 @@ android {
     defaultConfig {
         applicationId = "com.burixer.carrynotes"
         minSdk = 24
-        targetSdk = 36
-        versionCode = 8
+        targetSdk = 35
+        versionCode = 9
         versionName = "1.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
